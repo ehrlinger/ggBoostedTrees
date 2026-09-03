@@ -20,10 +20,10 @@ Description: Graphic elements for exploring boosted tree models fit with
 Depends:
     R (>= 4.4.0)
 Imports:
+    boostmtree (>= 2.0.1),
     ggplot2,
     rlang
 Suggests:
-    boostmtree (>= 2.0.1),
     BoostMLR,
     covr,
     knitr,
