@@ -34,9 +34,14 @@ package is created.
 ## Dependencies
 
 ```
-Imports:  boostmtree, ggplot2, dplyr, tidyr
+Imports:  boostmtree (>= 2.0.1), ggplot2, dplyr, tidyr
 Suggests: BoostMLR, patchwork, testthat, vdiffr, knitr, quarto, covr, lintr
+Remotes:  ehrlinger/boostmtree_src@v2.0.2-ccf
 ```
+
+The version floor and the `Remotes:` line exist because development runs against
+a patched fork of `boostmtree`. See "Backend provenance" below; both lines are
+removed at the release gate.
 
 `boostmtree` is a hard dependency: it is the primary backend and its examples and
 vignettes must always run.
@@ -48,13 +53,79 @@ chunk, and test — is guarded by `requireNamespace("BoostMLR", quietly = TRUE)`
 This is the same guard pattern future optional backends will use, so the
 extension mechanism is built once rather than retrofitted.
 
-### Known constraint: the boostmtree fork
+## Backend provenance: the boostmtree fork
 
-CRAN `boostmtree` 2.0.0 is maintained by Kogalur and still contains the
-`cv.flag`, `na.action`, and `vimp(joint = TRUE)` defects fixed locally in the
-`v2.0.2-ccf` line. A CRAN release of `ggBoostedTrees` must import the CRAN
-version. Version 1 examples and vignettes therefore avoid those code paths, or
-gate them behind `\donttest`, until the upstream fixes are merged.
+Development runs against `ehrlinger/boostmtree_src@v2.0.2-ccf`, not CRAN
+`boostmtree` 2.0.0. The fork carries fixes for three defects found in the CRAN
+release: frozen residuals under `cv.flag = TRUE`, incorrect `na.action`
+handling, and malformed dimnames from `vimp(joint = TRUE)`.
+
+R resolves dependencies by package name and version, never by source. The fork
+declares `Version: 2.0.2` while CRAN sits at `2.0.0`, so the floor
+`boostmtree (>= 2.0.1)` is satisfiable only by the fork. This makes the fork
+requirement machine-enforced rather than a README request: a CRAN install fails
+resolution instead of silently supplying the defective backend. The `Remotes:`
+line tells `pak` and `devtools` where to find it, accounting for the fork's
+`subdir` layout.
+
+This constraint reaches three parts of the package, and they are not equally
+exposed.
+
+### Dependency resolution
+
+`Imports: boostmtree (>= 2.0.1)` and `Remotes: ehrlinger/boostmtree_src@v2.0.2-ccf`
+are development-only. CRAN rejects a `Remotes:` field, and rejects a version
+floor that no CRAN release satisfies. **Removing both is a mandatory item on the
+release-gate checklist**, resolved either by upstream merging the fixes (floor
+relaxed to whatever CRAN then offers) or by dropping the floor and documenting
+the affected code paths.
+
+### Extractor correctness
+
+Only one of the three fixes can break extractor code, because only one changes
+object *structure* rather than values:
+
+| Fix | What it changes | Exposure |
+|---|---|---|
+| `cv.flag` frozen residuals | `mu` and `err.rate` values | None — extractors read the same fields regardless |
+| `na.action` handling | which rows survive the fit | None structurally |
+| `vimp(joint = TRUE)` dimnames | structure of the vimp object | Real — `gg_boost_vimp` reads those dimnames |
+
+Foundation and Longitudinal core phases are therefore indifferent to which
+backend is installed. Only `gg_boost_vimp` in the Interpretation phase is
+exposed.
+
+**Requirement:** `gg_boost_vimp` normalizes vimp dimnames defensively, handling
+both the CRAN and fork shapes, rather than assuming the fork. This removes the
+coupling for the one class that has it, at negligible cost.
+
+**Open item:** the value-versus-structure classification above derives from prior
+debugging sessions and has not been re-verified against the fork diff. It must be
+confirmed before Interpretation-phase work begins. A direct
+`git diff release_2_0_0 v2.0.2-ccf` is not usable for this — the fork moved
+package files into a `boostmtree/` subdirectory, so the diff reads as pure
+insertion.
+
+### Test fixtures
+
+Fixtures fitted under `v2.0.2-ccf` and stored as `.rds` bake the corrected values
+in. Extraction tests read the `.rds` and never invoke the backend, so the suite
+is insulated from backend version differences — a second argument for the fixture
+strategy beyond check time.
+
+The corollary is that a green suite does not demonstrate that a user running CRAN
+`boostmtree` 2.0.0 gets correct figures. Fixtures therefore carry a provenance
+record — backend package version and the exact fitting call — stored alongside
+them, and are regenerated whenever the backend version changes.
+
+### Strategic note
+
+Phases 1 through 4 represent months of work, and the upstream fixes may merge
+before the release gate is reached, in which case this section expires. The
+architecture is not contorted around a constraint with a reasonable chance of
+resolving itself: the fork is targeted during development, the removal stays on
+the checklist, and only the single genuinely exposed extractor is written
+defensively.
 
 ## Architecture
 
@@ -148,9 +219,11 @@ following are requirements, not optimizations:
 3. **Interpretation** — `gg_boost_vimp` and `gg_boost_effect`.
 4. **Second backend** — `BoostMLR` extractors behind `requireNamespace()` guards.
    Validates the extension mechanism.
-5. **Release gate** — full CRAN Cookbook audit, `R CMD check --as-cran` with the
-   manual built, reverse-dependency check, `urlchecker::url_check()`, and
-   check-time profiling against the 10-minute budget.
+5. **Release gate** — removal of the `Remotes:` field and the `boostmtree`
+   version floor (see "Backend provenance"), full CRAN Cookbook audit,
+   `R CMD check --as-cran` with the manual built, reverse-dependency check,
+   `urlchecker::url_check()`, and check-time profiling against the 10-minute
+   budget.
 
 Version numbers are assigned by the maintainer at each milestone; phases do not
 imply minor-version bumps.
