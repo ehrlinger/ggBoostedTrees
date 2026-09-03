@@ -7,3 +7,5 @@
 docs/reference
 docs/articles
 .superpowers/
+*.Rcheck/
+*.tar.gz
