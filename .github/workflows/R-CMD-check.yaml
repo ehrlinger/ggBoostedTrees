@@ -1,0 +1,63 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+name: R-CMD-check.yaml
+
+permissions: read-all
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'oldrel-1'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      # The whole reason this workflow exists: without NOT_CRAN the vdiffr
+      # snapshot tests call skip_on_cran() and pass vacuously, so the committed
+      # reference SVGs would be validated nowhere but a laptop.
+      NOT_CRAN: "true"
+      # Note: vdiffr 1.0.9 has no VDIFFR_RUN_TESTS switch -- it gates only on
+      # testthat's CRAN flag. Which platform compares against the committed
+      # SVGs is therefore decided in the test files themselves, with
+      # skip_on_os(); see tests/testthat/test-plot-gg_boost_error.R.
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      # setup-r-dependencies reads the DESCRIPTION Remotes: field, which points
+      # at the patched boostmtree fork. The Imports floor (>= 2.0.1) is not
+      # satisfiable by CRAN's 2.0.0, so resolution fails loudly here if the
+      # Remotes line is ever wrong -- which is the point of declaring it.
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          cache-version: 1
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual")'

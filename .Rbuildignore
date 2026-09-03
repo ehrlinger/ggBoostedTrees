@@ -6,3 +6,5 @@
 ^_pkgdown\.yml$
 ^\.lintr$
 ^\.superpowers$
+^\.claude$
+^pkgdown-site$

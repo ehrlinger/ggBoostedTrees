@@ -54,6 +54,12 @@ test_that("the renderer applies no theme", {
 
 test_that("the univariate error plot is stable", {
   skip_on_cran()
+  # Text rendering is not byte-identical across platforms, and the committed
+  # reference SVGs were generated on macOS. Comparing elsewhere reports font
+  # differences as regressions. One platform is enough to catch a real
+  # rendering change; use vdiffr variants if per-platform references are ever
+  # wanted.
+  skip_on_os(c("windows", "linux", "solaris"))
   vdiffr::expect_doppelganger(
     "error univariate",
     ggplot2::autoplot(gg_boost_error(boost_fixture()))
@@ -62,6 +68,12 @@ test_that("the univariate error plot is stable", {
 
 test_that("the multi-response error plot is stable", {
   skip_on_cran()
+  # Text rendering is not byte-identical across platforms, and the committed
+  # reference SVGs were generated on macOS. Comparing elsewhere reports font
+  # differences as regressions. One platform is enough to catch a real
+  # rendering change; use vdiffr variants if per-platform references are ever
+  # wanted.
+  skip_on_os(c("windows", "linux", "solaris"))
   vdiffr::expect_doppelganger(
     "error multi response",
     ggplot2::autoplot(gg_boost_error(boost_multi_fixture()))

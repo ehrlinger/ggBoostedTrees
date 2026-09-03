@@ -36,7 +36,7 @@ package is created.
 ```
 Imports:  boostmtree (>= 2.0.1), ggplot2, rlang
 Suggests: BoostMLR, patchwork, testthat, vdiffr, knitr, quarto, covr, lintr
-Remotes:  ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf
+Remotes:  boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf
 ```
 
 The version floor and the `Remotes:` line exist because development runs against
@@ -68,12 +68,22 @@ resolution instead of silently supplying the defective backend. The `Remotes:`
 line tells `pak` and `devtools` where to find it, accounting for the fork's
 `subdir` layout.
 
+Two details of that line are load-bearing and were each found by a failure
+rather than by reading documentation. The trailing `/boostmtree` is the subdir:
+the fork has no `DESCRIPTION` at its repository root, so without it `remotes`
+reports "does not appear to be an R package". The leading `boostmtree=` names
+the package explicitly: `pak` matches a `Remotes:` entry to a dependency by
+*repository* name, and this repository is `boostmtree_src`, so without the
+prefix the remote is never matched to the `boostmtree` dependency, `pak`
+falls back to CRAN's 2.0.0, and resolution fails against the floor.
+
 This constraint reaches three parts of the package, and they are not equally
 exposed.
 
 ### Dependency resolution
 
-`Imports: boostmtree (>= 2.0.1)` and `Remotes: ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf`
+`Imports: boostmtree (>= 2.0.1)` and
+`Remotes: boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf`
 are development-only. CRAN rejects a `Remotes:` field, and rejects a version
 floor that no CRAN release satisfies. **Removing both is a mandatory item on the
 release-gate checklist**, resolved either by upstream merging the fixes (floor

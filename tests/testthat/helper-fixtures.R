@@ -1,6 +1,6 @@
 # The fitted fixture. Read from disk, never refit -- see fixtures/make-fixtures.R.
 boost_fixture <- function() {
-  readRDS(test_path("fixtures", "boost_continuous.rds"))
+  readRDS(testthat::test_path("fixtures", "boost_continuous.rds"))
 }
 
 # A hand-built two-response object. simLong() cannot produce n.q > 1, but
