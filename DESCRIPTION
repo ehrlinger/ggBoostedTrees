@@ -36,3 +36,5 @@ Suggests:
 Remotes:
     ehrlinger/boostmtree_src@v2.0.2-ccf
 Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.0
