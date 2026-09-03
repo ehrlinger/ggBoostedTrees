@@ -1,0 +1,38 @@
+Package: ggBoostedTrees
+Type: Package
+Title: Visually Exploring Boosted Tree Models
+Version: 0.0.1
+Date: 2026-09-03
+Authors@R: person("John", "Ehrlinger",
+  role = c("aut", "cre"),
+  email = "john.ehrlinger@gmail.com",
+  comment = c(ORCID = "0000-0002-5340-5154"))
+License: GPL (>= 3)
+Encoding: UTF-8
+Language: en-US
+URL: https://github.com/ehrlinger/ggBoostedTrees
+BugReports: https://github.com/ehrlinger/ggBoostedTrees/issues
+Description: Graphic elements for exploring boosted tree models fit with
+    'boostmtree' and 'BoostMLR', which implement Friedman's gradient descent
+    boosting with multivariate tree base learners for longitudinal responses.
+    Separates data extraction from rendering so that additional boosting
+    backends can be added without changes to the plotting layer.
+Depends:
+    R (>= 4.4.0)
+Imports:
+    boostmtree (>= 2.0.1),
+    ggplot2,
+    dplyr,
+    tidyr
+Suggests:
+    BoostMLR,
+    covr,
+    knitr,
+    lintr,
+    patchwork,
+    quarto,
+    testthat,
+    vdiffr
+Remotes:
+    ehrlinger/boostmtree_src@v2.0.2-ccf
+Roxygen: list(markdown = TRUE)
