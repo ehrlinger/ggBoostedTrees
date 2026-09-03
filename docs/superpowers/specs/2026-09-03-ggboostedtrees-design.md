@@ -34,9 +34,9 @@ package is created.
 ## Dependencies
 
 ```
-Imports:  boostmtree (>= 2.0.1), ggplot2, dplyr, tidyr
+Imports:  boostmtree (>= 2.0.1), ggplot2, rlang
 Suggests: BoostMLR, patchwork, testthat, vdiffr, knitr, quarto, covr, lintr
-Remotes:  ehrlinger/boostmtree_src@v2.0.2-ccf
+Remotes:  ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf
 ```
 
 The version floor and the `Remotes:` line exist because development runs against
@@ -73,7 +73,7 @@ exposed.
 
 ### Dependency resolution
 
-`Imports: boostmtree (>= 2.0.1)` and `Remotes: ehrlinger/boostmtree_src@v2.0.2-ccf`
+`Imports: boostmtree (>= 2.0.1)` and `Remotes: ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf`
 are development-only. CRAN rejects a `Remotes:` field, and rejects a version
 floor that no CRAN release satisfies. **Removing both is a mandatory item on the
 release-gate checklist**, resolved either by upstream merging the fixes (floor
@@ -144,7 +144,7 @@ defensively.
 Three layers with a single direction of dependency:
 
 ```
-model object  →  gg_boost_*()  →  tibble w/ documented columns  →  autoplot()  →  ggplot
+model object  →  gg_boost_*()  →  data.frame w/ documented columns  →  autoplot()  →  ggplot
    (backend)      (extractor,        (the contract)                 (renderer,
                    S3 on model)                                    S3 on gg class)
 ```
@@ -175,7 +175,7 @@ lets one renderer produce a faceted multi-panel figure instead of requiring
 several near-identical plot methods. Partial and marginal effects are one class
 distinguished by `kind`, not two classes.
 
-`response` carries the `q.label` for multivariate fits and holds a single level
+`response` carries the `q.set` for multivariate fits and holds a single level
 for univariate fits, so faceting logic is uniform across both cases.
 
 ### File layout
