@@ -73,6 +73,13 @@ gg_boost_error.boostmtree <- function(object, use.rmse = TRUE, ...) {
   if (!is.list(err)) {
     err <- list(err)
   }
+  if (length(err) != n_q) {
+    stop(
+      "gg_boost_error: err.rate has ", length(err),
+      " element(s) but the fit records n.q = ", n_q, " response(s).",
+      call. = FALSE
+    )
+  }
   m_opt <- object$m.opt
 
   blocks <- lapply(seq_len(n_q), function(q) {
