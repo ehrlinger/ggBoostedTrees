@@ -961,10 +961,18 @@ gg_boost_path.boostmtree <- function(object,
 
   blocks <- lapply(present, function(p) {
     # A single response stores each path as a vector; several responses store
-    # it as an iteration-by-response matrix. as.matrix() normalizes both.
+    # it as an iteration-by-response matrix. as.matrix() normalizes both, so
+    # ncol(path) must equal n_q; a mismatch means the fit object is malformed.
     path <- as.matrix(object[[p]])
+    if (ncol(path) != n_q) {
+      stop(
+        "gg_boost_path: the '", p, "' path has ", ncol(path),
+        " column(s) but the fit records n.q = ", n_q, " response(s).",
+        call. = FALSE
+      )
+    }
     do.call(rbind, lapply(seq_len(n_q), function(q) {
-      value <- as.numeric(path[, min(q, ncol(path))])
+      value <- as.numeric(path[, q])
       data.frame(
         iteration = seq_along(value),
         value = value,
@@ -1021,7 +1029,17 @@ test_that("autoplot returns a ggplot", {
 test_that("plot is an alias for autoplot", {
   gg <- gg_boost_path(boost_fixture())
 
-  expect_equal(plot(gg), ggplot2::autoplot(gg))
+  b1 <- ggplot2::ggplot_build(plot(gg))
+  b2 <- ggplot2::ggplot_build(ggplot2::autoplot(gg))
+
+  # Compare BUILT plots, not the ggplot objects. aes() quosures capture
+  # S3-dispatch bookkeeping (.Generic, .Method, ...) from the calling frame,
+  # so two identical plots differ as objects when one reaches the renderer
+  # through dispatch and the other does not. ggplot_build() evaluates the
+  # quosures away, and its $data carries the computed geometry -- so this
+  # catches a real divergence in layers, facets or mapping.
+  expect_equal(b1$data, b2$data)
+  expect_equal(b1$layout$layout, b2$layout$layout)
 })
 
 test_that("the renderer rejects a foreign object", {
@@ -1178,10 +1196,17 @@ Create `tests/testthat/test-autoplot-boostmtree.R`:
 test_that("autoplot on a model object gives the error plot", {
   fit <- boost_fixture()
 
-  expect_equal(
-    ggplot2::autoplot(fit),
-    ggplot2::autoplot(gg_boost_error(fit))
-  )
+  b1 <- ggplot2::ggplot_build(ggplot2::autoplot(fit))
+  b2 <- ggplot2::ggplot_build(ggplot2::autoplot(gg_boost_error(fit)))
+
+  # Compare BUILT plots, not the ggplot objects. aes() quosures capture
+  # S3-dispatch bookkeeping (.Generic, .Method, ...) from the calling frame,
+  # so two identical plots differ as objects when one reaches the renderer
+  # through dispatch and the other does not. ggplot_build() evaluates the
+  # quosures away, and its $data carries the computed geometry -- so this
+  # catches a real divergence in layers, facets or mapping.
+  expect_equal(b1$data, b2$data)
+  expect_equal(b1$layout$layout, b2$layout$layout)
 })
 
 test_that("autoplot on a model object returns a ggplot", {
@@ -1273,7 +1298,9 @@ TMP=$(mktemp -d) && git archive --format=tar HEAD | tar -x -C "$TMP" && \
   R CMD build "$TMP" && R CMD check --as-cran ggBoostedTrees_0.0.2.tar.gz
 ```
 
-Expected: `Status: OK` — 0 errors, 0 warnings, 0 notes. A NOTE about the `Remotes:` field is expected at this stage and is removed at the phase-5 release gate, not now.
+Expected: 0 errors and 0 warnings. Exactly one NOTE is acceptable — the one
+about the `Remotes:` field, which is removed at the phase-5 release gate, not
+now. Any other note or warning fails this step.
 
 - [ ] **Step 8: Commit**
 
