@@ -23,6 +23,7 @@ Imports:
     boostmtree (>= 2.0.1),
     ggplot2,
     dplyr,
+    rlang,
     tidyr
 Suggests:
     BoostMLR,
