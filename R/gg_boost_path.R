@@ -88,10 +88,18 @@ gg_boost_path.boostmtree <- function(object,
 
   blocks <- lapply(present, function(p) {
     # A single response stores each path as a vector; several responses store
-    # it as an iteration-by-response matrix. as.matrix() normalizes both.
+    # it as an iteration-by-response matrix. as.matrix() normalizes both, so
+    # ncol(path) must equal n_q; a mismatch means the fit object is malformed.
     path <- as.matrix(object[[p]])
+    if (ncol(path) != n_q) {
+      stop(
+        "gg_boost_path: the '", p, "' path has ", ncol(path),
+        " column(s) but the fit records n.q = ", n_q, " response(s).",
+        call. = FALSE
+      )
+    }
     do.call(rbind, lapply(seq_len(n_q), function(q) {
-      value <- as.numeric(path[, min(q, ncol(path))])
+      value <- as.numeric(path[, q])
       data.frame(
         iteration = seq_along(value),
         value = value,

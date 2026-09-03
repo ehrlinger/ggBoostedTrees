@@ -62,3 +62,10 @@ test_that("gg_boost_path rejects an unknown parameter name", {
 test_that("gg_boost_path rejects a non-boostmtree object", {
   expect_error(gg_boost_path(data.frame(x = 1)), "gg_boost_path")
 })
+
+test_that("gg_boost_path errors on a path/n.q shape mismatch", {
+  fit <- boost_multi_fixture()
+  fit$rho <- matrix(fit$rho[, 1], ncol = 1L)
+
+  expect_error(gg_boost_path(fit, parameters = "rho"), "rho")
+})
