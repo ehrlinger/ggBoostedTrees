@@ -1273,7 +1273,9 @@ TMP=$(mktemp -d) && git archive --format=tar HEAD | tar -x -C "$TMP" && \
   R CMD build "$TMP" && R CMD check --as-cran ggBoostedTrees_0.0.2.tar.gz
 ```
 
-Expected: `Status: OK` — 0 errors, 0 warnings, 0 notes. A NOTE about the `Remotes:` field is expected at this stage and is removed at the phase-5 release gate, not now.
+Expected: 0 errors and 0 warnings. Exactly one NOTE is acceptable — the one
+about the `Remotes:` field, which is removed at the phase-5 release gate, not
+now. Any other note or warning fails this step.
 
 - [ ] **Step 8: Commit**
 
