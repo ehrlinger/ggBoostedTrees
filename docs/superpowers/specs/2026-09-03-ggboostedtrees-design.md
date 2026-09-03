@@ -87,13 +87,25 @@ object *structure* rather than values:
 
 | Fix | What it changes | Exposure |
 |---|---|---|
-| `cv.flag` frozen residuals | `mu` and `err.rate` values | None — extractors read the same fields regardless |
+| `cv.flag` frozen residuals | `mu` and `err.rate` values | Extractors unaffected; plotted values wrong under CRAN 2.0.0 |
 | `na.action` handling | which rows survive the fit | None structurally |
 | `vimp(joint = TRUE)` dimnames | structure of the vimp object | Real — `gg_boost_vimp` reads those dimnames |
 
-Foundation and Longitudinal core phases are therefore indifferent to which
-backend is installed. Only `gg_boost_vimp` in the Interpretation phase is
-exposed.
+No phase is *structurally* exposed except Interpretation. But structural
+indifference is not the same as correctness, and the Foundation phase is
+affected by values in a way first noticed while planning it:
+
+**`gg_boost_error` requires a fit grown with `cv.flag = TRUE`.** Verified
+against `boostmtree` 2.0.2 — a default fit records neither `err.rate` nor
+`m.opt`, so there is no error path to extract at all. That makes the headline
+Foundation figure a direct consumer of the exact code path the `cv.flag` fix
+repairs. The extractor reads the same fields under either backend and will not
+break, but under CRAN 2.0.0 it will faithfully plot the wrong error path and
+the wrong optimal iteration.
+
+The consequence is for examples and vignettes, not for the extractor code: any
+`gg_boost_error` example is a `cv.flag = TRUE` example, and until upstream
+merges the fix those must stay behind `\donttest` and out of the vignettes.
 
 **Requirement:** `gg_boost_vimp` normalizes vimp dimnames defensively, handling
 both the CRAN and fork shapes, rather than assuming the fork. This removes the
