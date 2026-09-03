@@ -38,6 +38,12 @@ test_that("the three parameters are faceted on free y scales", {
   expect_true(p$facet$params$free$y)
 })
 
+test_that("the renderer applies no theme", {
+  p <- ggplot2::autoplot(gg_boost_path(boost_fixture()))
+
+  expect_equal(length(p$theme), 0L)
+})
+
 test_that("the parameter path plot is stable", {
   skip_on_cran()
   vdiffr::expect_doppelganger(

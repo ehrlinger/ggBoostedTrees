@@ -46,6 +46,12 @@ test_that("marking the optimum can be switched off", {
   expect_false("GeomVline" %in% geoms)
 })
 
+test_that("the renderer applies no theme", {
+  p <- ggplot2::autoplot(gg_boost_error(boost_fixture()))
+
+  expect_equal(length(p$theme), 0L)
+})
+
 test_that("the univariate error plot is stable", {
   skip_on_cran()
   vdiffr::expect_doppelganger(

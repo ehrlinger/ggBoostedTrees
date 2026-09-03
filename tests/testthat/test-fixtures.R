@@ -23,7 +23,7 @@ test_that("fixture provenance is recorded", {
   expect_true(any(grepl("cv.flag = TRUE", txt, fixed = TRUE)))
 })
 
-test_that("the multi-response fixture has the shapes boostmtree uses", {
+test_that("the multi-response helper builds the shapes it claims to", {
   obj <- boost_multi_fixture()
 
   expect_true(is.list(obj$err.rate))

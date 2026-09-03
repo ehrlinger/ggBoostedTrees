@@ -64,3 +64,10 @@ test_that("gg_boost_error rejects a fit without cv.flag", {
 test_that("gg_boost_error rejects a non-boostmtree object", {
   expect_error(gg_boost_error(data.frame(x = 1)), "gg_boost_error")
 })
+
+test_that("gg_boost_error errors on an err.rate/n.q shape mismatch", {
+  fit <- boost_multi_fixture()
+  fit$err.rate <- fit$err.rate[[1]]
+
+  expect_error(gg_boost_error(fit), "n\\.q")
+})

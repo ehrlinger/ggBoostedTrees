@@ -7,6 +7,12 @@ boost_fixture <- function() {
 # boostmtree stores err.rate as a LIST and rho/phi/lambda as MATRICES in that
 # case, and the extractors must handle both shapes. Only the fields the
 # extractors read are populated.
+#
+# n.q > 1 is reachable ONLY for family = "nominal" or "ordinal" in the
+# boostmtree fork; continuous fits hard-code n.q = 1L. That is why this
+# fixture sets family = "nominal" rather than the default continuous family.
+# It also omits the third class element real grow objects carry
+# ("mtree.pspline.learner"), because nothing under test reads it.
 boost_multi_fixture <- function() {
   m <- 4L
   err <- lapply(1:2, function(q) {
