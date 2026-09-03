@@ -9,3 +9,4 @@ docs/articles
 .superpowers/
 *.Rcheck/
 *.tar.gz
+pkgdown-site/

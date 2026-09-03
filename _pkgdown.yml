@@ -1,0 +1,80 @@
+url: https://ehrlinger.github.io/ggBoostedTrees/
+
+# NOT the default `docs/`. That directory holds this project's superpowers
+# plans and specs, and pkgdown's check_dest_is_pkgdown() refuses to build over
+# a directory it did not create -- correctly, since building there would
+# deploy the plans as the package site and, with clean: true, delete them.
+destination: pkgdown-site
+template:
+  bootstrap: 5
+  bslib:
+    bootswatch: zephyr
+    base_font: {google: "Outfit"}
+    code_font: {google: "Fira Code"}
+  light-switch: true
+  theme: atom-one-light
+  theme-dark: atom-one-dark
+
+home:
+  sidebar:
+    structure: [badges, links, authors]
+    components:
+      badges:
+        title: Package badges
+        text: |
+          ![](https://img.shields.io/github/r-package/v/ehrlinger/ggBoostedTrees)<br>
+          ![](https://img.shields.io/github/actions/workflow/status/ehrlinger/ggBoostedTrees/pkgdown.yaml)<br>
+
+navbar:
+  structure:
+    left: [reference, news]
+    right: [search, github, my_linkedin, lightswitch]
+  components:
+    my_linkedin:
+      icon: fa-linkedin
+      href: https://www.linkedin.com/in/ehrlinger/
+      aria-label: LinkedIn
+
+reference:
+- title: "1. Extract — pull a data frame out of a fit"
+  desc: >
+    Start here. Each extractor takes a fitted model and returns a tidy data
+    frame with a documented column contract, so what a figure shows can be
+    read, tested and reshaped before anything is drawn. `gg_boost_error()`
+    needs a fit grown with `cv.flag = TRUE`; `boostmtree` records the error
+    path and the optimal iteration only when cross-validation ran.
+  contents:
+  - gg_boost_error
+  - gg_boost_path
+
+- title: "2. Render — draw the extracted object"
+  desc: >
+    The `autoplot()` method for each extracted class, with `plot()` as its
+    alias. Rendering reads only the column contract above, which is what lets
+    a new modelling backend be added by writing extractor methods and nothing
+    else.
+  contents:
+  - autoplot.gg_boost_error
+  - autoplot.gg_boost_path
+
+- title: "3. Shortcut — straight from a fit"
+  desc: >
+    Skips the two steps for the one figure worth looking at first. Every other
+    figure is reached through its own extractor.
+  contents:
+  - autoplot.boostmtree
+
+- title: "Package overview"
+  desc: >
+    The two-step shape -- extract, then render -- and why the seam is where it
+    is.
+  contents:
+  - ggBoostedTrees-package
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with_pkgdown
+  components:
+    developed_by: "John Ehrlinger"
+    built_with_pkgdown: "This site was built using [pkgdown](https://pkgdown.r-lib.org/)!&nbsp;&nbsp;<img src='https://pkgdown.r-lib.org/logo.png' alt='pkgdown logo' width='25'>"
