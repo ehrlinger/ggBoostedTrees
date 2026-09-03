@@ -1021,20 +1021,17 @@ test_that("autoplot returns a ggplot", {
 test_that("plot is an alias for autoplot", {
   gg <- gg_boost_path(boost_fixture())
 
-  p1 <- plot(gg)
-  p2 <- ggplot2::autoplot(gg)
+  b1 <- ggplot2::ggplot_build(plot(gg))
+  b2 <- ggplot2::ggplot_build(ggplot2::autoplot(gg))
 
-  # Compare data/labels/layer geoms rather than the full ggplot objects:
-  # ggplot2 4.0.3's aes() quosures capture S3-dispatch bookkeeping
-  # (.Generic, .Method, .GenericCallEnv, ...) from the calling frame, so a
-  # direct call vs. a generic-dispatched call differ in that bookkeeping
-  # even though the two plots are identical in every visible respect.
-  expect_equal(p1$data, p2$data)
-  expect_equal(p1$labels, p2$labels)
-  expect_equal(
-    vapply(p1$layers, function(l) class(l$geom)[1], character(1)),
-    vapply(p2$layers, function(l) class(l$geom)[1], character(1))
-  )
+  # Compare BUILT plots, not the ggplot objects. aes() quosures capture
+  # S3-dispatch bookkeeping (.Generic, .Method, ...) from the calling frame,
+  # so two identical plots differ as objects when one reaches the renderer
+  # through dispatch and the other does not. ggplot_build() evaluates the
+  # quosures away, and its $data carries the computed geometry -- so this
+  # catches a real divergence in layers, facets or mapping.
+  expect_equal(b1$data, b2$data)
+  expect_equal(b1$layout$layout, b2$layout$layout)
 })
 
 test_that("the renderer rejects a foreign object", {
@@ -1191,20 +1188,17 @@ Create `tests/testthat/test-autoplot-boostmtree.R`:
 test_that("autoplot on a model object gives the error plot", {
   fit <- boost_fixture()
 
-  p1 <- ggplot2::autoplot(fit)
-  p2 <- ggplot2::autoplot(gg_boost_error(fit))
+  b1 <- ggplot2::ggplot_build(ggplot2::autoplot(fit))
+  b2 <- ggplot2::ggplot_build(ggplot2::autoplot(gg_boost_error(fit)))
 
-  # Compare data/labels/layer geoms rather than the full ggplot objects:
-  # ggplot2 4.0.3's aes() quosures capture S3-dispatch bookkeeping
-  # (.Generic, .Method, .GenericCallEnv, ...) from the calling frame, so a
-  # direct call vs. a generic-dispatched call differ in that bookkeeping
-  # even though the two plots are identical in every visible respect.
-  expect_equal(p1$data, p2$data)
-  expect_equal(p1$labels, p2$labels)
-  expect_equal(
-    vapply(p1$layers, function(l) class(l$geom)[1], character(1)),
-    vapply(p2$layers, function(l) class(l$geom)[1], character(1))
-  )
+  # Compare BUILT plots, not the ggplot objects. aes() quosures capture
+  # S3-dispatch bookkeeping (.Generic, .Method, ...) from the calling frame,
+  # so two identical plots differ as objects when one reaches the renderer
+  # through dispatch and the other does not. ggplot_build() evaluates the
+  # quosures away, and its $data carries the computed geometry -- so this
+  # catches a real divergence in layers, facets or mapping.
+  expect_equal(b1$data, b2$data)
+  expect_equal(b1$layout$layout, b2$layout$layout)
 })
 
 test_that("autoplot on a model object returns a ggplot", {
