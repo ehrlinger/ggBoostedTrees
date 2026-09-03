@@ -3,8 +3,11 @@
 S3method(autoplot,gg_boost_error)
 S3method(gg_boost_error,boostmtree)
 S3method(gg_boost_error,default)
+S3method(gg_boost_path,boostmtree)
+S3method(gg_boost_path,default)
 S3method(plot,gg_boost_error)
 export(gg_boost_error)
+export(gg_boost_path)
 importFrom(ggplot2,
   aes,
   autoplot,
