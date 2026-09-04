@@ -23,7 +23,8 @@ stopifnot(dir.exists(here))
 ## id.unique, rho, phi, lambda, m.opt -- IS bit-identical across refits, so the
 ## committed fixture stays valid indefinitely.
 model.path <- file.path(here, "boost_continuous.rds")
-if (file.exists(model.path) && !nzchar(Sys.getenv("REGENERATE_MODEL_FIXTURE"))) {
+regenerate <- nzchar(Sys.getenv("REGENERATE_MODEL_FIXTURE"))
+if (file.exists(model.path) && !regenerate) {
   message("boost_continuous.rds exists; not refitting. ",
           "Set REGENERATE_MODEL_FIXTURE=1 to force.")
 } else {
@@ -102,7 +103,8 @@ cat("wrote fixture, m.opt =", fit$m.opt, "\n")
 effect.vars <- c("x1", "x2")
 
 ## vimp() permutes, so it consumes RNG: two calls on the SAME fit differ unless
-## seeded. partial.plot() and marginal.plot() are deterministic and need no seed.
+## seeded. partial.plot() and marginal.plot() are deterministic and need
+## no seed.
 set.seed(7)
 saveRDS(
   vimp.boostmtree(fit),
@@ -126,7 +128,8 @@ saveRDS(
   file.path(here, "effect_marginal.rds"), compress = "xz"
 )
 
-cat("wrote interpretation fixtures for", paste(effect.vars, collapse = ", "), "\n")
+cat("wrote interpretation fixtures for",
+    paste(effect.vars, collapse = ", "), "\n")
 
 ## Effect fixtures with a FACTOR covariate.
 ##

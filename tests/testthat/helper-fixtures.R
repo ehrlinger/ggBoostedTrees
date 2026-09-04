@@ -1,4 +1,5 @@
-# The fitted fixture. Read from disk, never refit -- see fixtures/make-fixtures.R.
+# The fitted fixture. Read from disk, never refit. See the generator under
+# the fixtures directory for how it was produced.
 boost_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "boost_continuous.rds"))
 }

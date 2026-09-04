@@ -187,7 +187,7 @@ test_that("a BoostMLR predict object is refused", {
   expect_error(gg_boost_trajectory(f), "grow")
 })
 
-test_that("a y/mu dimension mismatch is refused rather than silently misaligned", {
+test_that("a y/mu dimension mismatch is refused, not silently misaligned", {
   f <- boostmlr_fixture()
   # Fewer rows in y than mu would otherwise silently subset to the wrong
   # rows via as.matrix() recycling/truncation rather than erroring.
