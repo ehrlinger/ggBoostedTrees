@@ -38,15 +38,36 @@ test_that("fitted and observed keep their pairing through the sort", {
   fit <- boost_fixture()
   gg <- gg_boost_trajectory(fit)
 
-  # Subject 1 in the fixture has unsorted times, so a sort that moved one
-  # column without the others would break this.
-  first <- fit$id.unique[1]
-  ord <- order(fit$time[[1]])
-  rows <- gg[gg$id == as.character(first), ]
+  # Checked across every subject (not one hand-picked index) so the
+  # assertion has teeth regardless of which subjects happen to have
+  # constant vs. varying mu, and survives the fixture being regenerated.
+  for (i in seq_along(fit$id.unique)) {
+    id <- as.character(fit$id.unique[i])
+    ord <- order(fit$time[[i]])
+    rows <- gg[gg$id == id, ]
 
-  expect_equal(rows$time, fit$time[[1]][ord])
-  expect_equal(rows$fitted, fit$mu[[1]][ord])
-  expect_equal(rows$observed, fit$y.org[[1]][ord])
+    expect_equal(rows$time, fit$time[[i]][ord])
+    expect_equal(rows$fitted, fit$mu[[i]][ord])
+    expect_equal(rows$observed, fit$y.org[[i]][ord])
+  }
+})
+
+test_that("fitted and observed keep their pairing across nested responses", {
+  gg <- gg_boost_trajectory(boost_multi_fixture())
+  fit <- boost_multi_fixture()
+
+  for (q in seq_len(fit$n.q)) {
+    response <- levels(gg$response)[q]
+    for (i in seq_along(fit$id.unique)) {
+      id <- as.character(fit$id.unique[i])
+      ord <- order(fit$time[[i]])
+      rows <- gg[gg$response == response & gg$id == id, ]
+
+      expect_equal(rows$time, fit$time[[i]][ord])
+      expect_equal(rows$fitted, fit$mu[[q]][[i]][ord])
+      expect_equal(rows$observed, fit$y.org[[q]][[i]][ord])
+    }
+  }
 })
 
 test_that("a univariate fit is labelled y", {
@@ -88,4 +109,28 @@ test_that("gg_boost_trajectory fails loud on a subject-count mismatch", {
 
 test_that("gg_boost_trajectory rejects a non-boostmtree object", {
   expect_error(gg_boost_trajectory(data.frame(x = 1)), "gg_boost_trajectory")
+})
+
+test_that("gg_boost_trajectory fails loud on an observed-length mismatch", {
+  fit <- boost_fixture()
+  fit$y.org[[1]] <- fit$y.org[[1]][1:3]
+
+  expect_error(gg_boost_trajectory(fit), "observed value")
+})
+
+test_that("gg_boost_trajectory fails loud on a response-count mismatch in mu", {
+  fit <- boost_multi_fixture()
+  fit$mu <- fit$mu[1]
+
+  expect_error(gg_boost_trajectory(fit), "n.q")
+})
+
+test_that("gg_boost_trajectory fails loud with no subjects", {
+  fit <- boost_fixture()
+  fit$time <- list()
+  fit$id.unique <- fit$id.unique[0]
+  fit$mu <- fit$mu[0]
+  fit$y.org <- fit$y.org[0]
+
+  expect_error(gg_boost_trajectory(fit), "gg_boost_trajectory")
 })

@@ -82,6 +82,12 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
     )
   }
   n_subject <- length(object$time)
+  if (n_subject == 0L) {
+    stop(
+      "gg_boost_trajectory: this fit records no subjects (time is empty).",
+      call. = FALSE
+    )
+  }
   if (length(ids) != n_subject) {
     stop(
       "gg_boost_trajectory: the fit records ", length(ids),
@@ -104,6 +110,21 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
   mu <- as_q_list(object$mu)
   y_org <- as_q_list(object$y.org)
 
+  if (length(mu) != n_q) {
+    stop(
+      "gg_boost_trajectory: mu has ", length(mu),
+      " element(s) but the fit records n.q = ", n_q, " response(s).",
+      call. = FALSE
+    )
+  }
+  if (!is.null(y_org) && length(y_org) != n_q) {
+    stop(
+      "gg_boost_trajectory: y.org has ", length(y_org),
+      " element(s) but the fit records n.q = ", n_q, " response(s).",
+      call. = FALSE
+    )
+  }
+
   id_levels <- as.character(ids)
 
   blocks <- lapply(seq_len(n_q), function(q) {
@@ -124,6 +145,13 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
         rep(NA_real_, length(tm))
       } else {
         as.numeric(y_q[[i]])
+      }
+      if (!is.null(y_q) && length(observed) != length(tm)) {
+        stop(
+          "gg_boost_trajectory: subject ", id_levels[i], " has ", length(tm),
+          " time(s) but ", length(observed), " observed value(s).",
+          call. = FALSE
+        )
       }
 
       # Sorting is not cosmetic: boostmtree stores observations in input
