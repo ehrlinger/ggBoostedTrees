@@ -33,5 +33,6 @@ ggplot2::autoplot(fit)
 
 }
 \seealso{
-\code{\link{gg_boost_error}}, \code{\link{gg_boost_path}}
+\code{\link{gg_boost_error}}, \code{\link{gg_boost_path}},
+\code{\link{gg_boost_trajectory}}
 }

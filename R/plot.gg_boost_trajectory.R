@@ -7,8 +7,8 @@
 #' The extractor returns every subject, so thinning happens here and the tidy
 #' data frame always represents the whole fit. `subset` names the subjects to
 #' keep; `n_max` caps how many are drawn, sampling at random and saying so.
-#' Set `n_max = Inf` to draw all of them. Random sampling is not seeded — call
-#' `set.seed()` first for a reproducible figure.
+#' Set `n_max = Inf` to draw all of them. Random sampling is not seeded --
+#' call `set.seed()` first for a reproducible figure.
 #'
 #' Transparency is doing real work in this figure rather than decorating it.
 #' A cohort of any size overplots, and partial transparency turns the tangle
@@ -39,7 +39,7 @@
 #' sim <- boostmtree::simLong(n = 25, n.time = 4, model = 1)$data.list
 #' fit <- boostmtree::boostmtree(
 #'   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
-#'   M = 50, cv.flag = TRUE, verbose = FALSE
+#'   M = 50, verbose = FALSE
 #' )
 #' plot(gg_boost_trajectory(fit))
 #' }
@@ -75,7 +75,8 @@ autoplot.gg_boost_trajectory <- function(object,
   if (is.finite(n_max) && length(drawn) > n_max) {
     message(
       "Drawing ", n_max, " of ", length(drawn),
-      " subjects. Pass n_max = Inf to draw all, or subset to choose."
+      " subjects, chosen at random. Pass n_max = Inf to draw all, or ",
+      "subset to choose; call set.seed() first for a reproducible sample."
     )
     keep <- sample(drawn, n_max)
     object <- object[as.character(object$id) %in% keep, , drop = FALSE]

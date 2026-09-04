@@ -11,7 +11,8 @@
 #' @return A `ggplot` object, as produced by
 #'   \code{\link{autoplot.gg_boost_error}}.
 #'
-#' @seealso \code{\link{gg_boost_error}}, \code{\link{gg_boost_path}}
+#' @seealso \code{\link{gg_boost_error}}, \code{\link{gg_boost_path}},
+#'   \code{\link{gg_boost_trajectory}}
 #'
 #' @examples
 #' \donttest{

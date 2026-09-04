@@ -32,10 +32,11 @@ population mean.
 
 \code{boostmtree} stores \code{time}, \code{mu} and \code{y.org} as parallel lists of
 per-subject vectors, in the order observations were supplied rather than in
-time order. Rows here are sorted by subject and then by time, so a line
-drawn through them follows the trajectory instead of zigzagging. Subject
-identifiers come from the fit's own \code{id.unique}, not from a positional
-index.
+time order. Rows here are sorted by time within each subject, and the
+assembled frame is response-major (all subjects for one response, then the
+next), so a line drawn through one subject's rows follows the trajectory
+instead of zigzagging. Subject identifiers come from the fit's own
+\code{id.unique}, not from a positional index.
 
 \code{observed} is \code{NA} throughout when the fit carries no observed response,
 which happens for a prediction on new data.
@@ -45,7 +46,7 @@ which happens for a prediction on new data.
 sim <- boostmtree::simLong(n = 25, n.time = 4, model = 1)$data.list
 fit <- boostmtree::boostmtree(
   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
-  M = 50, cv.flag = TRUE, verbose = FALSE
+  M = 50, verbose = FALSE
 )
 plot(gg_boost_trajectory(fit))
 }
