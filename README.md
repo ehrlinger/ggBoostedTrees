@@ -127,7 +127,7 @@ autoplot(gg_boost_trajectory(fit))
 | `gg_boost_path()` | Estimated `rho`, `phi` and `lambda` by iteration. Available on any fit. |
 | `gg_boost_trajectory()` | Observed and fitted subject trajectories over time, sorted within subject. |
 | `gg_boost_vimp()` | Variable importance for the main effect and the time interaction. |
-| `gg_boost_effect()` | Partial and marginal covariate effects over time. |
+| `gg_boost_effect()` | Partial and marginal covariate effects over time, for both continuous and discrete (factor) covariates. |
 
 ### Rendering
 

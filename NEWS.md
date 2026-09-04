@@ -1,5 +1,18 @@
 Package: ggBoostedTrees
-Version: 0.0.4
+Version: 0.0.5
+
+# ggBoostedTrees 0.0.5
+
+* `gg_boost_effect()` now handles factor covariates. It previously coerced
+  their labels with `as.numeric()`, producing an all-`NA` covariate column and
+  a blank figure. The contract gains an `x_label` column, and the renderer
+  draws discrete covariates as points on a labelled axis.
+* An object mixing continuous and discrete covariates is refused with
+  guidance, since one figure permits only one scale type per aesthetic.
+* `gg_boost_vimp()` validates `components`: an empty vector is rejected and
+  duplicates are de-duplicated rather than reaching an opaque `factor()` error.
+* Corrected the description of `marginal.plot()`'s `$data`, which holds
+  unsmoothed fitted predictions rather than raw observations.
 
 # ggBoostedTrees 0.0.4
 

@@ -73,6 +73,14 @@ gg_boost_vimp.default <- function(object,
 gg_boost_vimp.vimp.boostmtree <- function(object,
                                           components = c("main", "interaction"),
                                           ...) {
+  if (!is.character(components) || length(components) == 0L) {
+    stop(
+      "gg_boost_vimp: 'components' must be a non-empty character vector.",
+      call. = FALSE
+    )
+  }
+  components <- unique(components)
+
   known <- c("main", "interaction")
   unknown <- setdiff(components, known)
   if (length(unknown) > 0L) {

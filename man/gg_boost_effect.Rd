@@ -38,10 +38,13 @@ covariate while averaging over the others; a marginal effect reads the fitted
 surface as the data actually distribute it. Both are covariate-by-time
 surfaces, so both land in this one class, distinguished by \code{kind}.
 
-\code{marginal.plot()} returns a raw scatter alongside its smoothed curve. The
-smoothed curve is what is extracted, so that both levels of \code{kind} mean the
-same thing: the fitted effect. The raw observations are available through
-\code{\link{gg_boost_trajectory}}.
+\code{marginal.plot()} returns a raw scatter alongside its smoothed curve.
+That scatter is not the raw observations: it holds one unsmoothed fitted
+prediction per subject at the subject's own observed covariate value,
+not the observed response and not the stored fitted values. It is also
+not reconstructable from \code{\link{gg_boost_trajectory}}, which carries
+no covariate column. \code{gg_boost_effect} extracts the smoothed curve instead,
+so that both levels of \code{kind} mean the same thing: the fitted effect.
 
 Neither source computes a confidence interval, so none is reported here.
 

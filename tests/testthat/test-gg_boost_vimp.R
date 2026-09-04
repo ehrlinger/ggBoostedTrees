@@ -78,3 +78,15 @@ test_that("gg_boost_vimp rejects a non-vimp object", {
   # A fitted model is the most likely wrong input, so name it specifically.
   expect_error(gg_boost_vimp(boost_fixture()), "vimp.boostmtree")
 })
+
+test_that("gg_boost_vimp rejects an empty components vector", {
+  expect_error(gg_boost_vimp(vimp_fixture(), components = character(0)),
+               "gg_boost_vimp")
+})
+
+test_that("duplicate components are de-duplicated rather than erroring", {
+  gg <- gg_boost_vimp(vimp_fixture(), components = c("main", "main"))
+
+  expect_identical(levels(gg$component), "main")
+  expect_identical(nrow(gg), 4L)
+})
