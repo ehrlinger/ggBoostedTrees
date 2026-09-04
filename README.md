@@ -21,7 +21,7 @@ Pre-1.0 and under active development. What exists today:
 | Subject trajectories, observed against fitted | Implemented |
 | Variable importance | Implemented |
 | Partial and marginal effects | Implemented |
-| `BoostMLR` as a second backend | Not yet |
+| `BoostMLR` as a second backend | Partial — `gg_boost_trajectory()`, `gg_boost_error()` and `gg_boost_path()` accept it; `gg_boost_vimp()` and `gg_boost_effect()` remain `boostmtree` only |
 
 The five implemented figures are complete and tested. The API for what exists
 is not expected to change; the list above is what is missing, not what is
@@ -150,4 +150,5 @@ autoplot(gg_boost_trajectory(fit))
 - [boostmtree](https://cran.r-project.org/package=boostmtree) — the backend
   modelled here.
 - [BoostMLR](https://cran.r-project.org/package=BoostMLR) — boosting for
-  multivariate longitudinal responses, planned as a second backend.
+  multivariate longitudinal responses, a supported second backend for
+  `gg_boost_trajectory()`, `gg_boost_error()` and `gg_boost_path()`.

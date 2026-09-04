@@ -221,6 +221,27 @@ grow-versus-predict objects, unwraps the per-response list nesting, and emits
 `iteration`/`value` frames. That logic is ported, not called, since it is not
 exported.
 
+### Phase 4 finding: what a second backend actually costs
+
+Phase 4 added `BoostMLR` as a second modelling backend to test the claim
+above. The result is mixed, and the reasons why are informative:
+
+- Three of five figures took a second backend as **extractor methods
+  only**, with no renderer touched — the claim holds where the source
+  object is classed and carries the same quantities in a different layout.
+  `gg_boost_trajectory()`, `gg_boost_error()` and `gg_boost_path()` all fall
+  in this group.
+- Two did not, for reasons that are properties of the source rather than of
+  this design: `partial.BoostMLR()` returns an **unclassed list**, leaving
+  nothing for S3 to dispatch on; and `vimp.BoostMLR()` reports a genuinely
+  different decomposition (one main effect plus 13 time-basis interaction
+  terms) rather than the same one reshaped. Neither is a column-contract
+  defect to fix; both are reasons `gg_boost_vimp()` and `gg_boost_effect()`
+  remain `boostmtree` only.
+- Extractors read list elements and never call backend functions, so a
+  Suggests-only backend needs no `requireNamespace()` guard in `R/` — only
+  where an object of that class is created (test fixtures, examples).
+
 ### Classes and column contracts
 
 | Class | Columns | boostmtree source |

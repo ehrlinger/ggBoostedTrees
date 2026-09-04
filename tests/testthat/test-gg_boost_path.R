@@ -59,6 +59,20 @@ test_that("gg_boost_path rejects an unknown parameter name", {
   expect_error(gg_boost_path(boost_fixture(), parameters = "sigma"), "sigma")
 })
 
+test_that("duplicate parameters are de-duplicated rather than erroring", {
+  gg <- gg_boost_path(boost_fixture(), parameters = c("rho", "rho"))
+
+  expect_identical(levels(gg$parameter), "rho")
+  expect_identical(nrow(gg), 50L)
+})
+
+test_that("gg_boost_path rejects an empty parameters vector", {
+  expect_error(
+    gg_boost_path(boost_fixture(), parameters = character(0)),
+    "non-empty"
+  )
+})
+
 test_that("gg_boost_path rejects a non-boostmtree object", {
   expect_error(gg_boost_path(data.frame(x = 1)), "gg_boost_path")
 })

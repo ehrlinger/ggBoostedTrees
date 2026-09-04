@@ -82,6 +82,11 @@ gg_boost_path.boostmtree <- function(object,
       call. = FALSE
     )
   }
+  if (length(parameters) == 0L) {
+    stop("gg_boost_path: 'parameters' must be a non-empty character vector.",
+         call. = FALSE)
+  }
+  parameters <- unique(parameters)
 
   n_q <- object$n.q %||% 1L
   labels <- .boost_response_labels(object)
