@@ -16,12 +16,13 @@ gg_boost_path(object, parameters = c("rho", "phi", "lambda"), ...)
 
   A fitted
   [`boostmtree`](https://rdrr.io/pkg/boostmtree/man/boostmtree.html)
-  object.
+  object, or a fitted `BoostMLR` object.
 
 - parameters:
 
-  Character vector naming the paths to extract, any of `"rho"`, `"phi"`,
-  and `"lambda"`. Defaults to all three.
+  Character vector naming the paths to extract. For a `boostmtree` fit,
+  any of `"rho"`, `"phi"`, and `"lambda"`, defaulting to all three. For
+  a `BoostMLR` fit, `"rho"` and/or `"phi"` only, defaulting to both.
 
 - ...:
 
@@ -59,6 +60,14 @@ Unlike the error path, these are recorded on every fit and do not
 require `cv.flag = TRUE`. A parameter absent from the fit is dropped
 silently; it is an error only when none of the requested parameters is
 present.
+
+This figure also accepts a `BoostMLR` fit, which records only `Rho` and
+`Phi` as M-by-response matrices – the method's default `parameters` is
+`c("rho", "phi")` rather than all three. `BoostMLR` has no comparable
+`lambda`: its `Lambda_List` holds per-iteration basis coefficients
+rather than a scalar smoothing parameter per response, a different
+quantity, so requesting `"lambda"` from a `BoostMLR` fit is refused with
+that reason instead of silently dropped.
 
 ## See also
 

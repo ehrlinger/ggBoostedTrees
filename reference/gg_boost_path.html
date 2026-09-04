@@ -11,7 +11,7 @@ iteration."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,12 +60,15 @@ iteration.</p>
 
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>A fitted <code><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></code> object.</p></dd>
+<dd><p>A fitted <code><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></code> object, or a
+fitted <code>BoostMLR</code> object.</p></dd>
 
 
 <dt id="arg-parameters">parameters<a class="anchor" aria-label="anchor" href="#arg-parameters"></a></dt>
-<dd><p>Character vector naming the paths to extract, any of
-<code>"rho"</code>, <code>"phi"</code>, and <code>"lambda"</code>. Defaults to all three.</p></dd>
+<dd><p>Character vector naming the paths to extract. For a
+<code>boostmtree</code> fit, any of <code>"rho"</code>, <code>"phi"</code>, and <code>"lambda"</code>, defaulting
+to all three. For a <code>BoostMLR</code> fit, <code>"rho"</code> and/or <code>"phi"</code> only,
+defaulting to both.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -98,6 +101,13 @@ is still drifting when boosting stops.</p>
 <p>Unlike the error path, these are recorded on every fit and do not require
 <code>cv.flag = TRUE</code>. A parameter absent from the fit is dropped silently; it is
 an error only when none of the requested parameters is present.</p>
+<p>This figure also accepts a <code>BoostMLR</code> fit, which records only <code>Rho</code>
+and <code>Phi</code> as M-by-response matrices – the method's default <code>parameters</code> is
+<code>c("rho", "phi")</code> rather than all three. <code>BoostMLR</code> has no comparable
+<code>lambda</code>: its <code>Lambda_List</code> holds per-iteration basis coefficients rather
+than a scalar smoothing parameter per response, a different quantity, so
+requesting <code>"lambda"</code> from a <code>BoostMLR</code> fit is refused with that reason
+instead of silently dropped.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

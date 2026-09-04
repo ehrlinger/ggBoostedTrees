@@ -15,7 +15,7 @@ gg_boost_trajectory(object, ...)
 
   A fitted
   [`boostmtree`](https://rdrr.io/pkg/boostmtree/man/boostmtree.html)
-  object.
+  object, or a fitted `BoostMLR` object.
 
 - ...:
 
@@ -61,6 +61,14 @@ fit's own `id.unique`, not from a positional index.
 
 `observed` is `NA` throughout when the fit carries no observed response,
 which happens for a prediction on new data.
+
+This figure accepts either a `boostmtree` or a `BoostMLR` fit.
+`BoostMLR` stores `mu` and `y` as flat observation-by-response matrices,
+with `tm` and `id` as parallel flat vectors, rather than boostmtree's
+nested per-subject lists – entirely different layout for the same
+information. Response labels come from `y_Names`, since `mu` carries no
+column names. `BoostMLR` is natively multi-response, so a fit typically
+yields several response blocks even for a "single" model.
 
 ## See also
 

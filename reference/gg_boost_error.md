@@ -16,7 +16,7 @@ gg_boost_error(object, use.rmse = TRUE, ...)
 
   A fitted
   [`boostmtree`](https://rdrr.io/pkg/boostmtree/man/boostmtree.html)
-  object.
+  object, or a fitted `BoostMLR` object.
 
 - use.rmse:
 
@@ -58,6 +58,21 @@ function reports that the fit has no error path, refit with
 `boostmtree` stores the error on the standardized response scale in the
 `l2` column. `use.rmse = FALSE` returns `(l2 * y.sd)^2`, the squared
 error on the original scale.
+
+This figure also accepts a `BoostMLR` *grow* fit (predict objects are
+not supported – see below). `BoostMLR` records `Error_Rate` as an
+M-by-response matrix already on a single scale, so there is no
+`use.rmse` argument for that backend; passing one is refused. `BoostMLR`
+grow objects also select no optimal iteration anywhere in the object –
+`partial.BoostMLR()` takes `Mopt` as a user-supplied argument instead –
+so `optimal` is `FALSE` for every row; deriving an argmin here would
+report a choice the backend never made.
+
+A `BoostMLR` **predict** object is refused outright, even though it
+shares the `"BoostMLR"` class and also carries an `Error_Rate`. Its
+`Error_Rate` is test error rather than the training path documented
+above, and it records a real `Mopt` that this extractor would otherwise
+silently discard and overwrite with `optimal = FALSE`.
 
 ## See also
 

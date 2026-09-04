@@ -11,7 +11,7 @@ cross-validation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,8 @@ cross-validation.</p>
 
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>A fitted <code><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></code> object.</p></dd>
+<dd><p>A fitted <code><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></code> object, or a
+fitted <code>BoostMLR</code> object.</p></dd>
 
 
 <dt id="arg-use-rmse">use.rmse<a class="anchor" aria-label="anchor" href="#arg-use-rmse"></a></dt>
@@ -97,6 +98,19 @@ reports that the fit has no error path, refit with <code>cv.flag = TRUE</code>.<
 <p><code>boostmtree</code> stores the error on the standardized response scale in the
 <code>l2</code> column. <code>use.rmse = FALSE</code> returns <code>(l2 * y.sd)^2</code>, the squared error
 on the original scale.</p>
+<p>This figure also accepts a <code>BoostMLR</code> <em>grow</em> fit (predict
+objects are not supported – see below). <code>BoostMLR</code> records <code>Error_Rate</code>
+as an M-by-response matrix already on a single scale, so there is no
+<code>use.rmse</code> argument for that backend; passing one is refused. <code>BoostMLR</code>
+grow objects also select no optimal iteration anywhere in the object –
+<code>partial.BoostMLR()</code> takes <code>Mopt</code> as a user-supplied argument instead –
+so <code>optimal</code> is <code>FALSE</code> for every row; deriving an argmin here would
+report a choice the backend never made.</p>
+<p>A <code>BoostMLR</code> <strong>predict</strong> object is refused outright, even though it
+shares the <code>"BoostMLR"</code> class and also carries an <code>Error_Rate</code>. Its
+<code>Error_Rate</code> is test error rather than the training path documented above,
+and it records a real <code>Mopt</code> that this extractor would otherwise silently
+discard and overwrite with <code>optimal = FALSE</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

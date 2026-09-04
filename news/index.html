@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,23 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.6" id="ggboostedtrees-006">ggBoostedTrees 0.0.6<a class="anchor" aria-label="anchor" href="#ggboostedtrees-006"></a></h2>
+<ul><li>
+<code>BoostMLR</code> fits are now accepted by <code><a href="../reference/gg_boost_trajectory.html">gg_boost_trajectory()</a></code>, <code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> and <code><a href="../reference/gg_boost_path.html">gg_boost_path()</a></code>. Adding the backend required extractor methods only; no renderer changed, which is what the tidy intermediate exists to guarantee.</li>
+<li>
+<code>BoostMLR</code> selects no optimal boosting iteration, so <code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> flags none for that backend rather than deriving one.</li>
+<li>
+<code>BoostMLR</code>’s <code>Lambda_List</code> holds per-iteration basis coefficients rather than a scalar smoothing parameter, so <code><a href="../reference/gg_boost_path.html">gg_boost_path()</a></code> offers <code>rho</code> and <code>phi</code> for that backend and says so if <code>lambda</code> is requested.</li>
+<li>
+<code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> and <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> remain <code>boostmtree</code> only.</li>
+<li>
+<code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> refuses <code>use.rmse</code> on a <code>BoostMLR</code> fit whether it is passed by name or by position. The generic declares it as its second formal, so the positional form is valid syntax, and it previously fell through and returned standardized values to a caller who had asked for the other scale.</li>
+<li>
+<code><a href="../reference/autoplot.gg_boost_trajectory.html">autoplot.gg_boost_trajectory()</a></code> accepts a repeated subject identifier in <code>subset</code> rather than failing with an internal <code>factor level [2] is duplicated</code>. The caller’s ordering still determines the factor levels.</li>
+<li>
+<code><a href="../reference/gg_boost_path.html">gg_boost_path()</a></code>’s <code>boostmtree</code> method validates <code>parameters</code> the same way its <code>BoostMLR</code> sibling and <code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code>’s <code>components</code> argument do: an empty vector is rejected and duplicates are de-duplicated rather than reaching an opaque <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code> error.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.5" id="ggboostedtrees-005">ggBoostedTrees 0.0.5<a class="anchor" aria-label="anchor" href="#ggboostedtrees-005"></a></h2>
 <ul><li>

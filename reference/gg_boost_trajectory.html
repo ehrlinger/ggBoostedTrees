@@ -9,7 +9,7 @@ multivariate tree fit, one row per observation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,8 @@ multivariate tree fit, one row per observation.</p>
 
 
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>A fitted <code><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></code> object.</p></dd>
+<dd><p>A fitted <code><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></code> object, or a
+fitted <code>BoostMLR</code> object.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -97,6 +98,13 @@ instead of zigzagging. Subject identifiers come from the fit's own
 <code>id.unique</code>, not from a positional index.</p>
 <p><code>observed</code> is <code>NA</code> throughout when the fit carries no observed response,
 which happens for a prediction on new data.</p>
+<p>This figure accepts either a <code>boostmtree</code> or a <code>BoostMLR</code> fit.
+<code>BoostMLR</code> stores <code>mu</code> and <code>y</code> as flat observation-by-response matrices,
+with <code>tm</code> and <code>id</code> as parallel flat vectors, rather than boostmtree's
+nested per-subject lists – entirely different layout for the same
+information. Response labels come from <code>y_Names</code>, since <code>mu</code> carries no
+column names. <code>BoostMLR</code> is natively multi-response, so a fit typically
+yields several response blocks even for a "single" model.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
