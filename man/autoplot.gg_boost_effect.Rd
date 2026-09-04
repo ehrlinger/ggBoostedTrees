@@ -28,6 +28,15 @@ figure answers is how a covariate's effect \emph{changes} across follow-up, and
 that change is legible only when the curves share one panel. Variables get
 the facets instead, since their x scales are unrelated.
 
+A continuous covariate is drawn as a line per time point across the
+covariate grid. A discrete (factor) covariate has one row per level, so
+a "curve" would connect points along an axis with no ordering; it is
+drawn instead as a point per level per time point, on an axis labelled
+with the level names. Because \code{ggplot2} permits only one scale type per
+aesthetic across all facets, an object mixing continuous and discrete
+covariates cannot be drawn as a single figure and is refused with an
+error asking the caller to plot them one at a time.
+
 The returned plot carries no theme.
 }
 \examples{
