@@ -31,7 +31,21 @@ boost_multi_fixture <- function() {
       err.rate = err,
       rho = matrix(seq(0.1, 0.8, length.out = m * 2L), nrow = m),
       phi = matrix(seq(1, 8, length.out = m * 2L), nrow = m),
-      lambda = matrix(seq(10, 80, length.out = m * 2L), nrow = m)
+      lambda = matrix(seq(10, 80, length.out = m * 2L), nrow = m),
+      # Trajectory fields. Per-subject vectors, nested by response exactly as
+      # boostmtree nests mu and y.org when n.q > 1. Times are deliberately
+      # out of order and contain a duplicate, mirroring what boostmtree
+      # actually stores -- the extractor must sort them.
+      id.unique = c(101, 102),
+      time = list(c(2, 1, 1), c(3, 1)),
+      mu = list(
+        list(c(0.2, 0.1, 0.1), c(0.3, 0.1)),
+        list(c(1.2, 1.1, 1.1), c(1.3, 1.1))
+      ),
+      y.org = list(
+        list(c(0.25, 0.15, 0.05), c(0.35, 0.15)),
+        list(c(1.25, 1.15, 1.05), c(1.35, 1.15))
+      )
     ),
     class = c("boostmtree", "grow")
   )
