@@ -17,6 +17,16 @@
   invisible(object)
 }
 
+# Every renderer front-door calls this so that a wrong object type produces
+# one consistent message naming the class the renderer expects.
+.boost_check_gg <- function(object, class_name) {
+  if (!inherits(object, class_name)) {
+    stop("Incorrect object type: expected a ", class_name, " object.",
+         call. = FALSE)
+  }
+  invisible(object)
+}
+
 # Labels for the `response` column. boostmtree records q.set as NA for a
 # univariate fit, so a single response is labelled "y" rather than "NA".
 .boost_response_labels <- function(object) {

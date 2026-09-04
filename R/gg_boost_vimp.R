@@ -20,10 +20,10 @@
 #' label the axis. The overall time effect has no variable to attach to and
 #' travels as the `time.effect` attribute.
 #'
-#' A joint importance object (`vimp(joint = TRUE)`) reports a single combined
-#' value, labelled `joint.vimp`. Note that CRAN `boostmtree` 2.0.0 cannot
-#' produce one at all; the patched build this package requires is needed to
-#' compute it.
+#' A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports a
+#' single combined value, labelled `joint.vimp`. Note that CRAN `boostmtree`
+#' 2.0.0 cannot produce one at all; the patched build this package requires is
+#' needed to compute it.
 #'
 #' @param object A \code{\link[boostmtree]{vimp.boostmtree}} object.
 #' @param components Character vector naming the components to extract, any of
@@ -119,7 +119,9 @@ gg_boost_vimp.vimp.boostmtree <- function(object,
         call. = FALSE
       )
     }
-    response_labels <- colnames(mat) %||% paste0("y", seq_len(ncol(mat)))
+    response_labels <- colnames(mat) %||% (
+      if (ncol(mat) == 1L) "y" else paste0("y", seq_len(ncol(mat)))
+    )
 
     do.call(rbind, lapply(seq_len(ncol(mat)), function(q) {
       data.frame(

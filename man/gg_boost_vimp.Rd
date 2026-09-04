@@ -45,10 +45,10 @@ quantity, so it travels as the \code{metric} attribute and the renderer uses it 
 label the axis. The overall time effect has no variable to attach to and
 travels as the \code{time.effect} attribute.
 
-A joint importance object (\code{vimp(joint = TRUE)}) reports a single combined
-value, labelled \code{joint.vimp}. Note that CRAN \code{boostmtree} 2.0.0 cannot
-produce one at all; the patched build this package requires is needed to
-compute it.
+A joint importance object (\code{vimp.boostmtree(fit, joint = TRUE)}) reports a
+single combined value, labelled \code{joint.vimp}. Note that CRAN \code{boostmtree}
+2.0.0 cannot produce one at all; the patched build this package requires is
+needed to compute it.
 }
 \examples{
 \donttest{

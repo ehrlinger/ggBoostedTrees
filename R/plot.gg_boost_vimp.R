@@ -38,10 +38,7 @@
 #' @importFrom ggplot2 autoplot ggplot aes geom_col coord_flip facet_wrap labs
 #' @export
 autoplot.gg_boost_vimp <- function(object, ...) {
-  if (!inherits(object, "gg_boost_vimp")) {
-    stop("Incorrect object type: expected a gg_boost_vimp object.",
-         call. = FALSE)
-  }
+  .boost_check_gg(object, "gg_boost_vimp")
 
   # Order by the largest importance a variable reaches in any component, so
   # both facets share one ordering and a variable sits on the same row in each.
@@ -60,12 +57,11 @@ autoplot.gg_boost_vimp <- function(object, ...) {
     ggplot2::coord_flip() +
     ggplot2::labs(x = "Variable", y = metric)
 
-  if (nlevels(object$component) > 1L) {
-    gg_plt <- gg_plt + ggplot2::facet_wrap(~ component)
-  }
   if (nlevels(object$response) > 1L) {
     gg_plt <- gg_plt +
       ggplot2::facet_wrap(~ component + response)
+  } else if (nlevels(object$component) > 1L) {
+    gg_plt <- gg_plt + ggplot2::facet_wrap(~ component)
   }
 
   gg_plt
