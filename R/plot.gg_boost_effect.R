@@ -21,7 +21,8 @@
 #'
 #' @param object A \code{\link{gg_boost_effect}} object.
 #' @param x A \code{\link{gg_boost_effect}} object.
-#' @param ... Passed to \code{\link[ggplot2]{geom_line}}.
+#' @param ... Passed to \code{\link[ggplot2]{geom_line}} (continuous
+#'   covariates) or \code{\link[ggplot2]{geom_point}} (discrete covariates).
 #'
 #' @return A `ggplot` object.
 #'

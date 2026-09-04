@@ -12,7 +12,8 @@
 \arguments{
 \item{object}{A \code{\link{gg_boost_effect}} object.}
 
-\item{...}{Passed to \code{\link[ggplot2]{geom_line}}.}
+\item{...}{Passed to \code{\link[ggplot2]{geom_line}} (continuous
+covariates) or \code{\link[ggplot2]{geom_point}} (discrete covariates).}
 
 \item{x}{A \code{\link{gg_boost_effect}} object.}
 }
