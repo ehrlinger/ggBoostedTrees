@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,11 +89,11 @@
 </tr>
 <tr>
 <td>Variable importance</td>
-<td>Not yet</td>
+<td>Implemented</td>
 </tr>
 <tr>
 <td>Partial and marginal effects</td>
-<td>Not yet</td>
+<td>Implemented</td>
 </tr>
 <tr>
 <td>
@@ -102,7 +102,7 @@
 </tr>
 </tbody>
 </table>
-<p>The three implemented figures are complete and tested. The API for what exists is not expected to change; the list above is what is missing, not what is provisional.</p>
+<p>The five implemented figures are complete and tested. The API for what exists is not expected to change; the list above is what is missing, not what is provisional.</p>
 <p>ggBoostedTrees draws diagnostic figures for boosted tree models fit with <a href="https://cran.r-project.org/package=boostmtree" class="external-link">boostmtree</a>, which implements Friedman’s gradient descent boosting with multivariate tree base learners for longitudinal responses. It is the boosting counterpart to <a href="https://github.com/ehrlinger/ggRandomForests" class="external-link">ggRandomForests</a>, and follows the same two-step idiom: an extractor pulls a tidy data frame out of a fitted model, and <code>autoplot()</code> renders it. If you have a <code>boostmtree</code> fit and want to know whether it converged, this is the package.</p>
 <p>The full reference — every function and the changelog — is online at <a href="https://ehrlinger.github.io/ggBoostedTrees/" class="uri">https://ehrlinger.github.io/ggBoostedTrees/</a>.</p>
 </div>
@@ -182,6 +182,14 @@
 <td><code><a href="reference/gg_boost_trajectory.html">gg_boost_trajectory()</a></code></td>
 <td>Observed and fitted subject trajectories over time, sorted within subject.</td>
 </tr>
+<tr>
+<td><code><a href="reference/gg_boost_vimp.html">gg_boost_vimp()</a></code></td>
+<td>Variable importance for the main effect and the time interaction.</td>
+</tr>
+<tr>
+<td><code><a href="reference/gg_boost_effect.html">gg_boost_effect()</a></code></td>
+<td>Partial and marginal covariate effects over time, for both continuous and discrete (factor) covariates.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -213,6 +221,14 @@
 <tr>
 <td><code><a href="reference/autoplot.boostmtree.html">autoplot.boostmtree()</a></code></td>
 <td>Shortcut from a fitted model straight to the error plot.</td>
+</tr>
+<tr>
+<td><code><a href="reference/autoplot.gg_boost_vimp.html">autoplot.gg_boost_vimp()</a></code></td>
+<td>Ordered horizontal bars, faceted by component.</td>
+</tr>
+<tr>
+<td><code><a href="reference/autoplot.gg_boost_effect.html">autoplot.gg_boost_effect()</a></code></td>
+<td>Effect curves coloured by time, faceted by variable.</td>
 </tr>
 </tbody>
 </table>

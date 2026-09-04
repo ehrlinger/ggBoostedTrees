@@ -17,6 +17,10 @@ path and the optimal iteration only when cross-validation ran.
   : Boosting parameter path data object
 - [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md)
   : Subject trajectory data object
+- [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
+  : Variable importance data object
+- [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
+  : Partial and marginal effect data object
 
 ## 
 
@@ -45,6 +49,18 @@ else.
   :
 
   Plot a `gg_boost_trajectory` object
+
+- [`autoplot(`*`<gg_boost_vimp>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_vimp.md)
+  [`plot(`*`<gg_boost_vimp>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_vimp.md)
+  :
+
+  Plot a `gg_boost_vimp` object
+
+- [`autoplot(`*`<gg_boost_effect>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_effect.md)
+  [`plot(`*`<gg_boost_effect>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_effect.md)
+  :
+
+  Plot a `gg_boost_effect` object
 
 ## 
 

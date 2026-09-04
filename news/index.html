@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,23 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.5" id="ggboostedtrees-005">ggBoostedTrees 0.0.5<a class="anchor" aria-label="anchor" href="#ggboostedtrees-005"></a></h2>
+<ul><li>
+<code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> now handles factor covariates. It previously coerced their labels with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code>, producing an all-<code>NA</code> covariate column and a blank figure. The contract gains an <code>x_label</code> column, and the renderer draws discrete covariates as points on a labelled axis.</li>
+<li>An object mixing continuous and discrete covariates is refused with guidance, since one figure permits only one scale type per aesthetic.</li>
+<li>
+<code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> validates <code>components</code>: an empty vector is rejected and duplicates are de-duplicated rather than reaching an opaque <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code> error.</li>
+<li>Corrected the description of <code>marginal.plot()</code>’s <code>$data</code>, which holds unsmoothed fitted predictions rather than raw observations.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.4" id="ggboostedtrees-004">ggBoostedTrees 0.0.4<a class="anchor" aria-label="anchor" href="#ggboostedtrees-004"></a></h2>
+<ul><li>
+<code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>/<code>autoplot()</code> for variable importance, covering both the main effect of each covariate and its interaction with time. The axis is labelled with the metric recorded on the source object rather than a hard-coded string.</li>
+<li>
+<code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>/<code>autoplot()</code> for partial and marginal covariate effects over time, as one class distinguished by <code>kind</code>.</li>
+<li>Neither <code>partial.plot()</code> nor <code>marginal.plot()</code> computes a confidence interval, so <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> reports none.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.3" id="ggboostedtrees-003">ggBoostedTrees 0.0.3<a class="anchor" aria-label="anchor" href="#ggboostedtrees-003"></a></h2>
 <ul><li>
