@@ -27,14 +27,30 @@
   invisible(object)
 }
 
+# BoostMLR predict objects share the "BoostMLR" class with grow objects and
+# carry some of the same fields, so dispatch alone does not distinguish them.
+# They are deliberately unsupported: their Error_Rate is test error, and they
+# record an Mopt that these extractors would otherwise silently discard.
+.boost_check_mlr_grow <- function(object, call_name) {
+  if (!inherits(object, "grow")) {
+    stop(
+      call_name, ": expected a BoostMLR 'grow' object; got an object of ",
+      "class ", paste(class(object), collapse = "/"), ". BoostMLR predict ",
+      "objects are not supported.",
+      call. = FALSE
+    )
+  }
+  invisible(object)
+}
+
 # Pivot a BoostMLR M-by-response matrix into long form. BoostMLR stores
 # Error_Rate, Rho and Phi identically, so the three extractions differ only in
 # which matrix they read and what they call the value.
-.boost_mlr_long <- function(mat, labels, value_name) {
+.boost_mlr_long <- function(mat, labels, call_name) {
   mat <- as.matrix(mat)
   if (ncol(mat) != length(labels)) {
     stop(
-      value_name, ": the fit names ", length(labels), " response(s) but ",
+      call_name, ": the fit names ", length(labels), " response(s) but ",
       "records ", ncol(mat), " column(s).",
       call. = FALSE
     )

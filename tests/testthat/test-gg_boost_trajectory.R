@@ -171,9 +171,29 @@ test_that("fitted and observed come from the matching response column", {
   gg <- gg_boost_trajectory(f)
 
   rows <- gg[gg$response == "y2", ]
-  ord <- order(f$id, f$tm)
+  # Matches the extractor's own ordering: subjects by first appearance in
+  # id (via match()), not by sorted id value -- these agree only by
+  # coincidence when the fixture's ids happen to arrive ascending.
+  id_levels <- unique(as.character(f$id))
+  ord <- order(match(as.character(f$id), id_levels), f$tm)
   expect_equal(rows$fitted, unname(f$mu[ord, 2]))
   expect_equal(rows$observed, unname(f$y[ord, 2]))
+})
+
+test_that("a BoostMLR predict object is refused", {
+  f <- boostmlr_fixture()
+  class(f) <- c("BoostMLR", "predict")
+
+  expect_error(gg_boost_trajectory(f), "grow")
+})
+
+test_that("a y/mu dimension mismatch is refused rather than silently misaligned", {
+  f <- boostmlr_fixture()
+  # Fewer rows in y than mu would otherwise silently subset to the wrong
+  # rows via as.matrix() recycling/truncation rather than erroring.
+  f$y <- f$y[seq_len(nrow(f$y) - 1L), , drop = FALSE]
+
+  expect_error(gg_boost_trajectory(f), "dimensions")
 })
 
 test_that("rows are sorted by time within subject", {

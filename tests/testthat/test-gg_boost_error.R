@@ -99,6 +99,40 @@ test_that("optimal is all FALSE because BoostMLR selects no iteration", {
   expect_false(any(gg$optimal))
 })
 
+test_that("a BoostMLR predict object is refused", {
+  # Predict objects share the "BoostMLR" class and even carry an Error_Rate,
+  # but it is test error and the object records a real Mopt this extractor
+  # would otherwise discard. Built by hand from the grow fixture -- no
+  # prediction is computed.
+  f <- boostmlr_fixture()
+  class(f) <- c("BoostMLR", "predict")
+
+  expect_error(gg_boost_error(f), "grow")
+})
+
+test_that("use.rmse is refused on the BoostMLR path", {
+  expect_error(
+    gg_boost_error(boostmlr_fixture(), use.rmse = FALSE),
+    "y\\.sd"
+  )
+})
+
+test_that("gg_boost_error output rbinds across backends unchanged", {
+  # Nothing else binds the two backends' outputs together; a type or
+  # column-order difference would otherwise surface only when a user facets
+  # or rbind()s them.
+  gg_tree <- gg_boost_error(boost_fixture())
+  gg_mlr <- gg_boost_error(boostmlr_fixture())
+
+  combined <- rbind(gg_tree, gg_mlr)
+
+  expect_identical(nrow(combined), nrow(gg_tree) + nrow(gg_mlr))
+  expect_identical(names(combined), names(gg_tree))
+  expect_identical(names(combined), names(gg_mlr))
+  expect_identical(vapply(combined, class, character(1)),
+                    vapply(gg_tree, class, character(1)))
+})
+
 test_that("the BoostMLR error plot draws with no optimal rule", {
   p <- ggplot2::autoplot(gg_boost_error(boostmlr_fixture()))
 

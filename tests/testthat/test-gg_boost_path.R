@@ -109,6 +109,13 @@ test_that("BoostMLR path values come from Rho and Phi", {
   )
 })
 
+test_that("a BoostMLR predict object is refused", {
+  f <- boostmlr_fixture()
+  class(f) <- c("BoostMLR", "predict")
+
+  expect_error(gg_boost_path(f), "grow")
+})
+
 test_that("requesting lambda from a BoostMLR fit is refused with a reason", {
   # BoostMLR's Lambda_List holds per-iteration basis coefficients, not a
   # scalar smoothing parameter per response, so it is not the same quantity.

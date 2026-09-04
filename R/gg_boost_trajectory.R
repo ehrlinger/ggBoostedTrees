@@ -188,6 +188,8 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
 
 #' @export
 gg_boost_trajectory.BoostMLR <- function(object, ...) {
+  .boost_check_mlr_grow(object, "gg_boost_trajectory")
+
   mu <- object$mu
   y <- object$y
   tm <- object$tm
@@ -227,6 +229,14 @@ gg_boost_trajectory.BoostMLR <- function(object, ...) {
     matrix(NA_real_, nrow = n_obs, ncol = ncol(mu))
   } else {
     as.matrix(y)
+  }
+  if (!is.null(y) && !identical(dim(observed), dim(mu))) {
+    stop(
+      "gg_boost_trajectory: y has dimensions ",
+      paste(dim(observed), collapse = " x "), " but mu has dimensions ",
+      paste(dim(mu), collapse = " x "), ".",
+      call. = FALSE
+    )
   }
 
   id_levels <- as.character(unique(id))

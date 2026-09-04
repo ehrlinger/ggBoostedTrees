@@ -14,13 +14,20 @@
 #' `l2` column. `use.rmse = FALSE` returns `(l2 * y.sd)^2`, the squared error
 #' on the original scale.
 #'
-#' This figure also accepts a \code{BoostMLR} fit. `BoostMLR` records
-#' `Error_Rate` as an M-by-response matrix already on a single scale, so there
-#' is no `use.rmse` argument for that backend. `BoostMLR` also selects no
-#' optimal iteration anywhere in the object -- `partial.BoostMLR()` takes
-#' `Mopt` as a user-supplied argument instead -- so `optimal` is `FALSE` for
-#' every row; deriving an argmin here would report a choice the backend never
-#' made.
+#' This figure also accepts a \code{BoostMLR} \emph{grow} fit (predict
+#' objects are not supported -- see below). `BoostMLR` records `Error_Rate`
+#' as an M-by-response matrix already on a single scale, so there is no
+#' `use.rmse` argument for that backend; passing one is refused. `BoostMLR`
+#' grow objects also select no optimal iteration anywhere in the object --
+#' `partial.BoostMLR()` takes `Mopt` as a user-supplied argument instead --
+#' so `optimal` is `FALSE` for every row; deriving an argmin here would
+#' report a choice the backend never made.
+#'
+#' A `BoostMLR` \strong{predict} object is refused outright, even though it
+#' shares the `"BoostMLR"` class and also carries an `Error_Rate`. Its
+#' `Error_Rate` is test error rather than the training path documented above,
+#' and it records a real `Mopt` that this extractor would otherwise silently
+#' discard and overwrite with `optimal = FALSE`.
 #'
 #' @param object A fitted \code{\link[boostmtree]{boostmtree}} object, or a
 #'   fitted \code{BoostMLR} object.
@@ -116,6 +123,18 @@ gg_boost_error.boostmtree <- function(object, use.rmse = TRUE, ...) {
 
 #' @export
 gg_boost_error.BoostMLR <- function(object, ...) {
+  .boost_check_mlr_grow(object, "gg_boost_error")
+
+  dots <- list(...)
+  if ("use.rmse" %in% names(dots)) {
+    stop(
+      "gg_boost_error: a BoostMLR fit records no response scale (y.sd), ",
+      "so its Error_Rate cannot be unstandardized; 'use.rmse' is not ",
+      "supported for BoostMLR fits.",
+      call. = FALSE
+    )
+  }
+
   if (is.null(object$Error_Rate)) {
     stop("gg_boost_error: this BoostMLR object records no error path.",
          call. = FALSE)

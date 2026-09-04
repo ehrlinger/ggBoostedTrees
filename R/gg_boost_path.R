@@ -134,6 +134,8 @@ gg_boost_path.boostmtree <- function(object,
 
 #' @export
 gg_boost_path.BoostMLR <- function(object, parameters = c("rho", "phi"), ...) {
+  .boost_check_mlr_grow(object, "gg_boost_path")
+
   known <- c("rho", "phi")
   unknown <- setdiff(parameters, known)
   if (length(unknown) > 0L) {
