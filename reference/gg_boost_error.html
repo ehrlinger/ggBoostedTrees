@@ -101,7 +101,8 @@ on the original scale.</p>
 <p>This figure also accepts a <code>BoostMLR</code> <em>grow</em> fit (predict
 objects are not supported – see below). <code>BoostMLR</code> records <code>Error_Rate</code>
 as an M-by-response matrix already on a single scale, so there is no
-<code>use.rmse</code> argument for that backend; passing one is refused. <code>BoostMLR</code>
+<code>use.rmse</code> argument for that backend; <code>use.rmse = FALSE</code> is refused,
+while <code>TRUE</code>, the default, names the scale it already returns. <code>BoostMLR</code>
 grow objects also select no optimal iteration anywhere in the object –
 <code>partial.BoostMLR()</code> takes <code>Mopt</code> as a user-supplied argument instead –
 so <code>optimal</code> is <code>FALSE</code> for every row; deriving an argmin here would

@@ -50,7 +50,7 @@
 <li>
 <code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> and <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> remain <code>boostmtree</code> only.</li>
 <li>
-<code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> refuses <code>use.rmse</code> on a <code>BoostMLR</code> fit whether it is passed by name or by position. The generic declares it as its second formal, so the positional form is valid syntax, and it previously fell through and returned standardized values to a caller who had asked for the other scale.</li>
+<code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> refuses <code>use.rmse = FALSE</code> on a <code>BoostMLR</code> fit, by name or by position: that backend records no <code>y.sd</code>, so its <code>Error_Rate</code> cannot be unstandardized. The generic declares <code>use.rmse</code> as its second formal, so the positional form is valid syntax, and it previously fell through and returned standardized values to a caller who had asked for the other scale. <code>use.rmse = TRUE</code> is accepted, being the default and the scale <code>BoostMLR</code> already returns, so a caller that always passes the argument runs against either backend unchanged.</li>
 <li>
 <code><a href="../reference/autoplot.gg_boost_trajectory.html">autoplot.gg_boost_trajectory()</a></code> accepts a repeated subject identifier in <code>subset</code> rather than failing with an internal <code>factor level [2] is duplicated</code>. The caller’s ordering still determines the factor levels.</li>
 <li>

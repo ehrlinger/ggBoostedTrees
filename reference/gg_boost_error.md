@@ -62,11 +62,12 @@ error on the original scale.
 This figure also accepts a `BoostMLR` *grow* fit (predict objects are
 not supported – see below). `BoostMLR` records `Error_Rate` as an
 M-by-response matrix already on a single scale, so there is no
-`use.rmse` argument for that backend; passing one is refused. `BoostMLR`
-grow objects also select no optimal iteration anywhere in the object –
-`partial.BoostMLR()` takes `Mopt` as a user-supplied argument instead –
-so `optimal` is `FALSE` for every row; deriving an argmin here would
-report a choice the backend never made.
+`use.rmse` argument for that backend; `use.rmse = FALSE` is refused,
+while `TRUE`, the default, names the scale it already returns.
+`BoostMLR` grow objects also select no optimal iteration anywhere in the
+object – `partial.BoostMLR()` takes `Mopt` as a user-supplied argument
+instead – so `optimal` is `FALSE` for every row; deriving an argmin here
+would report a choice the backend never made.
 
 A `BoostMLR` **predict** object is refused outright, even though it
 shares the `"BoostMLR"` class and also carries an `Error_Rate`. Its
