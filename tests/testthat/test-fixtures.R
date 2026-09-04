@@ -31,3 +31,13 @@ test_that("the multi-response helper builds the shapes it claims to", {
   expect_true(is.matrix(obj$rho))
   expect_identical(ncol(obj$rho), 2L)
 })
+
+test_that("the multi-response helper carries nested trajectory fields", {
+  obj <- boost_multi_fixture()
+
+  expect_length(obj$time, 2L)
+  expect_length(obj$mu, 2L)
+  expect_true(is.list(obj$mu[[1]]))
+  expect_identical(lengths(obj$time), lengths(obj$mu[[1]]))
+  expect_true(is.unsorted(obj$time[[1]]))
+})

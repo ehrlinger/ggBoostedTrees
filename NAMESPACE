@@ -3,14 +3,19 @@
 S3method(autoplot,boostmtree)
 S3method(autoplot,gg_boost_error)
 S3method(autoplot,gg_boost_path)
+S3method(autoplot,gg_boost_trajectory)
 S3method(gg_boost_error,boostmtree)
 S3method(gg_boost_error,default)
 S3method(gg_boost_path,boostmtree)
 S3method(gg_boost_path,default)
+S3method(gg_boost_trajectory,boostmtree)
+S3method(gg_boost_trajectory,default)
 S3method(plot,gg_boost_error)
 S3method(plot,gg_boost_path)
+S3method(plot,gg_boost_trajectory)
 export(gg_boost_error)
 export(gg_boost_path)
+export(gg_boost_trajectory)
 importFrom(boostmtree,boostmtree)
 importFrom(ggplot2,
   aes,
@@ -18,6 +23,7 @@ importFrom(ggplot2,
   facet_grid,
   facet_wrap,
   geom_line,
+  geom_point,
   geom_vline,
   ggplot,
   labs
