@@ -41,3 +41,45 @@ test_that("the multi-response helper carries nested trajectory fields", {
   expect_identical(lengths(obj$time), lengths(obj$mu[[1]]))
   expect_true(is.unsorted(obj$time[[1]]))
 })
+
+test_that("the vimp fixtures carry the shapes the extractor reads", {
+  v <- vimp_fixture()
+
+  expect_s3_class(v, "vimp.boostmtree")
+  expect_true(is.matrix(v$main))
+  expect_true(is.matrix(v$interaction))
+  expect_identical(rownames(v$main), c("x1", "x2", "x3", "x4"))
+  # The interaction rownames carry a :time suffix the extractor must strip.
+  expect_identical(rownames(v$interaction), paste0(c("x1", "x2", "x3", "x4"), ":time"))
+  expect_false(v$joint)
+})
+
+test_that("the joint vimp fixture collapses to one row", {
+  v <- vimp_joint_fixture()
+
+  expect_true(v$joint)
+  expect_identical(dim(v$main), c(1L, 1L))
+  expect_identical(rownames(v$main), "joint.vimp")
+  expect_identical(rownames(v$interaction), "joint.vimp:time")
+})
+
+test_that("the partial fixture is a wide curve frame per variable", {
+  p <- partial_fixture()
+
+  expect_s3_class(p, "partial.plot.boostmtree")
+  expect_identical(names(p$curves), c("x1", "x2"))
+  expect_identical(names(p$curves$x1)[1], "x")
+  expect_true(all(grepl("^time\\.", names(p$curves$x1)[-1])))
+  expect_length(p$time.points, ncol(p$curves$x1) - 1L)
+})
+
+test_that("the marginal fixture carries raw and smoothed curves", {
+  m <- marginal_fixture()
+
+  expect_s3_class(m, "marginal.plot.boostmtree")
+  expect_identical(names(m$smooth), c("x1", "x2"))
+  expect_true(all(grepl("^time = ", names(m$smooth$x1))))
+  expect_identical(names(m$smooth$x1[[1]]), c("x", "y"))
+  # The raw scatter is deliberately not extracted; see the spec.
+  expect_false(is.null(m$data))
+})
