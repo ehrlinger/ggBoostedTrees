@@ -171,6 +171,26 @@ The corollary is that a green suite does not demonstrate that a user running CRA
 record — backend package version and the exact fitting call — stored alongside
 them, and are regenerated whenever the backend version changes.
 
+**Reproducibility of the fixtures themselves** was measured on 2026-09-04, after
+a regeneration produced a different file:
+
+- Refitting the model is **not** bit-reproducible. `$base.learner`, the stored
+  `randomForestSRC` ensembles, differs between two identically seeded fits.
+- Every field this package extracts **is** bit-identical across those refits:
+  `err.rate`, `mu`, `y.org`, `time`, `id.unique`, `rho`, `phi`, `lambda`,
+  `m.opt`, `n.q`, `q.set`, `y.sd`. The committed model fixture is therefore
+  sound, and stays sound.
+- `vimp()` permutes and so consumes RNG. Two calls on the *same* fitted object
+  return different importances unless `set.seed()` precedes each.
+  `partial.plot()` and `marginal.plot()` are deterministic.
+
+Two consequences the generation script must honour. The model fixture is
+guarded against refitting rather than rewritten on every run, because rewriting
+it would change nothing the extractors read while invalidating every committed
+`vdiffr` snapshot. And every `vimp()` call in the generator is seeded, or the
+importance fixtures cannot be regenerated and their provenance record would be
+false.
+
 ### Strategic note
 
 Phases 1 through 4 represent months of work, and the upstream fixes may merge
