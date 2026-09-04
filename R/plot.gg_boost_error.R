@@ -31,10 +31,7 @@
 #' @importFrom ggplot2 autoplot ggplot aes geom_line geom_vline facet_wrap labs
 #' @export
 autoplot.gg_boost_error <- function(object, optimal = TRUE, ...) {
-  if (!inherits(object, "gg_boost_error")) {
-    stop("Incorrect object type: expected a gg_boost_error object.",
-         call. = FALSE)
-  }
+  .boost_check_gg(object, "gg_boost_error")
 
   gg_plt <- ggplot2::ggplot(
     object,

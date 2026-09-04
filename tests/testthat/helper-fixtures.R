@@ -50,3 +50,31 @@ boost_multi_fixture <- function() {
     class = c("boostmtree", "grow")
   )
 }
+
+# Interpretation fixtures. Read from disk, never recomputed -- partial.plot()
+# costs seconds per variable. See fixtures/make-fixtures.R.
+vimp_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "vimp_marginal.rds"))
+}
+
+vimp_joint_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "vimp_joint.rds"))
+}
+
+partial_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "effect_partial.rds"))
+}
+
+marginal_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "effect_marginal.rds"))
+}
+
+# Effect fixtures whose covariate is a two-level factor. boostmtree returns a
+# character x column for these, one row per level.
+partial_factor_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "effect_partial_factor.rds"))
+}
+
+marginal_factor_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "effect_marginal_factor.rds"))
+}

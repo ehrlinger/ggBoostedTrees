@@ -52,10 +52,7 @@ autoplot.gg_boost_trajectory <- function(object,
                                          observed = TRUE,
                                          alpha = NULL,
                                          ...) {
-  if (!inherits(object, "gg_boost_trajectory")) {
-    stop("Incorrect object type: expected a gg_boost_trajectory object.",
-         call. = FALSE)
-  }
+  .boost_check_gg(object, "gg_boost_trajectory")
 
   if (!is.null(subset)) {
     wanted <- as.character(subset)

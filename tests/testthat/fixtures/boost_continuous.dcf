@@ -1,9 +1,26 @@
 Fixture: boost_continuous.rds
 Backend: boostmtree 2.0.2
 Source: ehrlinger/boostmtree_src@v2.0.2-ccf (subdir = boostmtree)
-Generated: 2026-09-03
+Generated: 2026-09-04
 R: R version 4.6.1 (2026-06-24)
 Call: simLong(n = 25, n.time = 4, rho = 0.8, model = 1,
   family = 'continuous'); boostmtree(M = 50, cv.flag = TRUE,
   control = boostmtree.control(seed = 7)); set.seed(7)
 m.opt: 19
+
+Interpretation fixtures: vimp_marginal.rds, vimp_joint.rds,
+  effect_partial.rds, effect_marginal.rds
+Effect variables: x1, x2
+vimp() permutes and consumes RNG: set.seed(7) precedes each vimp call.
+partial.plot() and marginal.plot() are deterministic.
+The model fixture is not refit when present -- boostmtree's $base.learner
+  is not bit-reproducible across refits, though every field this package
+  extracts is. Force with REGENERATE_MODEL_FIXTURE=1.
+Note: vimp(joint = TRUE) CANNOT be generated under CRAN boostmtree 2.0.0,
+  which raises 'length of dimnames [1] not equal to array extent'.
+  The fork is required to regenerate vimp_joint.rds.
+
+Factor-covariate effect fixtures: effect_partial_factor.rds,
+  effect_marginal_factor.rds (covariate x2 as a two-level factor).
+  The underlying fit is deliberately NOT committed; only the effect
+  objects are needed and they are small.

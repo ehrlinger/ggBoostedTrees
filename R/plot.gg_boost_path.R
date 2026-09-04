@@ -31,10 +31,7 @@
 #' @importFrom ggplot2 autoplot ggplot aes geom_line facet_wrap facet_grid labs
 #' @export
 autoplot.gg_boost_path <- function(object, ...) {
-  if (!inherits(object, "gg_boost_path")) {
-    stop("Incorrect object type: expected a gg_boost_path object.",
-         call. = FALSE)
-  }
+  .boost_check_gg(object, "gg_boost_path")
 
   gg_plt <- ggplot2::ggplot(
     object,
