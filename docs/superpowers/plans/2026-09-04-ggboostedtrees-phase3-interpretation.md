@@ -33,7 +33,8 @@ Confirmed empirically against `boostmtree` 2.0.2 and the committed fixture. Do n
 - `$time.effect` is a named scalar per response (`names` = `"response"`). It has no variable to attach to.
 - `$x.var.names`, `$q.set`, `$family`, `$joint`, `$metric`, `$baseline.rmse`, `$m.opt` are also present. `$metric` is the string `"relative increase in OOB RMSE"` and belongs on the plot's axis.
 - With `joint = TRUE`: `$main` is 1x1 with rowname `joint.vimp`, `$interaction` is 1x1 with rowname `joint.vimp:time`.
-- `vimp()` is fast (about 0.1s on the fixture).
+- `vimp()` is fast (about 0.1s on the fixture) but **permutes, so it consumes RNG**. Two calls on the same fitted object return different importances unless `set.seed()` precedes each. `partial.plot()` and `marginal.plot()` are deterministic.
+- Refitting the model is **not** bit-reproducible in `$base.learner` (the stored randomForestSRC ensembles), but every field this package extracts -- `err.rate`, `mu`, `y.org`, `time`, `id.unique`, `rho`, `phi`, `lambda`, `m.opt` -- is bit-identical across refits. That is why the model fixture is guarded against refitting rather than regenerated.
 - **CRAN `boostmtree` 2.0.0 cannot produce a joint vimp object at all** — it raises `Error: length of 'dimnames' [1] not equal to array extent`. No compatibility layer is needed or wanted; see the spec's Backend provenance section.
 
 ### `partial.plot()` and `marginal.plot()`
@@ -66,7 +67,36 @@ Confirmed empirically against `boostmtree` 2.0.2 and the committed fixture. Do n
 
 - [ ] **Step 1: Extend the generation script**
 
-Append to `tests/testthat/fixtures/make-fixtures.R`, after the existing fixture is written and while `fit` is still in scope:
+First, guard the model fixture so running this script does not silently refit
+it. Replace the existing unconditional `saveRDS(fit, ...)` call and the
+`boostmtree(...)` call above it with a guarded block. Read the file and adapt,
+keeping the existing fitting code intact inside the guard:
+
+```r
+## The model fixture is NOT refit when it already exists.
+##
+## boostmtree's $base.learner (the stored randomForestSRC ensembles) is not
+## bit-reproducible across refits, so an unconditional refit rewrites the file
+## on every run and invalidates every committed vdiffr snapshot downstream.
+## Every field ggBoostedTrees actually extracts -- err.rate, mu, y.org, time,
+## id.unique, rho, phi, lambda, m.opt -- IS bit-identical across refits, so the
+## committed fixture stays valid indefinitely.
+model.path <- file.path(here, "boost_continuous.rds")
+if (file.exists(model.path) && !nzchar(Sys.getenv("REGENERATE_MODEL_FIXTURE"))) {
+  message("boost_continuous.rds exists; not refitting. ",
+          "Set REGENERATE_MODEL_FIXTURE=1 to force.")
+} else {
+  ## ... the existing set.seed(7) / simLong(...) / boostmtree(...) code ...
+  saveRDS(fit, model.path, compress = "xz")
+}
+fit <- readRDS(model.path)
+```
+
+Everything downstream, including the existing provenance `writeLines()`, then
+works from the committed model rather than a fresh one. The provenance block
+reads `fit$m.opt`, which still works.
+
+Then append the interpretation fixtures:
 
 ```r
 ## Interpretation fixtures (Phase 3).
@@ -78,10 +108,14 @@ Append to `tests/testthat/fixtures/make-fixtures.R`, after the existing fixture 
 ## keeping generation quick and the files small.
 effect.vars <- c("x1", "x2")
 
+## vimp() permutes, so it consumes RNG: two calls on the SAME fit differ unless
+## seeded. partial.plot() and marginal.plot() are deterministic and need no seed.
+set.seed(7)
 saveRDS(
   vimp.boostmtree(fit),
   file.path(here, "vimp_marginal.rds"), compress = "xz"
 )
+set.seed(7)
 saveRDS(
   vimp.boostmtree(fit, joint = TRUE),
   file.path(here, "vimp_joint.rds"), compress = "xz"
@@ -105,6 +139,11 @@ Also extend the provenance block so the `.dcf` records these. Add these lines to
     "Interpretation fixtures: vimp_marginal.rds, vimp_joint.rds,",
     "  effect_partial.rds, effect_marginal.rds",
     "Effect variables: x1, x2",
+    "vimp() permutes and consumes RNG: set.seed(7) precedes each vimp call.",
+    "partial.plot() and marginal.plot() are deterministic.",
+    "The model fixture is not refit when present -- boostmtree's $base.learner",
+    "  is not bit-reproducible across refits, though every field this package",
+    "  extracts is. Force with REGENERATE_MODEL_FIXTURE=1.",
     "Note: vimp(joint = TRUE) CANNOT be generated under CRAN boostmtree 2.0.0,",
     "  which raises 'length of dimnames [1] not equal to array extent'.",
     "  The fork is required to regenerate vimp_joint.rds."
@@ -117,9 +156,24 @@ Rscript tests/testthat/fixtures/make-fixtures.R
 ls -la tests/testthat/fixtures/
 ```
 
-Expected: `wrote fixture, m.opt = 19` then `wrote interpretation fixtures for x1, x2`. The four new files are small — roughly 400 bytes to 5 KB each. If any is dramatically larger, STOP and report.
+Expected: the "exists; not refitting" message, then `wrote interpretation fixtures for x1, x2`. The four new files are small — roughly 400 bytes to 5 KB each. If any is dramatically larger, STOP and report.
 
-`boost_continuous.rds` is regenerated too and must come out byte-identical to the committed one, since the recipe is unchanged and seeded. Confirm with `git status` that it is NOT modified. If it is, STOP and report — that means the fixture is not reproducible, which invalidates the provenance record.
+Confirm with `git status` that `boost_continuous.rds` is NOT modified. With the guard in place it is not rewritten at all, so any modification means the guard is wrong.
+
+Then confirm the vimp fixtures are reproducible, which is what the seeding is for:
+
+```bash
+Rscript -e '
+  suppressMessages(library(boostmtree))
+  fit <- readRDS("tests/testthat/fixtures/boost_continuous.rds")
+  set.seed(7); v <- vimp.boostmtree(fit)
+  committed <- readRDS("tests/testthat/fixtures/vimp_marginal.rds")
+  stopifnot(identical(v$main, committed$main))
+  cat("vimp fixture reproduces
+")'
+```
+
+Expected: `vimp fixture reproduces`. If it does not, STOP and report — an unseeded vimp fixture cannot be regenerated and its provenance record would be false.
 
 - [ ] **Step 3: Add the helpers**
 
