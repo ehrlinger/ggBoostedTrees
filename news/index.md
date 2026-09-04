@@ -1,5 +1,17 @@
 # Changelog
 
+## ggBoostedTrees 0.0.3
+
+- [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md)
+  and
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/`autoplot()`
+  for observed and fitted subject trajectories over time. Rows are
+  sorted within subject, because `boostmtree` stores observations in
+  input order and a line drawn from that order zigzags.
+- The trajectory renderer thins large cohorts with `subset` and `n_max`,
+  and scales transparency to the number of subjects drawn so that an
+  overplotted cohort reads as a density.
+
 ## ggBoostedTrees 0.0.2
 
 - [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)

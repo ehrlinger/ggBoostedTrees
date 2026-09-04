@@ -15,6 +15,8 @@ path and the optimal iteration only when cross-validation ran.
   : Boosting error trajectory data object
 - [`gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_path.md)
   : Boosting parameter path data object
+- [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md)
+  : Subject trajectory data object
 
 ## 
 
@@ -37,6 +39,12 @@ else.
   :
 
   Plot a `gg_boost_path` object
+
+- [`autoplot(`*`<gg_boost_trajectory>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_trajectory.md)
+  [`plot(`*`<gg_boost_trajectory>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_trajectory.md)
+  :
+
+  Plot a `gg_boost_trajectory` object
 
 ## 
 

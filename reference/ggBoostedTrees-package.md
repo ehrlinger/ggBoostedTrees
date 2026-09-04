@@ -12,6 +12,8 @@ Useful links:
 
 - <https://github.com/ehrlinger/ggBoostedTrees>
 
+- <https://ehrlinger.github.io/ggBoostedTrees/>
+
 - Report bugs at <https://github.com/ehrlinger/ggBoostedTrees/issues>
 
 ## Author

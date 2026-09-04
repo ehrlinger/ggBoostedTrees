@@ -13,12 +13,12 @@ Pre-1.0 and under active development. What exists today:
 |--------------------------------------------------------|-------------|
 | Boosting error path, with the optimal iteration marked | Implemented |
 | `rho` / `phi` / `lambda` parameter paths               | Implemented |
-| Subject trajectories, observed against fitted          | Not yet     |
+| Subject trajectories, observed against fitted          | Implemented |
 | Variable importance                                    | Not yet     |
 | Partial and marginal effects                           | Not yet     |
 | `BoostMLR` as a second backend                         | Not yet     |
 
-The two implemented figures are complete and tested. The API for what
+The three implemented figures are complete and tested. The API for what
 exists is not expected to change; the list above is what is missing, not
 what is provisional.
 
@@ -115,6 +115,15 @@ magnitude:
 autoplot(gg_boost_path(fit))
 ```
 
+The trajectory plot is the one longitudinal boosting exists for —
+whether the model tracks individual subjects, not just the population
+mean:
+
+``` r
+
+autoplot(gg_boost_trajectory(fit))
+```
+
 ## Function reference
 
 ### Figure data
@@ -123,6 +132,7 @@ autoplot(gg_boost_path(fit))
 |----|----|
 | [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md) | Boosting error path by iteration, with the cross-validated optimal iteration flagged. Requires `cv.flag = TRUE`. |
 | [`gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_path.md) | Estimated `rho`, `phi` and `lambda` by iteration. Available on any fit. |
+| [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md) | Observed and fitted subject trajectories over time, sorted within subject. |
 
 ### Rendering
 
@@ -130,6 +140,7 @@ autoplot(gg_boost_path(fit))
 |----|----|
 | [`autoplot.gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_error.md) | Error path as a line, with a dashed rule at the optimal iteration. |
 | [`autoplot.gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_path.md) | Parameter paths, faceted by parameter on a free y scale. |
+| [`autoplot.gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_trajectory.md) | Fitted trajectories as lines and observed values as points, thinned by `subset`/`n_max` with transparency scaled to cohort size. |
 | [`autoplot.boostmtree()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.boostmtree.md) | Shortcut from a fitted model straight to the error plot. |
 
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) is an alias for

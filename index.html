@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,7 +85,7 @@
 </tr>
 <tr>
 <td>Subject trajectories, observed against fitted</td>
-<td>Not yet</td>
+<td>Implemented</td>
 </tr>
 <tr>
 <td>Variable importance</td>
@@ -102,7 +102,7 @@
 </tr>
 </tbody>
 </table>
-<p>The two implemented figures are complete and tested. The API for what exists is not expected to change; the list above is what is missing, not what is provisional.</p>
+<p>The three implemented figures are complete and tested. The API for what exists is not expected to change; the list above is what is missing, not what is provisional.</p>
 <p>ggBoostedTrees draws diagnostic figures for boosted tree models fit with <a href="https://cran.r-project.org/package=boostmtree" class="external-link">boostmtree</a>, which implements Friedman’s gradient descent boosting with multivariate tree base learners for longitudinal responses. It is the boosting counterpart to <a href="https://github.com/ehrlinger/ggRandomForests" class="external-link">ggRandomForests</a>, and follows the same two-step idiom: an extractor pulls a tidy data frame out of a fitted model, and <code>autoplot()</code> renders it. If you have a <code>boostmtree</code> fit and want to know whether it converged, this is the package.</p>
 <p>The full reference — every function and the changelog — is online at <a href="https://ehrlinger.github.io/ggBoostedTrees/" class="uri">https://ehrlinger.github.io/ggBoostedTrees/</a>.</p>
 </div>
@@ -150,6 +150,9 @@
 <p>The variance and smoothing parameter paths diagnose whether the variance structure settled before boosting stopped. They are always faceted on a free y scale, because <code>rho</code>, <code>phi</code> and <code>lambda</code> span three orders of magnitude:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">autoplot</span><span class="op">(</span><span class="fu"><a href="reference/gg_boost_path.html">gg_boost_path</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The trajectory plot is the one longitudinal boosting exists for — whether the model tracks individual subjects, not just the population mean:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">autoplot</span><span class="op">(</span><span class="fu"><a href="reference/gg_boost_trajectory.html">gg_boost_trajectory</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="function-reference">Function reference<a class="anchor" aria-label="anchor" href="#function-reference"></a>
@@ -175,6 +178,10 @@
 <td><code><a href="reference/gg_boost_path.html">gg_boost_path()</a></code></td>
 <td>Estimated <code>rho</code>, <code>phi</code> and <code>lambda</code> by iteration. Available on any fit.</td>
 </tr>
+<tr>
+<td><code><a href="reference/gg_boost_trajectory.html">gg_boost_trajectory()</a></code></td>
+<td>Observed and fitted subject trajectories over time, sorted within subject.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -198,6 +205,10 @@
 <tr>
 <td><code><a href="reference/autoplot.gg_boost_path.html">autoplot.gg_boost_path()</a></code></td>
 <td>Parameter paths, faceted by parameter on a free y scale.</td>
+</tr>
+<tr>
+<td><code><a href="reference/autoplot.gg_boost_trajectory.html">autoplot.gg_boost_trajectory()</a></code></td>
+<td>Fitted trajectories as lines and observed values as points, thinned by <code>subset</code>/<code>n_max</code> with transparency scaled to cohort size.</td>
 </tr>
 <tr>
 <td><code><a href="reference/autoplot.boostmtree.html">autoplot.boostmtree()</a></code></td>

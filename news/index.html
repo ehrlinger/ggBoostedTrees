@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,12 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.3" id="ggboostedtrees-003">ggBoostedTrees 0.0.3<a class="anchor" aria-label="anchor" href="#ggboostedtrees-003"></a></h2>
+<ul><li>
+<code><a href="../reference/gg_boost_trajectory.html">gg_boost_trajectory()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>/<code>autoplot()</code> for observed and fitted subject trajectories over time. Rows are sorted within subject, because <code>boostmtree</code> stores observations in input order and a line drawn from that order zigzags.</li>
+<li>The trajectory renderer thins large cohorts with <code>subset</code> and <code>n_max</code>, and scales transparency to the number of subjects drawn so that an overplotted cohort reads as a density.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.2" id="ggboostedtrees-002">ggBoostedTrees 0.0.2<a class="anchor" aria-label="anchor" href="#ggboostedtrees-002"></a></h2>
 <ul><li>
