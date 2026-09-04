@@ -1,5 +1,16 @@
 Package: ggBoostedTrees
-Version: 0.0.3
+Version: 0.0.4
+
+# ggBoostedTrees 0.0.4
+
+* `gg_boost_vimp()` and `plot()`/`autoplot()` for variable importance,
+  covering both the main effect of each covariate and its interaction with
+  time. The axis is labelled with the metric recorded on the source object
+  rather than a hard-coded string.
+* `gg_boost_effect()` and `plot()`/`autoplot()` for partial and marginal
+  covariate effects over time, as one class distinguished by `kind`.
+* Neither `partial.plot()` nor `marginal.plot()` computes a confidence
+  interval, so `gg_boost_effect()` reports none.
 
 # ggBoostedTrees 0.0.3
 
