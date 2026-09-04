@@ -3,7 +3,7 @@ test_that("gg_boost_effect returns the documented column contract", {
 
   expect_s3_class(gg, "gg_boost_effect")
   expect_identical(
-    names(gg), c("variable", "x", "time", "estimate", "kind")
+    names(gg), c("variable", "x", "x_label", "time", "estimate", "kind")
   )
   expect_s3_class(gg$variable, "factor")
   expect_type(gg$x, "double")
@@ -81,4 +81,53 @@ test_that("a nested (multi-response) marginal object is rejected", {
   m$smooth <- list(y1 = m$smooth, y2 = m$smooth)
 
   expect_error(gg_boost_effect(m), "single-response")
+})
+
+test_that("the contract carries an x_label column", {
+  gg <- gg_boost_effect(partial_fixture())
+
+  expect_identical(
+    names(gg), c("variable", "x", "x_label", "time", "estimate", "kind")
+  )
+  expect_type(gg$x_label, "character")
+})
+
+test_that("a continuous covariate leaves x_label NA", {
+  gg <- gg_boost_effect(partial_fixture())
+
+  expect_true(all(is.na(gg$x_label)))
+})
+
+test_that("a factor covariate is extracted without coercion warnings", {
+  # The defect this fixes: as.numeric() on a character grid produced an
+  # all-NA x, four coercion warnings, and a plot with zero rows.
+  expect_no_warning(gg <- gg_boost_effect(partial_factor_fixture()))
+
+  expect_false(any(is.na(gg$x)))
+  expect_false(any(is.na(gg$x_label)))
+})
+
+test_that("factor levels become labels with integer positions", {
+  gg <- gg_boost_effect(partial_factor_fixture())
+
+  expect_setequal(unique(gg$x_label), c("high", "low"))
+  expect_setequal(unique(gg$x), c(1, 2))
+  # The position must map one-to-one onto the label, or the axis lies.
+  expect_identical(
+    length(unique(paste(gg$x, gg$x_label))), length(unique(gg$x_label))
+  )
+})
+
+test_that("a discrete covariate yields one row per level per time", {
+  p <- partial_factor_fixture()
+  gg <- gg_boost_effect(p)
+
+  expect_identical(nrow(gg), 2L * length(p$time.points))
+})
+
+test_that("the marginal factor path extracts without warnings", {
+  expect_no_warning(gg <- gg_boost_effect(marginal_factor_fixture()))
+
+  expect_setequal(unique(gg$x_label), c("high", "low"))
+  expect_identical(levels(gg$kind), "marginal")
 })

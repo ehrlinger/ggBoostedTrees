@@ -17,6 +17,15 @@
 #'
 #' Neither source computes a confidence interval, so none is reported here.
 #'
+#' `boostmtree` accepts factor covariates. For those, `partial.plot()` and
+#' `marginal.plot()` return a character (or, for `marginal.plot()$data`,
+#' factor) `x` column with one row per level rather than a numeric grid.
+#' `gg_boost_effect` detects this and maps each level to an integer position
+#' in `x`, carrying the level itself in `x_label`; a continuous covariate
+#' keeps its numeric value in `x` and leaves `x_label` `NA`. The grid is
+#' resolved once per variable so every time point shares the same level
+#' ordering.
+#'
 #' `gg_boost_effect` is currently single-response only. `boostmtree` nests
 #' `$curves` / `$smooth` as `[[response]][[variable]]` and flattens the outer
 #' level only when the fit has a single response; a multi-response object is
@@ -32,7 +41,11 @@
 #' @return A `gg_boost_effect` `data.frame` with columns:
 #'   \describe{
 #'     \item{variable}{Factor covariate name.}
-#'     \item{x}{Numeric covariate value.}
+#'     \item{x}{Numeric covariate value. For a continuous covariate this is
+#'       the covariate itself; for a discrete (factor) covariate this is an
+#'       integer position, one per level.}
+#'     \item{x_label}{Character level label for a discrete covariate, `NA`
+#'       for a continuous one.}
 #'     \item{time}{Numeric time point.}
 #'     \item{estimate}{Numeric fitted effect.}
 #'     \item{kind}{Factor, `partial` or `marginal`.}
@@ -103,10 +116,12 @@ gg_boost_effect.partial.plot.boostmtree <- function(object, ...) {
         call. = FALSE
       )
     }
+    grid <- .boost_effect_grid(wide[[1]])
     do.call(rbind, lapply(seq_along(value_cols), function(k) {
       data.frame(
         variable = factor(nm, levels = var_levels),
-        x = as.numeric(wide[[1]]),
+        x = grid$x,
+        x_label = grid$x_label,
         time = as.numeric(time_points[k]),
         estimate = as.numeric(wide[[value_cols[k]]]),
         kind = factor("partial", levels = "partial"),
@@ -146,11 +161,13 @@ gg_boost_effect.marginal.plot.boostmtree <- function(object, ...) {
         call. = FALSE
       )
     }
+    grid <- .boost_effect_grid(per_time[[1L]]$x)
     do.call(rbind, lapply(seq_along(per_time), function(k) {
       curve <- per_time[[k]]
       data.frame(
         variable = factor(nm, levels = var_levels),
-        x = as.numeric(curve$x),
+        x = grid$x,
+        x_label = grid$x_label,
         time = as.numeric(time_points[k]),
         estimate = as.numeric(curve$y),
         kind = factor("marginal", levels = "marginal"),
@@ -160,6 +177,28 @@ gg_boost_effect.marginal.plot.boostmtree <- function(object, ...) {
   })
 
   .gg_boost_effect_frame(blocks)
+}
+
+# Resolve a covariate grid into a numeric position and an optional label.
+#
+# boostmtree returns a character (partial, marginal $smooth) or factor
+# (marginal $data) x column for a factor predictor, with one row per level
+# rather than a grid. Coercing that with as.numeric() silently produced an
+# all-NA column and a blank figure, which is the defect this exists to prevent.
+#
+# A continuous covariate keeps its value in `x` and gets no label. A discrete
+# one gets an integer position in `x` -- so the column keeps one type -- and
+# its level in `x_label`, which is what the renderer puts on the axis.
+.boost_effect_grid <- function(x) {
+  if (is.numeric(x)) {
+    return(list(x = as.numeric(x), x_label = NA_character_))
+  }
+  labels <- as.character(x)
+  levels_seen <- unique(labels)
+  list(
+    x = as.numeric(match(labels, levels_seen)),
+    x_label = labels
+  )
 }
 
 # Shared tail of both methods: bind the per-variable blocks and class the

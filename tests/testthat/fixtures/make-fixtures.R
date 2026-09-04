@@ -70,7 +70,12 @@ writeLines(
     "  extracts is. Force with REGENERATE_MODEL_FIXTURE=1.",
     "Note: vimp(joint = TRUE) CANNOT be generated under CRAN boostmtree 2.0.0,",
     "  which raises 'length of dimnames [1] not equal to array extent'.",
-    "  The fork is required to regenerate vimp_joint.rds."
+    "  The fork is required to regenerate vimp_joint.rds.",
+    "",
+    "Factor-covariate effect fixtures: effect_partial_factor.rds,",
+    "  effect_marginal_factor.rds (covariate x2 as a two-level factor).",
+    "  The underlying fit is deliberately NOT committed; only the effect",
+    "  objects are needed and they are small."
   ),
   file.path(here, "boost_continuous.dcf")
 )
@@ -112,3 +117,30 @@ saveRDS(
 )
 
 cat("wrote interpretation fixtures for", paste(effect.vars, collapse = ", "), "\n")
+
+## Effect fixtures with a FACTOR covariate.
+##
+## boostmtree returns a character x column for a factor predictor, one row per
+## level rather than a grid. The fit itself is not committed: only the effect
+## objects are needed, and they are a few kilobytes.
+set.seed(11)
+fac.sim <- simLong(n = 20, n.time = 4, model = 1)$data.list
+fac.x <- fac.sim$features
+fac.x$x2 <- factor(ifelse(fac.x$x2 > median(fac.x$x2), "high", "low"))
+
+fac.fit <- boostmtree(
+  x = fac.x, tm = fac.sim$time, id = fac.sim$id, y = fac.sim$y,
+  M = 20, cv.flag = TRUE, verbose = FALSE,
+  control = boostmtree.control(seed = 11)
+)
+
+saveRDS(
+  partial.plot(fac.fit, x.var.names = "x2", output = "data", verbose = FALSE),
+  file.path(here, "effect_partial_factor.rds"), compress = "xz"
+)
+saveRDS(
+  marginal.plot(fac.fit, x.var.names = "x2", output = "data", verbose = FALSE),
+  file.path(here, "effect_marginal_factor.rds"), compress = "xz"
+)
+
+cat("wrote factor-covariate effect fixtures\n")

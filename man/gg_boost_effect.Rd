@@ -17,7 +17,11 @@ object, as returned by \code{boostmtree::partial.plot()} or
 A \code{gg_boost_effect} \code{data.frame} with columns:
 \describe{
 \item{variable}{Factor covariate name.}
-\item{x}{Numeric covariate value.}
+\item{x}{Numeric covariate value. For a continuous covariate this is
+the covariate itself; for a discrete (factor) covariate this is an
+integer position, one per level.}
+\item{x_label}{Character level label for a discrete covariate, \code{NA}
+for a continuous one.}
 \item{time}{Numeric time point.}
 \item{estimate}{Numeric fitted effect.}
 \item{kind}{Factor, \code{partial} or \code{marginal}.}
@@ -40,6 +44,15 @@ same thing: the fitted effect. The raw observations are available through
 \code{\link{gg_boost_trajectory}}.
 
 Neither source computes a confidence interval, so none is reported here.
+
+\code{boostmtree} accepts factor covariates. For those, \code{partial.plot()} and
+\code{marginal.plot()} return a character (or, for \code{marginal.plot()$data},
+factor) \code{x} column with one row per level rather than a numeric grid.
+\code{gg_boost_effect} detects this and maps each level to an integer position
+in \code{x}, carrying the level itself in \code{x_label}; a continuous covariate
+keeps its numeric value in \code{x} and leaves \code{x_label} \code{NA}. The grid is
+resolved once per variable so every time point shares the same level
+ordering.
 
 \code{gg_boost_effect} is currently single-response only. \code{boostmtree} nests
 \verb{$curves} / \verb{$smooth} as \verb{[[response]][[variable]]} and flattens the outer

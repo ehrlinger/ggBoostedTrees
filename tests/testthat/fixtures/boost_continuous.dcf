@@ -19,3 +19,8 @@ The model fixture is not refit when present -- boostmtree's $base.learner
 Note: vimp(joint = TRUE) CANNOT be generated under CRAN boostmtree 2.0.0,
   which raises 'length of dimnames [1] not equal to array extent'.
   The fork is required to regenerate vimp_joint.rds.
+
+Factor-covariate effect fixtures: effect_partial_factor.rds,
+  effect_marginal_factor.rds (covariate x2 as a two-level factor).
+  The underlying fit is deliberately NOT committed; only the effect
+  objects are needed and they are small.

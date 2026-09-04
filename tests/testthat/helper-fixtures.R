@@ -68,3 +68,13 @@ partial_fixture <- function() {
 marginal_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "effect_marginal.rds"))
 }
+
+# Effect fixtures whose covariate is a two-level factor. boostmtree returns a
+# character x column for these, one row per level.
+partial_factor_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "effect_partial_factor.rds"))
+}
+
+marginal_factor_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "effect_marginal_factor.rds"))
+}
