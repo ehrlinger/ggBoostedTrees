@@ -30,11 +30,13 @@ provisional.
 ggBoostedTrees draws diagnostic figures for boosted tree models fit with
 [boostmtree](https://cran.r-project.org/package=boostmtree), which implements
 Friedman's gradient descent boosting with multivariate tree base learners for
-longitudinal responses. It is the boosting counterpart to
+longitudinal responses, and with partial support for `BoostMLR` fits (see the
+status table above). It is the boosting counterpart to
 [ggRandomForests](https://github.com/ehrlinger/ggRandomForests), and follows
 the same two-step idiom: an extractor pulls a tidy data frame out of a fitted
 model, and `autoplot()` renders it. If you have a `boostmtree` fit and want to
-know whether it converged, this is the package.
+know whether it converged, this is the package; three of the five figures
+also accept a `BoostMLR` fit.
 
 The full reference — every function and the changelog — is online at
 <https://ehrlinger.github.io/ggBoostedTrees/>.

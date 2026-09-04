@@ -258,6 +258,14 @@ multi-panel figure instead of requiring several near-identical plot methods.
 Partial and marginal effects are one class distinguished by `kind`, not two
 classes.
 
+The `optimal` column of `gg_boost_error` keeps the same logical type across
+backends but not the same semantics: for `boostmtree` it marks a genuine
+cross-validated selection (`m.opt`); for `BoostMLR` it is `FALSE` for every
+row, because the backend selects no optimal iteration anywhere in the
+object. A future backend author meeting this contract should decide and
+document which of these two meanings (or a third) applies, not only note it
+in the function's `@details`.
+
 Two of those contracts were corrected on 2026-09-04, after inspecting what
 `boostmtree` actually returns:
 
