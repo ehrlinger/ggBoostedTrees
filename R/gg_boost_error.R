@@ -17,7 +17,8 @@
 #' This figure also accepts a \code{BoostMLR} \emph{grow} fit (predict
 #' objects are not supported -- see below). `BoostMLR` records `Error_Rate`
 #' as an M-by-response matrix already on a single scale, so there is no
-#' `use.rmse` argument for that backend; passing one is refused. `BoostMLR`
+#' `use.rmse` argument for that backend; `use.rmse = FALSE` is refused,
+#' while `TRUE`, the default, names the scale it already returns. `BoostMLR`
 #' grow objects also select no optimal iteration anywhere in the object --
 #' `partial.BoostMLR()` takes `Mopt` as a user-supplied argument instead --
 #' so `optimal` is `FALSE` for every row; deriving an argmin here would
@@ -128,13 +129,20 @@ gg_boost_error.boostmtree <- function(object, use.rmse = TRUE, ...) {
 # NAMED entry missed exactly that form, silently returning standardized values
 # to a caller who had asked for the other scale. As a formal, missing() catches
 # the named and positional forms alike.
+#
+# Only FALSE is refused. TRUE is the generic's default and names the scale
+# BoostMLR already returns, so refusing it would break the one thing the tidy
+# intermediate exists to promise: that a caller written against one backend
+# runs against another unchanged. `gg_boost_error(fit, use.rmse = TRUE)` is
+# the explicit spelling of the default, and lapply(fits, gg_boost_error,
+# use.rmse = TRUE) over a mixed list is the shape that broke.
 gg_boost_error.BoostMLR <- function(object, use.rmse, ...) {
   .boost_check_mlr_grow(object, "gg_boost_error")
 
-  if (!missing(use.rmse)) {
+  if (!missing(use.rmse) && !isTRUE(use.rmse)) {
     stop(
       "gg_boost_error: a BoostMLR fit records no response scale (y.sd), ",
-      "so its Error_Rate cannot be unstandardized; 'use.rmse' is not ",
+      "so its Error_Rate cannot be unstandardized; use.rmse = FALSE is not ",
       "supported for BoostMLR fits.",
       call. = FALSE
     )

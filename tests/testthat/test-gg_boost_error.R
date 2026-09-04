@@ -128,6 +128,28 @@ test_that("use.rmse is refused on the BoostMLR path", {
   )
 })
 
+test_that("use.rmse = TRUE is accepted on the BoostMLR path", {
+  # TRUE is the generic's default and names the scale BoostMLR already
+  # returns, so the explicit spelling of the default must not be an error.
+  # Refusing it broke backend-agnostic calling, which is the one thing the
+  # tidy intermediate exists to promise.
+  f <- boostmlr_fixture()
+
+  expect_identical(gg_boost_error(f, use.rmse = TRUE), gg_boost_error(f))
+  expect_identical(gg_boost_error(f, TRUE), gg_boost_error(f))
+})
+
+test_that("a mixed list of fits maps over gg_boost_error with use.rmse", {
+  # The shape that broke: a wrapper that always passes the argument
+  # explicitly, over fits from both backends.
+  fits <- list(boost_fixture(), boostmlr_fixture())
+
+  out <- lapply(fits, gg_boost_error, use.rmse = TRUE)
+
+  expect_length(out, 2L)
+  expect_true(all(vapply(out, inherits, logical(1), "gg_boost_error")))
+})
+
 test_that("gg_boost_error output rbinds across backends unchanged", {
   # Nothing else binds the two backends' outputs together; a type or
   # column-order difference would otherwise surface only when a user facets
