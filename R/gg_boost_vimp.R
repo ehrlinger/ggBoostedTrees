@@ -46,7 +46,7 @@
 #' sim <- boostmtree::simLong(n = 25, n.time = 4, model = 1)$data.list
 #' fit <- boostmtree::boostmtree(
 #'   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
-#'   M = 50, verbose = FALSE
+#'   M = 50, cv.flag = TRUE, verbose = FALSE
 #' )
 #' plot(gg_boost_vimp(boostmtree::vimp.boostmtree(fit)))
 #' }
