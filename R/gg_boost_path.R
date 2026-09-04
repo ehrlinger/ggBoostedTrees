@@ -15,9 +15,20 @@
 #' `cv.flag = TRUE`. A parameter absent from the fit is dropped silently; it is
 #' an error only when none of the requested parameters is present.
 #'
-#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object.
-#' @param parameters Character vector naming the paths to extract, any of
-#'   `"rho"`, `"phi"`, and `"lambda"`. Defaults to all three.
+#' This figure also accepts a \code{BoostMLR} fit, which records only `Rho`
+#' and `Phi` as M-by-response matrices -- the method's default `parameters` is
+#' `c("rho", "phi")` rather than all three. `BoostMLR` has no comparable
+#' `lambda`: its `Lambda_List` holds per-iteration basis coefficients rather
+#' than a scalar smoothing parameter per response, a different quantity, so
+#' requesting `"lambda"` from a `BoostMLR` fit is refused with that reason
+#' instead of silently dropped.
+#'
+#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+#'   fitted \code{BoostMLR} object.
+#' @param parameters Character vector naming the paths to extract. For a
+#'   \code{boostmtree} fit, any of `"rho"`, `"phi"`, and `"lambda"`, defaulting
+#'   to all three. For a \code{BoostMLR} fit, `"rho"` and/or `"phi"` only,
+#'   defaulting to both.
 #' @param ... Not used; present for S3 consistency.
 #'
 #' @return A `gg_boost_path` `data.frame` with columns:
@@ -108,6 +119,46 @@ gg_boost_path.boostmtree <- function(object,
         stringsAsFactors = FALSE
       )
     }))
+  })
+
+  gg_dta <- do.call(rbind, blocks)
+  rownames(gg_dta) <- NULL
+  class(gg_dta) <- c("gg_boost_path", class(gg_dta))
+  gg_dta
+}
+
+#' @export
+gg_boost_path.BoostMLR <- function(object, parameters = c("rho", "phi"), ...) {
+  known <- c("rho", "phi")
+  unknown <- setdiff(parameters, known)
+  if (length(unknown) > 0L) {
+    stop(
+      "gg_boost_path: BoostMLR records no ",
+      paste(sQuote(unknown), collapse = ", "), " path. Its Lambda_List holds ",
+      "per-iteration basis coefficients rather than a scalar smoothing ",
+      "parameter per response, so it is not the same quantity. Expected any ",
+      "of ", paste(sQuote(known), collapse = ", "), ".",
+      call. = FALSE
+    )
+  }
+  if (length(parameters) == 0L) {
+    stop("gg_boost_path: 'parameters' must be a non-empty character vector.",
+         call. = FALSE)
+  }
+  parameters <- unique(parameters)
+
+  fields <- c(rho = "Rho", phi = "Phi")
+  labels <- object$y_Names %||% colnames(object$Rho)
+
+  blocks <- lapply(parameters, function(p) {
+    mat <- object[[fields[[p]]]]
+    if (is.null(mat)) {
+      stop("gg_boost_path: this BoostMLR object records no '", p, "' path.",
+           call. = FALSE)
+    }
+    block <- .boost_mlr_long(mat, labels, "gg_boost_path")
+    block$parameter <- factor(p, levels = parameters)
+    block[, c("iteration", "value", "parameter", "response")]
   })
 
   gg_dta <- do.call(rbind, blocks)

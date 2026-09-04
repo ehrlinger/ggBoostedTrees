@@ -14,7 +14,16 @@
 #' `l2` column. `use.rmse = FALSE` returns `(l2 * y.sd)^2`, the squared error
 #' on the original scale.
 #'
-#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object.
+#' This figure also accepts a \code{BoostMLR} fit. `BoostMLR` records
+#' `Error_Rate` as an M-by-response matrix already on a single scale, so there
+#' is no `use.rmse` argument for that backend. `BoostMLR` also selects no
+#' optimal iteration anywhere in the object -- `partial.BoostMLR()` takes
+#' `Mopt` as a user-supplied argument instead -- so `optimal` is `FALSE` for
+#' every row; deriving an argmin here would report a choice the backend never
+#' made.
+#'
+#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+#'   fitted \code{BoostMLR} object.
 #' @param use.rmse Logical. When `TRUE` (default) return the standardized `l2`
 #'   error; when `FALSE` return the unstandardized squared error.
 #' @param ... Not used; present for S3 consistency.
@@ -100,6 +109,26 @@ gg_boost_error.boostmtree <- function(object, use.rmse = TRUE, ...) {
   })
 
   gg_dta <- do.call(rbind, blocks)
+  rownames(gg_dta) <- NULL
+  class(gg_dta) <- c("gg_boost_error", class(gg_dta))
+  gg_dta
+}
+
+#' @export
+gg_boost_error.BoostMLR <- function(object, ...) {
+  if (is.null(object$Error_Rate)) {
+    stop("gg_boost_error: this BoostMLR object records no error path.",
+         call. = FALSE)
+  }
+  labels <- object$y_Names %||% colnames(object$Error_Rate)
+  gg_dta <- .boost_mlr_long(object$Error_Rate, labels, "gg_boost_error")
+
+  # BoostMLR selects no optimal iteration -- there is no m.opt equivalent
+  # anywhere in the object -- so no row is flagged and the renderer draws no
+  # rule. Deriving argmin here would report a choice the backend never made.
+  gg_dta$optimal <- FALSE
+  gg_dta <- gg_dta[, c("iteration", "value", "response", "optimal")]
+
   rownames(gg_dta) <- NULL
   class(gg_dta) <- c("gg_boost_error", class(gg_dta))
   gg_dta

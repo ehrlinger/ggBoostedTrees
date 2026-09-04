@@ -7,7 +7,8 @@
 gg_boost_error(object, use.rmse = TRUE, ...)
 }
 \arguments{
-\item{object}{A fitted \code{\link[boostmtree]{boostmtree}} object.}
+\item{object}{A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+fitted \code{BoostMLR} object.}
 
 \item{use.rmse}{Logical. When \code{TRUE} (default) return the standardized \code{l2}
 error; when \code{FALSE} return the unstandardized squared error.}
@@ -37,6 +38,14 @@ reports that the fit has no error path, refit with \code{cv.flag = TRUE}.
 \code{boostmtree} stores the error on the standardized response scale in the
 \code{l2} column. \code{use.rmse = FALSE} returns \code{(l2 * y.sd)^2}, the squared error
 on the original scale.
+
+This figure also accepts a \code{BoostMLR} fit. \code{BoostMLR} records
+\code{Error_Rate} as an M-by-response matrix already on a single scale, so there
+is no \code{use.rmse} argument for that backend. \code{BoostMLR} also selects no
+optimal iteration anywhere in the object -- \code{partial.BoostMLR()} takes
+\code{Mopt} as a user-supplied argument instead -- so \code{optimal} is \code{FALSE} for
+every row; deriving an argmin here would report a choice the backend never
+made.
 }
 \examples{
 \donttest{

@@ -69,3 +69,37 @@ test_that("gg_boost_path errors on a path/n.q shape mismatch", {
 
   expect_error(gg_boost_path(fit, parameters = "rho"), "rho")
 })
+
+test_that("a BoostMLR fit yields rho and phi paths", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_path(f)
+
+  expect_identical(
+    names(gg), c("iteration", "value", "parameter", "response")
+  )
+  expect_identical(levels(gg$parameter), c("rho", "phi"))
+  expect_identical(nrow(gg), as.integer(f$M) * length(f$y_Names) * 2L)
+})
+
+test_that("BoostMLR path values come from Rho and Phi", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_path(f)
+
+  expect_equal(
+    gg$value[gg$parameter == "rho" & gg$response == "y1"],
+    unname(f$Rho[, 1])
+  )
+  expect_equal(
+    gg$value[gg$parameter == "phi" & gg$response == "y3"],
+    unname(f$Phi[, 3])
+  )
+})
+
+test_that("requesting lambda from a BoostMLR fit is refused with a reason", {
+  # BoostMLR's Lambda_List holds per-iteration basis coefficients, not a
+  # scalar smoothing parameter per response, so it is not the same quantity.
+  expect_error(
+    gg_boost_path(boostmlr_fixture(), parameters = "lambda"),
+    "lambda"
+  )
+})

@@ -27,6 +27,28 @@
   invisible(object)
 }
 
+# Pivot a BoostMLR M-by-response matrix into long form. BoostMLR stores
+# Error_Rate, Rho and Phi identically, so the three extractions differ only in
+# which matrix they read and what they call the value.
+.boost_mlr_long <- function(mat, labels, value_name) {
+  mat <- as.matrix(mat)
+  if (ncol(mat) != length(labels)) {
+    stop(
+      value_name, ": the fit names ", length(labels), " response(s) but ",
+      "records ", ncol(mat), " column(s).",
+      call. = FALSE
+    )
+  }
+  do.call(rbind, lapply(seq_len(ncol(mat)), function(q) {
+    data.frame(
+      iteration = seq_len(nrow(mat)),
+      value = as.numeric(mat[, q]),
+      response = factor(labels[q], levels = labels),
+      stringsAsFactors = FALSE
+    )
+  }))
+}
+
 # Labels for the `response` column. boostmtree records q.set as NA for a
 # univariate fit, so a single response is labelled "y" rather than "NA".
 .boost_response_labels <- function(object) {
