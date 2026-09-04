@@ -46,6 +46,7 @@ reference:
   contents:
   - gg_boost_error
   - gg_boost_path
+  - gg_boost_trajectory
 
 - title: "2. Render — draw the extracted object"
   desc: >
@@ -56,6 +57,7 @@ reference:
   contents:
   - autoplot.gg_boost_error
   - autoplot.gg_boost_path
+  - autoplot.gg_boost_trajectory
 
 - title: "3. Shortcut — straight from a fit"
   desc: >

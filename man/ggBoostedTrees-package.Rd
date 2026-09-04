@@ -16,6 +16,7 @@ methods only.
 Useful links:
 \itemize{
   \item \url{https://github.com/ehrlinger/ggBoostedTrees}
+  \item \url{https://ehrlinger.github.io/ggBoostedTrees}
   \item Report bugs at \url{https://github.com/ehrlinger/ggBoostedTrees/issues}
 }
 
