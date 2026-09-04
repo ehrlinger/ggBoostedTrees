@@ -110,6 +110,17 @@ test_that("a BoostMLR predict object is refused", {
   expect_error(gg_boost_error(f), "grow")
 })
 
+test_that("use.rmse is refused positionally too", {
+  # The generic declares use.rmse as its second formal, so positional use is
+  # valid API syntax. Detecting only a NAMED entry in ... let the positional
+  # form through: the caller asked for a different scale and silently got the
+  # standardized values back.
+  expect_error(
+    gg_boost_error(boostmlr_fixture(), FALSE),
+    "use.rmse"
+  )
+})
+
 test_that("use.rmse is refused on the BoostMLR path", {
   expect_error(
     gg_boost_error(boostmlr_fixture(), use.rmse = FALSE),

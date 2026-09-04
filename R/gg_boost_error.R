@@ -122,11 +122,16 @@ gg_boost_error.boostmtree <- function(object, use.rmse = TRUE, ...) {
 }
 
 #' @export
-gg_boost_error.BoostMLR <- function(object, ...) {
+# `use.rmse` is a formal here, with no default, rather than something fished
+# out of `...`. The generic declares it as its second argument, so
+# gg_boost_error(fit, FALSE) is valid API syntax -- and inspecting `...` for a
+# NAMED entry missed exactly that form, silently returning standardized values
+# to a caller who had asked for the other scale. As a formal, missing() catches
+# the named and positional forms alike.
+gg_boost_error.BoostMLR <- function(object, use.rmse, ...) {
   .boost_check_mlr_grow(object, "gg_boost_error")
 
-  dots <- list(...)
-  if ("use.rmse" %in% names(dots)) {
+  if (!missing(use.rmse)) {
     stop(
       "gg_boost_error: a BoostMLR fit records no response scale (y.sd), ",
       "so its Error_Rate cannot be unstandardized; 'use.rmse' is not ",
