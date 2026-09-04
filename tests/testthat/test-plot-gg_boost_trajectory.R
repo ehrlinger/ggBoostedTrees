@@ -54,6 +54,27 @@ test_that("subset keeps only the named subjects", {
   expect_setequal(as.character(unique(p$data$id)), keep)
 })
 
+test_that("a repeated identifier in subset is not an error", {
+  gg <- gg_boost_trajectory(boost_fixture())
+  keep <- levels(gg$id)[1]
+
+  # subset feeds factor(levels = ), which rejects duplicated levels with a
+  # bare "factor level [2] is duplicated" carrying no function name. Naming a
+  # subject twice is a harmless thing for a caller to do.
+  p <- ggplot2::autoplot(gg, subset = c(keep, keep))
+
+  expect_identical(levels(droplevels(p$data$id)), keep)
+})
+
+test_that("subset keeps the caller's order after de-duplication", {
+  gg <- gg_boost_trajectory(boost_fixture())
+  ids <- levels(gg$id)[1:3]
+  # Reversed, with a repeat: the surviving order should be first-appearance.
+  p <- ggplot2::autoplot(gg, subset = c(ids[3], ids[1], ids[3]))
+
+  expect_identical(levels(p$data$id), c(ids[3], ids[1]))
+})
+
 test_that("subset errors on an identifier the data does not contain", {
   gg <- gg_boost_trajectory(boost_fixture())
 
