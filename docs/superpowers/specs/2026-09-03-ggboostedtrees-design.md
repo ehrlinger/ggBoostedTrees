@@ -99,7 +99,7 @@ object *structure* rather than values:
 |---|---|---|
 | `cv.flag` frozen residuals | `mu` and `err.rate` values | Extractors unaffected; plotted values wrong under CRAN 2.0.0 |
 | `na.action` handling | which rows survive the fit | None structurally |
-| `vimp(joint = TRUE)` dimnames | structure of the vimp object | Real — `gg_boost_vimp` reads those dimnames |
+| `vimp(joint = TRUE)` dimnames | CRAN raises an error; the fork returns a result | Real, but total: CRAN cannot produce a joint vimp object at all |
 
 No phase is *structurally* exposed except Interpretation. But structural
 indifference is not the same as correctness, and the Foundation phase is
@@ -117,16 +117,47 @@ The consequence is for examples and vignettes, not for the extractor code: any
 `gg_boost_error` example is a `cv.flag = TRUE` example, and until upstream
 merges the fix those must stay behind `\donttest` and out of the vignettes.
 
-**Requirement:** `gg_boost_vimp` normalizes vimp dimnames defensively, handling
-both the CRAN and fork shapes, rather than assuming the fork. This removes the
-coupling for the one class that has it, at negligible cost.
+**Resolved 2026-09-04, before Interpretation-phase work began.** The earlier
+open item recorded that the classification above came from prior debugging
+sessions and had never been verified. It has now been verified two ways, and
+the result changed the plan.
 
-**Open item:** the value-versus-structure classification above derives from prior
-debugging sessions and has not been re-verified against the fork diff. It must be
-confirmed before Interpretation-phase work begins. A direct
-`git diff release_2_0_0 v2.0.2-ccf` is not usable for this — the fork moved
-package files into a `boostmtree/` subdirectory, so the diff reads as pure
-insertion.
+The source diff is obtainable after all. The obstacle was only that the two
+trees store the package at different paths: CRAN 2.0.0 lives at
+`src/main/resources/cran/R/` in the `release_2_0_0` tag, the fork at
+`boostmtree/R/` in `v2.0.2-ccf`. Comparing `vimp.boostmtree.R` across those
+paths shows exactly one functional change; every other hunk is blank-line
+removal:
+
+```r
+# CRAN 2.0.0
+selected.names <- x.var.names
+# fork 2.0.2
+selected.names <- if (joint) "joint.vimp" else x.var.names
+```
+
+`p` is `1L` when `joint` in both versions, so CRAN labels a single value with
+the full `x.var.names` vector. Confirmed empirically by installing CRAN 2.0.0
+into a separate library and calling both versions on the same fitted object:
+
+| Call | CRAN 2.0.0 | fork 2.0.2 |
+|---|---|---|
+| `vimp()` | 4x1 matrix | 4x1 matrix |
+| `vimp(joint = TRUE)` | `Error: length of 'dimnames' [1] not equal to array extent` | 1x1 matrix, row named `joint.vimp` |
+
+Note also that the `x.names`-supplied branch is identical in both versions, so
+the defect fires only on the default `x.names = NULL`.
+
+**The consequence deletes a planned requirement rather than adding one.** The
+earlier draft required `gg_boost_vimp` to normalize dimnames defensively across
+"both the CRAN and fork shapes". There is no CRAN joint shape to normalize:
+CRAN cannot construct the object at all, so no such object can ever reach the
+extractor. `gg_boost_vimp` therefore reads the fork's shape with no
+compatibility layer.
+
+What remains is the same consequence the `cv.flag` fix has — any example or
+vignette calling `vimp(joint = TRUE)` cannot run under CRAN 2.0.0, and must
+stay behind `\donttest` until upstream merges the fix.
 
 ### Test fixtures
 
@@ -177,13 +208,33 @@ exported.
 | `gg_boost_error` | `iteration, value, response, optimal` | `err.rate[[q]][, "l2"]`, `m.opt` |
 | `gg_boost_path` | `iteration, value, parameter, response` | `rho`, `phi`, `lambda` |
 | `gg_boost_trajectory` | `id, time, fitted, observed, response` | `mu`, `y.org`, `time` |
-| `gg_boost_vimp` | `variable, importance, response` | `vimp.boostmtree()` |
-| `gg_boost_effect` | `variable, x, time, estimate, lower, upper, kind` | `partial.plot()`, `marginal.plot()` |
+| `gg_boost_vimp` | `variable, importance, component, response` | `vimp.boostmtree()` |
+| `gg_boost_effect` | `variable, x, time, estimate, kind` | `partial.plot()`, `marginal.plot()` |
 
-`parameter` in `gg_boost_path` and `kind` in `gg_boost_effect` are factors. This
-lets one renderer produce a faceted multi-panel figure instead of requiring
-several near-identical plot methods. Partial and marginal effects are one class
-distinguished by `kind`, not two classes.
+`parameter` in `gg_boost_path`, `component` in `gg_boost_vimp` and `kind` in
+`gg_boost_effect` are factors. This lets one renderer produce a faceted
+multi-panel figure instead of requiring several near-identical plot methods.
+Partial and marginal effects are one class distinguished by `kind`, not two
+classes.
+
+Two of those contracts were corrected on 2026-09-04, after inspecting what
+`boostmtree` actually returns:
+
+- `vimp.boostmtree()` yields a `main` matrix, an `interaction` matrix and a
+  scalar `time.effect`. The original three-column contract could hold only one
+  of them, and dropping the interaction would discard the time-covariate effect
+  the model exists to fit. `component` (`main` / `interaction`) carries both;
+  `time.effect` has no variable to attach to and rides as an attribute.
+- The original `gg_boost_effect` contract listed `lower` and `upper`. Neither
+  `partial.plot()` nor `marginal.plot()` computes an interval, so those columns
+  were speculative and are removed.
+
+`partial.plot()` returns `$curves[[var]]`, a wide frame of `x` plus one column
+per time point. `marginal.plot()` returns both `$data[[var]]` (the raw scatter)
+and `$smooth[[var]]` (the smoothed curve), each keyed by time. `gg_boost_effect`
+takes the smoothed curve for the marginal kind, so both levels of `kind` mean
+"the fitted effect". The raw scatter is the observed data, already reachable
+through `gg_boost_trajectory`.
 
 `response` carries the `q.set` for multivariate fits and holds a single level
 for univariate fits, so faceting logic is uniform across both cases.
