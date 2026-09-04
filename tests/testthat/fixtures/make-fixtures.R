@@ -75,7 +75,17 @@ writeLines(
     "Factor-covariate effect fixtures: effect_partial_factor.rds,",
     "  effect_marginal_factor.rds (covariate x2 as a two-level factor).",
     "  The underlying fit is deliberately NOT committed; only the effect",
-    "  objects are needed and they are small."
+    "  objects are needed and they are small.",
+    "",
+    "BoostMLR fixture: boostmlr_grow.rds",
+    paste0("  BoostMLR ", if (requireNamespace("BoostMLR", quietly = TRUE)) {
+      as.character(utils::packageVersion("BoostMLR"))
+    } else {
+      "not installed"
+    }, " (CRAN); simLong(n = 20, N = 3, rho = 0.8, model = 1,"),
+    "  q_x = 2, q_y = 0); BoostMLR(M = 50, VarFlag = TRUE); set.seed(3)",
+    "  BoostMLR records no optimal iteration, so gg_boost_error()'s",
+    "  optimal column is all FALSE for this backend."
   ),
   file.path(here, "boost_continuous.dcf")
 )
@@ -144,3 +154,31 @@ saveRDS(
 )
 
 cat("wrote factor-covariate effect fixtures\n")
+
+## BoostMLR fixture (Phase 4).
+##
+## BoostMLR is a Suggests package, so guard its use here. The extractors
+## themselves need no guard: they read list elements and never call a BoostMLR
+## function, so S3 dispatch works off the class attribute alone.
+##
+## n = 20, N = 3, M = 50 gives 130 observations across 3 responses in about
+## 300 KB. BoostMLR is natively multi-response, which is why this fixture is
+## worth having beyond the second-backend proof: it is the first real
+## multi-response object in the suite.
+if (!requireNamespace("BoostMLR", quietly = TRUE)) {
+  message("BoostMLR not installed; skipping boostmlr_grow.rds.")
+} else {
+  set.seed(3)
+  mlr.sim <- BoostMLR::simLong(
+    n = 20, N = 3, rho = 0.8, model = 1, q_x = 2, q_y = 0
+  )$dtaL
+
+  mlr.fit <- BoostMLR::BoostMLR(
+    x = mlr.sim$features, tm = mlr.sim$time, id = mlr.sim$id, y = mlr.sim$y,
+    M = 50, VarFlag = TRUE, Verbose = FALSE
+  )
+
+  saveRDS(mlr.fit, file.path(here, "boostmlr_grow.rds"), compress = "xz")
+  cat("wrote BoostMLR fixture:", length(mlr.fit$tm), "observations,",
+      ncol(mlr.fit$y), "responses\n")
+}

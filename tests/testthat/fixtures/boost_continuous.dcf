@@ -24,3 +24,9 @@ Factor-covariate effect fixtures: effect_partial_factor.rds,
   effect_marginal_factor.rds (covariate x2 as a two-level factor).
   The underlying fit is deliberately NOT committed; only the effect
   objects are needed and they are small.
+
+BoostMLR fixture: boostmlr_grow.rds
+  BoostMLR 1.0.3 (CRAN); simLong(n = 20, N = 3, rho = 0.8, model = 1,
+  q_x = 2, q_y = 0); BoostMLR(M = 50, VarFlag = TRUE); set.seed(3)
+  BoostMLR records no optimal iteration, so gg_boost_error()'s
+  optimal column is all FALSE for this backend.
