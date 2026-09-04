@@ -55,7 +55,11 @@ autoplot.gg_boost_trajectory <- function(object,
   .boost_check_gg(object, "gg_boost_trajectory")
 
   if (!is.null(subset)) {
-    wanted <- as.character(subset)
+    # De-duplicate: `wanted` becomes factor levels below, and factor() rejects
+    # a repeated level with a bare "factor level [2] is duplicated" naming no
+    # function. unique() keeps first-appearance order, so the caller's chosen
+    # ordering survives.
+    wanted <- unique(as.character(subset))
     missing_ids <- setdiff(wanted, levels(object$id))
     if (length(missing_ids) > 0L) {
       stop(
