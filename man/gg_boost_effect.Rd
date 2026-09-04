@@ -9,7 +9,7 @@ gg_boost_effect(object, ...)
 \arguments{
 \item{object}{A \code{partial.plot.boostmtree} or \code{marginal.plot.boostmtree}
 object, as returned by \code{boostmtree::partial.plot()} or
-\code{boostmtree::marginal.plot()} with \code{plot.it = FALSE}.}
+\code{boostmtree::marginal.plot()} with \verb{output = "data", verbose = FALSE}.}
 
 \item{...}{Not used; present for S3 consistency.}
 }
@@ -48,7 +48,9 @@ fit <- boostmtree::boostmtree(
   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
   M = 50, verbose = FALSE
 )
-pp <- boostmtree::partial.plot(fit, x.var.names = "x1", plot.it = FALSE)
+pp <- boostmtree::partial.plot(
+  fit, x.var.names = "x1", output = "data", verbose = FALSE
+)
 plot(gg_boost_effect(pp))
 }
 

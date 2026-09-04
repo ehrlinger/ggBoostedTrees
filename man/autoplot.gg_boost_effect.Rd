@@ -37,7 +37,9 @@ fit <- boostmtree::boostmtree(
   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
   M = 50, verbose = FALSE
 )
-pp <- boostmtree::partial.plot(fit, x.var.names = "x1", plot.it = FALSE)
+pp <- boostmtree::partial.plot(
+  fit, x.var.names = "x1", output = "data", verbose = FALSE
+)
 plot(gg_boost_effect(pp))
 }
 

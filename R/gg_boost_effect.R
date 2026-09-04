@@ -19,7 +19,7 @@
 #'
 #' @param object A `partial.plot.boostmtree` or `marginal.plot.boostmtree`
 #'   object, as returned by `boostmtree::partial.plot()` or
-#'   `boostmtree::marginal.plot()` with `plot.it = FALSE`.
+#'   `boostmtree::marginal.plot()` with `output = "data", verbose = FALSE`.
 #' @param ... Not used; present for S3 consistency.
 #'
 #' @return A `gg_boost_effect` `data.frame` with columns:
@@ -40,7 +40,9 @@
 #'   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
 #'   M = 50, verbose = FALSE
 #' )
-#' pp <- boostmtree::partial.plot(fit, x.var.names = "x1", plot.it = FALSE)
+#' pp <- boostmtree::partial.plot(
+#'   fit, x.var.names = "x1", output = "data", verbose = FALSE
+#' )
 #' plot(gg_boost_effect(pp))
 #' }
 #'
@@ -56,7 +58,8 @@ gg_boost_effect.default <- function(object, ...) {
     "gg_boost_effect: expected a 'partial.plot.boostmtree' or ",
     "'marginal.plot.boostmtree' object; got an object of class ",
     paste(class(object), collapse = "/"),
-    ". Produce one with boostmtree::partial.plot(fit, plot.it = FALSE).",
+    ". Produce one with boostmtree::partial.plot(",
+    "fit, output = \"data\", verbose = FALSE).",
     call. = FALSE
   )
 }

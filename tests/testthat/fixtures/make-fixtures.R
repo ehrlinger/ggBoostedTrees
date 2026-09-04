@@ -99,11 +99,15 @@ saveRDS(
   file.path(here, "vimp_joint.rds"), compress = "xz"
 )
 saveRDS(
-  partial.plot(fit, x.var.names = effect.vars, plot.it = FALSE),
+  partial.plot(
+    fit, x.var.names = effect.vars, output = "data", verbose = FALSE
+  ),
   file.path(here, "effect_partial.rds"), compress = "xz"
 )
 saveRDS(
-  marginal.plot(fit, x.var.names = effect.vars, plot.it = FALSE),
+  marginal.plot(
+    fit, x.var.names = effect.vars, output = "data", verbose = FALSE
+  ),
   file.path(here, "effect_marginal.rds"), compress = "xz"
 )
 

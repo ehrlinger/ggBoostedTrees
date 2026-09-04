@@ -10,4 +10,3 @@ docs/articles
 *.Rcheck/
 *.tar.gz
 pkgdown-site/
-Rplots.pdf

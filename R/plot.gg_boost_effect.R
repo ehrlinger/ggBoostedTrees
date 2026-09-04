@@ -25,17 +25,16 @@
 #'   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
 #'   M = 50, verbose = FALSE
 #' )
-#' pp <- boostmtree::partial.plot(fit, x.var.names = "x1", plot.it = FALSE)
+#' pp <- boostmtree::partial.plot(
+#'   fit, x.var.names = "x1", output = "data", verbose = FALSE
+#' )
 #' plot(gg_boost_effect(pp))
 #' }
 #'
 #' @importFrom ggplot2 autoplot ggplot aes geom_line facet_wrap labs
 #' @export
 autoplot.gg_boost_effect <- function(object, ...) {
-  if (!inherits(object, "gg_boost_effect")) {
-    stop("Incorrect object type: expected a gg_boost_effect object.",
-         call. = FALSE)
-  }
+  .boost_check_gg(object, "gg_boost_effect")
 
   gg_plt <- ggplot2::ggplot(
     object,
