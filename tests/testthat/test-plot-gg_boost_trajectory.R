@@ -19,7 +19,9 @@ test_that("plot is an alias for autoplot", {
 })
 
 test_that("the renderer rejects a foreign object", {
-  expect_error(plot.gg_boost_trajectory(data.frame(x = 1)), "gg_boost_trajectory")
+  expect_error(
+    plot.gg_boost_trajectory(data.frame(x = 1)), "gg_boost_trajectory"
+  )
 })
 
 test_that("axis labels name time and the response", {

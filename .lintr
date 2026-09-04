@@ -1,24 +1,24 @@
 # House lint configuration.
 #
-# line_length 120 rather than lintr's 80: matches the rest of the portfolio,
-# and the roxygen-heavy extractor files read better unwrapped.
+# This sits at lintr's defaults with ONE exception, because that is all the
+# code turned out to need. An earlier version also widened line_length to 120
+# and disabled indentation_linter; both were measured on 2026-09-04 and
+# removed. R/ had no line over 80 at all, and the seven that existed were in
+# tests/ at 81 to 87 characters; indentation_linter produced a single lint,
+# off by one space. Both justifications described a problem the code did not
+# have, so the lines were wrapped and the rules restored.
 #
-# object_name accepts dotted.case alongside snake_case: this package's
-# arguments deliberately mirror boostmtree's own naming, which is dotted
-# throughout -- `use.rmse` here answers to `cv.flag`, `na.action` and
-# `err.rate` there. Renaming them to snake_case would make the plotting layer
-# read as though it belonged to a different package than the model it draws.
-#
-# indentation_linter is off for the same reason it is off in hvtiPlotR: it
-# fires on the aligned-argument style used throughout R/ without catching a
-# defect.
+# object_name accepts dotted.case alongside snake_case, and this one is real:
+# without it lintr reports twelve names. The package's arguments deliberately
+# mirror boostmtree's own naming, which is dotted throughout -- `use.rmse`
+# here answers to `cv.flag`, `na.action` and `err.rate` there. Renaming them
+# would make the plotting layer read as though it belonged to a different
+# package than the model it draws.
 #
 # Everything else is lintr's default and IS enforced. The workflow gates on
 # this file, so a genuine false positive belongs behind a `# nolint` carrying
 # its reason, not behind a widened rule here.
 linters: linters_with_defaults(
-    line_length_linter = line_length_linter(120L),
-    object_name_linter = object_name_linter(c("snake_case", "dotted.case", "symbols")),
-    indentation_linter = NULL
+    object_name_linter = object_name_linter(c("snake_case", "dotted.case", "symbols"))
   )
 encoding: "UTF-8"

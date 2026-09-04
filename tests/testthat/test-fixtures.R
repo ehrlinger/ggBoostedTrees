@@ -50,7 +50,9 @@ test_that("the vimp fixtures carry the shapes the extractor reads", {
   expect_true(is.matrix(v$interaction))
   expect_identical(rownames(v$main), c("x1", "x2", "x3", "x4"))
   # The interaction rownames carry a :time suffix the extractor must strip.
-  expect_identical(rownames(v$interaction), paste0(c("x1", "x2", "x3", "x4"), ":time"))
+  expect_identical(
+    rownames(v$interaction), paste0(c("x1", "x2", "x3", "x4"), ":time")
+  )
   expect_false(v$joint)
 })
 

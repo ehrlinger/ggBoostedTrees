@@ -163,7 +163,7 @@ test_that("gg_boost_error output rbinds across backends unchanged", {
   expect_identical(names(combined), names(gg_tree))
   expect_identical(names(combined), names(gg_mlr))
   expect_identical(vapply(combined, class, character(1)),
-                    vapply(gg_tree, class, character(1)))
+                   vapply(gg_tree, class, character(1)))
 })
 
 test_that("the BoostMLR error plot draws with no optimal rule", {
