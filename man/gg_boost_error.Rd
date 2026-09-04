@@ -42,7 +42,8 @@ on the original scale.
 This figure also accepts a \code{BoostMLR} \emph{grow} fit (predict
 objects are not supported -- see below). \code{BoostMLR} records \code{Error_Rate}
 as an M-by-response matrix already on a single scale, so there is no
-\code{use.rmse} argument for that backend; passing one is refused. \code{BoostMLR}
+\code{use.rmse} argument for that backend; \code{use.rmse = FALSE} is refused,
+while \code{TRUE}, the default, names the scale it already returns. \code{BoostMLR}
 grow objects also select no optimal iteration anywhere in the object --
 \code{partial.BoostMLR()} takes \code{Mopt} as a user-supplied argument instead --
 so \code{optimal} is \code{FALSE} for every row; deriving an argmin here would
