@@ -78,3 +78,10 @@ partial_factor_fixture <- function() {
 marginal_factor_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "effect_marginal_factor.rds"))
 }
+
+# The BoostMLR grow object. Read from disk, never refit. BoostMLR stores the
+# same information as boostmtree in a flat layout: mu and y are
+# observation-by-response matrices, tm and id flat vectors.
+boostmlr_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "boostmlr_grow.rds"))
+}

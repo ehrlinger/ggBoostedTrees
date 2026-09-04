@@ -1,5 +1,29 @@
 Package: ggBoostedTrees
-Version: 0.0.5
+Version: 0.0.6
+
+# ggBoostedTrees 0.0.6
+
+* `BoostMLR` fits are now accepted by `gg_boost_trajectory()`,
+  `gg_boost_error()` and `gg_boost_path()`. Adding the backend required
+  extractor methods only; no renderer changed, which is what the tidy
+  intermediate exists to guarantee.
+* `BoostMLR` selects no optimal boosting iteration, so `gg_boost_error()`
+  flags none for that backend rather than deriving one.
+* `BoostMLR`'s `Lambda_List` holds per-iteration basis coefficients rather
+  than a scalar smoothing parameter, so `gg_boost_path()` offers `rho` and
+  `phi` for that backend and says so if `lambda` is requested.
+* `gg_boost_vimp()` and `gg_boost_effect()` remain `boostmtree` only.
+* `gg_boost_error()` refuses `use.rmse` on a `BoostMLR` fit whether it is
+  passed by name or by position. The generic declares it as its second formal,
+  so the positional form is valid syntax, and it previously fell through and
+  returned standardized values to a caller who had asked for the other scale.
+* `autoplot.gg_boost_trajectory()` accepts a repeated subject identifier in
+  `subset` rather than failing with an internal `factor level [2] is
+  duplicated`. The caller's ordering still determines the factor levels.
+* `gg_boost_path()`'s `boostmtree` method validates `parameters` the same
+  way its `BoostMLR` sibling and `gg_boost_vimp()`'s `components` argument
+  do: an empty vector is rejected and duplicates are de-duplicated rather
+  than reaching an opaque `factor()` error.
 
 # ggBoostedTrees 0.0.5
 

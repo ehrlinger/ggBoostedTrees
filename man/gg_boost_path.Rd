@@ -7,10 +7,13 @@
 gg_boost_path(object, parameters = c("rho", "phi", "lambda"), ...)
 }
 \arguments{
-\item{object}{A fitted \code{\link[boostmtree]{boostmtree}} object.}
+\item{object}{A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+fitted \code{BoostMLR} object.}
 
-\item{parameters}{Character vector naming the paths to extract, any of
-\code{"rho"}, \code{"phi"}, and \code{"lambda"}. Defaults to all three.}
+\item{parameters}{Character vector naming the paths to extract. For a
+\code{boostmtree} fit, any of \code{"rho"}, \code{"phi"}, and \code{"lambda"}, defaulting
+to all three. For a \code{BoostMLR} fit, \code{"rho"} and/or \code{"phi"} only,
+defaulting to both.}
 
 \item{...}{Not used; present for S3 consistency.}
 }
@@ -38,6 +41,14 @@ is still drifting when boosting stops.
 Unlike the error path, these are recorded on every fit and do not require
 \code{cv.flag = TRUE}. A parameter absent from the fit is dropped silently; it is
 an error only when none of the requested parameters is present.
+
+This figure also accepts a \code{BoostMLR} fit, which records only \code{Rho}
+and \code{Phi} as M-by-response matrices -- the method's default \code{parameters} is
+\code{c("rho", "phi")} rather than all three. \code{BoostMLR} has no comparable
+\code{lambda}: its \code{Lambda_List} holds per-iteration basis coefficients rather
+than a scalar smoothing parameter per response, a different quantity, so
+requesting \code{"lambda"} from a \code{BoostMLR} fit is refused with that reason
+instead of silently dropped.
 }
 \examples{
 \donttest{

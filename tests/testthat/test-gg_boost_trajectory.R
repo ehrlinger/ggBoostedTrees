@@ -134,3 +134,80 @@ test_that("gg_boost_trajectory fails loud with no subjects", {
 
   expect_error(gg_boost_trajectory(fit), "gg_boost_trajectory")
 })
+
+test_that("a BoostMLR fit yields the same contract as a boostmtree fit", {
+  gg <- gg_boost_trajectory(boostmlr_fixture())
+
+  expect_s3_class(gg, "gg_boost_trajectory")
+  expect_identical(
+    names(gg), c("id", "time", "fitted", "observed", "response")
+  )
+  expect_s3_class(gg$id, "factor")
+  expect_type(gg$time, "double")
+  expect_type(gg$fitted, "double")
+  expect_type(gg$observed, "double")
+  expect_s3_class(gg$response, "factor")
+})
+
+test_that("one row per observation per response", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_trajectory(f)
+
+  expect_identical(nrow(gg), length(f$tm) * ncol(f$mu))
+  expect_identical(levels(gg$response), f$y_Names)
+})
+
+test_that("response labels come from y_Names, not mu colnames", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_trajectory(f)
+
+  # mu carries no column names at all, so a label taken from there would be NA.
+  expect_null(colnames(f$mu))
+  expect_identical(levels(gg$response), c("y1", "y2", "y3"))
+})
+
+test_that("fitted and observed come from the matching response column", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_trajectory(f)
+
+  rows <- gg[gg$response == "y2", ]
+  # Matches the extractor's own ordering: subjects by first appearance in
+  # id (via match()), not by sorted id value -- these agree only by
+  # coincidence when the fixture's ids happen to arrive ascending.
+  id_levels <- unique(as.character(f$id))
+  ord <- order(match(as.character(f$id), id_levels), f$tm)
+  expect_equal(rows$fitted, unname(f$mu[ord, 2]))
+  expect_equal(rows$observed, unname(f$y[ord, 2]))
+})
+
+test_that("a BoostMLR predict object is refused", {
+  f <- boostmlr_fixture()
+  class(f) <- c("BoostMLR", "predict")
+
+  expect_error(gg_boost_trajectory(f), "grow")
+})
+
+test_that("a y/mu dimension mismatch is refused rather than silently misaligned", {
+  f <- boostmlr_fixture()
+  # Fewer rows in y than mu would otherwise silently subset to the wrong
+  # rows via as.matrix() recycling/truncation rather than erroring.
+  f$y <- f$y[seq_len(nrow(f$y) - 1L), , drop = FALSE]
+
+  expect_error(gg_boost_trajectory(f), "dimensions")
+})
+
+test_that("rows are sorted by time within subject", {
+  gg <- gg_boost_trajectory(boostmlr_fixture())
+
+  by_subject <- split(gg$time, list(gg$id, gg$response), drop = TRUE)
+  expect_false(any(vapply(by_subject, is.unsorted, logical(1))))
+})
+
+test_that("the BoostMLR trajectory plot draws without touching a renderer", {
+  # The whole architectural claim: a new backend is extractor methods only.
+  p <- ggplot2::autoplot(gg_boost_trajectory(boostmlr_fixture()))
+
+  expect_s3_class(p, "ggplot")
+  built <- ggplot2::ggplot_build(p)
+  expect_gt(nrow(built$data[[1]]), 0L)
+})

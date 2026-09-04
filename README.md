@@ -21,7 +21,7 @@ Pre-1.0 and under active development. What exists today:
 | Subject trajectories, observed against fitted | Implemented |
 | Variable importance | Implemented |
 | Partial and marginal effects | Implemented |
-| `BoostMLR` as a second backend | Not yet |
+| `BoostMLR` as a second backend | Partial — `gg_boost_trajectory()`, `gg_boost_error()` and `gg_boost_path()` accept it; `gg_boost_vimp()` and `gg_boost_effect()` remain `boostmtree` only |
 
 The five implemented figures are complete and tested. The API for what exists
 is not expected to change; the list above is what is missing, not what is
@@ -30,11 +30,13 @@ provisional.
 ggBoostedTrees draws diagnostic figures for boosted tree models fit with
 [boostmtree](https://cran.r-project.org/package=boostmtree), which implements
 Friedman's gradient descent boosting with multivariate tree base learners for
-longitudinal responses. It is the boosting counterpart to
+longitudinal responses, and with partial support for `BoostMLR` fits (see the
+status table above). It is the boosting counterpart to
 [ggRandomForests](https://github.com/ehrlinger/ggRandomForests), and follows
 the same two-step idiom: an extractor pulls a tidy data frame out of a fitted
 model, and `autoplot()` renders it. If you have a `boostmtree` fit and want to
-know whether it converged, this is the package.
+know whether it converged, this is the package; three of the five figures
+also accept a `BoostMLR` fit.
 
 The full reference — every function and the changelog — is online at
 <https://ehrlinger.github.io/ggBoostedTrees/>.
@@ -150,4 +152,5 @@ autoplot(gg_boost_trajectory(fit))
 - [boostmtree](https://cran.r-project.org/package=boostmtree) — the backend
   modelled here.
 - [BoostMLR](https://cran.r-project.org/package=BoostMLR) — boosting for
-  multivariate longitudinal responses, planned as a second backend.
+  multivariate longitudinal responses, a supported second backend for
+  `gg_boost_trajectory()`, `gg_boost_error()` and `gg_boost_path()`.

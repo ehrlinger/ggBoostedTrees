@@ -14,7 +14,23 @@
 #' `l2` column. `use.rmse = FALSE` returns `(l2 * y.sd)^2`, the squared error
 #' on the original scale.
 #'
-#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object.
+#' This figure also accepts a \code{BoostMLR} \emph{grow} fit (predict
+#' objects are not supported -- see below). `BoostMLR` records `Error_Rate`
+#' as an M-by-response matrix already on a single scale, so there is no
+#' `use.rmse` argument for that backend; passing one is refused. `BoostMLR`
+#' grow objects also select no optimal iteration anywhere in the object --
+#' `partial.BoostMLR()` takes `Mopt` as a user-supplied argument instead --
+#' so `optimal` is `FALSE` for every row; deriving an argmin here would
+#' report a choice the backend never made.
+#'
+#' A `BoostMLR` \strong{predict} object is refused outright, even though it
+#' shares the `"BoostMLR"` class and also carries an `Error_Rate`. Its
+#' `Error_Rate` is test error rather than the training path documented above,
+#' and it records a real `Mopt` that this extractor would otherwise silently
+#' discard and overwrite with `optimal = FALSE`.
+#'
+#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+#'   fitted \code{BoostMLR} object.
 #' @param use.rmse Logical. When `TRUE` (default) return the standardized `l2`
 #'   error; when `FALSE` return the unstandardized squared error.
 #' @param ... Not used; present for S3 consistency.
@@ -100,6 +116,43 @@ gg_boost_error.boostmtree <- function(object, use.rmse = TRUE, ...) {
   })
 
   gg_dta <- do.call(rbind, blocks)
+  rownames(gg_dta) <- NULL
+  class(gg_dta) <- c("gg_boost_error", class(gg_dta))
+  gg_dta
+}
+
+#' @export
+# `use.rmse` is a formal here, with no default, rather than something fished
+# out of `...`. The generic declares it as its second argument, so
+# gg_boost_error(fit, FALSE) is valid API syntax -- and inspecting `...` for a
+# NAMED entry missed exactly that form, silently returning standardized values
+# to a caller who had asked for the other scale. As a formal, missing() catches
+# the named and positional forms alike.
+gg_boost_error.BoostMLR <- function(object, use.rmse, ...) {
+  .boost_check_mlr_grow(object, "gg_boost_error")
+
+  if (!missing(use.rmse)) {
+    stop(
+      "gg_boost_error: a BoostMLR fit records no response scale (y.sd), ",
+      "so its Error_Rate cannot be unstandardized; 'use.rmse' is not ",
+      "supported for BoostMLR fits.",
+      call. = FALSE
+    )
+  }
+
+  if (is.null(object$Error_Rate)) {
+    stop("gg_boost_error: this BoostMLR object records no error path.",
+         call. = FALSE)
+  }
+  labels <- object$y_Names %||% colnames(object$Error_Rate)
+  gg_dta <- .boost_mlr_long(object$Error_Rate, labels, "gg_boost_error")
+
+  # BoostMLR selects no optimal iteration -- there is no m.opt equivalent
+  # anywhere in the object -- so no row is flagged and the renderer draws no
+  # rule. Deriving argmin here would report a choice the backend never made.
+  gg_dta$optimal <- FALSE
+  gg_dta <- gg_dta[, c("iteration", "value", "response", "optimal")]
+
   rownames(gg_dta) <- NULL
   class(gg_dta) <- c("gg_boost_error", class(gg_dta))
   gg_dta

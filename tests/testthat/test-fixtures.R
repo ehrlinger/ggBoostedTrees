@@ -83,3 +83,39 @@ test_that("the marginal fixture carries raw and smoothed curves", {
   # The raw scatter is deliberately not extracted; see the spec.
   expect_false(is.null(m$data))
 })
+
+test_that("the BoostMLR fixture carries the shapes the extractors read", {
+  f <- boostmlr_fixture()
+
+  expect_s3_class(f, "BoostMLR")
+  expect_identical(class(f)[2], "grow")
+  expect_identical(f$y_Names, c("y1", "y2", "y3"))
+  expect_true(is.matrix(f$mu))
+  expect_true(is.matrix(f$y))
+  expect_identical(dim(f$mu), dim(f$y))
+  expect_identical(length(f$tm), nrow(f$mu))
+  expect_identical(length(f$id), nrow(f$mu))
+})
+
+test_that("the BoostMLR path matrices are M by response", {
+  f <- boostmlr_fixture()
+
+  for (nm in c("Error_Rate", "Rho", "Phi")) {
+    expect_true(is.matrix(f[[nm]]), label = nm)
+    expect_identical(colnames(f[[nm]]), f$y_Names, label = nm)
+    expect_identical(nrow(f[[nm]]), as.integer(f$M), label = nm)
+  }
+})
+
+test_that("BoostMLR records no optimal iteration", {
+  f <- boostmlr_fixture()
+
+  # This is why gg_boost_error()'s optimal column is all FALSE for BoostMLR.
+  expect_length(grep("opt", names(f), ignore.case = TRUE), 0L)
+})
+
+test_that("mu carries no column names, so labels must come from y_Names", {
+  f <- boostmlr_fixture()
+
+  expect_null(colnames(f$mu))
+})
