@@ -88,6 +88,16 @@ test_that("alpha falls as the cohort grows", {
   expect_gt(many, 0)
 })
 
+test_that("alpha pins the 12/n formula and its caps", {
+  # The default alpha is what makes an overplotted cohort readable as a
+  # density, so a silent change to the constant or the floor/cap would
+  # change every trajectory figure the package draws without any test
+  # failing. Pin the actual contract: max(0.1, min(0.9, 12 / n)).
+  expect_equal(.boost_trajectory_alpha(5L), 0.9) # small cohort hits the cap
+  expect_equal(.boost_trajectory_alpha(60L), 0.2) # mid-range formula value
+  expect_equal(.boost_trajectory_alpha(500L), 0.1) # large cohort hits the floor
+})
+
 test_that("an explicit alpha overrides the computed one", {
   gg <- gg_boost_trajectory(boost_fixture())
   p <- ggplot2::autoplot(gg, alpha = 0.42)
@@ -96,6 +106,23 @@ test_that("an explicit alpha overrides the computed one", {
     p$layers, function(l) class(l$geom)[1], character(1)
   ) == "GeomLine")[1]]]
   expect_equal(line$aes_params$alpha, 0.42)
+})
+
+test_that("no observed values suppresses the point layer, not the line", {
+  # A predict object carries no observed response, and autoplot silently
+  # drops the point layer for it. Nothing else in the suite exercises this
+  # branch, and a regression here would silently blank out a layer.
+  fit <- boost_fixture()
+  fit$y.org <- NULL
+  gg <- gg_boost_trajectory(fit)
+
+  expect_no_warning(p <- ggplot2::ggplot_build(ggplot2::autoplot(gg)))
+
+  geoms <- vapply(
+    p$plot$layers, function(l) class(l$geom)[1], character(1)
+  )
+  expect_false("GeomPoint" %in% geoms)
+  expect_true("GeomLine" %in% geoms)
 })
 
 test_that("the trajectory plot is stable", {
