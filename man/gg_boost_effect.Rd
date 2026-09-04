@@ -40,6 +40,13 @@ same thing: the fitted effect. The raw observations are available through
 \code{\link{gg_boost_trajectory}}.
 
 Neither source computes a confidence interval, so none is reported here.
+
+\code{gg_boost_effect} is currently single-response only. \code{boostmtree} nests
+\verb{$curves} / \verb{$smooth} as \verb{[[response]][[variable]]} and flattens the outer
+level only when the fit has a single response; a multi-response object is
+rejected with an informative error rather than mishandled. This is also
+why \code{gg_boost_effect} is the one class of the five without a \code{response}
+column.
 }
 \examples{
 \donttest{

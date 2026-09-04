@@ -40,9 +40,11 @@ test_that("partial estimates are the wide curve columns pivoted long", {
   p <- partial_fixture()
   gg <- gg_boost_effect(p)
 
-  first <- gg[gg$variable == "x1" & gg$time == p$time.points[1], ]
-  expect_equal(first$x, p$curves$x1$x)
-  expect_equal(first$estimate, p$curves$x1[[2]])
+  for (k in seq_along(p$time.points)) {
+    at_k <- gg[gg$variable == "x1" & gg$time == p$time.points[k], ]
+    expect_equal(at_k$x, p$curves$x1$x)
+    expect_equal(at_k$estimate, p$curves$x1[[k + 1L]])
+  }
 })
 
 test_that("time is parsed to a number, not left as a label", {
@@ -65,4 +67,18 @@ test_that("the marginal kind takes the smoothed curve, not the raw scatter", {
 test_that("gg_boost_effect rejects a non-effect object", {
   expect_error(gg_boost_effect(data.frame(x = 1)), "gg_boost_effect")
   expect_error(gg_boost_effect(boost_fixture()), "partial.plot")
+})
+
+test_that("a nested (multi-response) partial object is rejected", {
+  p <- partial_fixture()
+  p$curves <- list(y1 = p$curves, y2 = p$curves)
+
+  expect_error(gg_boost_effect(p), "single-response")
+})
+
+test_that("a nested (multi-response) marginal object is rejected", {
+  m <- marginal_fixture()
+  m$smooth <- list(y1 = m$smooth, y2 = m$smooth)
+
+  expect_error(gg_boost_effect(m), "single-response")
 })

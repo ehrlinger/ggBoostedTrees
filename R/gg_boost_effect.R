@@ -17,6 +17,13 @@
 #'
 #' Neither source computes a confidence interval, so none is reported here.
 #'
+#' `gg_boost_effect` is currently single-response only. `boostmtree` nests
+#' `$curves` / `$smooth` as `[[response]][[variable]]` and flattens the outer
+#' level only when the fit has a single response; a multi-response object is
+#' rejected with an informative error rather than mishandled. This is also
+#' why `gg_boost_effect` is the one class of the five without a `response`
+#' column.
+#'
 #' @param object A `partial.plot.boostmtree` or `marginal.plot.boostmtree`
 #'   object, as returned by `boostmtree::partial.plot()` or
 #'   `boostmtree::marginal.plot()` with `output = "data", verbose = FALSE`.
@@ -71,6 +78,14 @@ gg_boost_effect.partial.plot.boostmtree <- function(object, ...) {
     stop("gg_boost_effect: this object records no effect curves.",
          call. = FALSE)
   }
+  if (!is.data.frame(curves[[1L]])) {
+    stop(
+      "gg_boost_effect: this partial.plot object is nested by response ",
+      "(multi-response fit); gg_boost_effect() supports single-response ",
+      "'partial.plot.boostmtree' objects only.",
+      call. = FALSE
+    )
+  }
   time_points <- object$time.points
   var_levels <- names(curves)
 
@@ -109,6 +124,14 @@ gg_boost_effect.marginal.plot.boostmtree <- function(object, ...) {
   if (is.null(smooth) || length(smooth) == 0L) {
     stop("gg_boost_effect: this object records no smoothed effect curves.",
          call. = FALSE)
+  }
+  if (!is.data.frame(smooth[[1L]][[1L]])) {
+    stop(
+      "gg_boost_effect: this marginal.plot object is nested by response ",
+      "(multi-response fit); gg_boost_effect() supports single-response ",
+      "'marginal.plot.boostmtree' objects only.",
+      call. = FALSE
+    )
   }
   time_points <- object$time.points
   var_levels <- names(smooth)
