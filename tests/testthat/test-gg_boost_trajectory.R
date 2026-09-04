@@ -134,3 +134,60 @@ test_that("gg_boost_trajectory fails loud with no subjects", {
 
   expect_error(gg_boost_trajectory(fit), "gg_boost_trajectory")
 })
+
+test_that("a BoostMLR fit yields the same contract as a boostmtree fit", {
+  gg <- gg_boost_trajectory(boostmlr_fixture())
+
+  expect_s3_class(gg, "gg_boost_trajectory")
+  expect_identical(
+    names(gg), c("id", "time", "fitted", "observed", "response")
+  )
+  expect_s3_class(gg$id, "factor")
+  expect_type(gg$time, "double")
+  expect_type(gg$fitted, "double")
+  expect_type(gg$observed, "double")
+  expect_s3_class(gg$response, "factor")
+})
+
+test_that("one row per observation per response", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_trajectory(f)
+
+  expect_identical(nrow(gg), length(f$tm) * ncol(f$mu))
+  expect_identical(levels(gg$response), f$y_Names)
+})
+
+test_that("response labels come from y_Names, not mu colnames", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_trajectory(f)
+
+  # mu carries no column names at all, so a label taken from there would be NA.
+  expect_null(colnames(f$mu))
+  expect_identical(levels(gg$response), c("y1", "y2", "y3"))
+})
+
+test_that("fitted and observed come from the matching response column", {
+  f <- boostmlr_fixture()
+  gg <- gg_boost_trajectory(f)
+
+  rows <- gg[gg$response == "y2", ]
+  ord <- order(f$id, f$tm)
+  expect_equal(rows$fitted, unname(f$mu[ord, 2]))
+  expect_equal(rows$observed, unname(f$y[ord, 2]))
+})
+
+test_that("rows are sorted by time within subject", {
+  gg <- gg_boost_trajectory(boostmlr_fixture())
+
+  by_subject <- split(gg$time, list(gg$id, gg$response), drop = TRUE)
+  expect_false(any(vapply(by_subject, is.unsorted, logical(1))))
+})
+
+test_that("the BoostMLR trajectory plot draws without touching a renderer", {
+  # The whole architectural claim: a new backend is extractor methods only.
+  p <- ggplot2::autoplot(gg_boost_trajectory(boostmlr_fixture()))
+
+  expect_s3_class(p, "ggplot")
+  built <- ggplot2::ggplot_build(p)
+  expect_gt(nrow(built$data[[1]]), 0L)
+})

@@ -7,7 +7,8 @@
 gg_boost_trajectory(object, ...)
 }
 \arguments{
-\item{object}{A fitted \code{\link[boostmtree]{boostmtree}} object.}
+\item{object}{A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+fitted \code{BoostMLR} object.}
 
 \item{...}{Not used; present for S3 consistency.}
 }
@@ -40,6 +41,14 @@ instead of zigzagging. Subject identifiers come from the fit's own
 
 \code{observed} is \code{NA} throughout when the fit carries no observed response,
 which happens for a prediction on new data.
+
+This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
+\code{BoostMLR} stores \code{mu} and \code{y} as flat observation-by-response matrices,
+with \code{tm} and \code{id} as parallel flat vectors, rather than boostmtree's
+nested per-subject lists -- entirely different layout for the same
+information. Response labels come from \code{y_Names}, since \code{mu} carries no
+column names. \code{BoostMLR} is natively multi-response, so a fit typically
+yields several response blocks even for a "single" model.
 }
 \examples{
 \donttest{

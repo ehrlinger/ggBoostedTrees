@@ -19,7 +19,16 @@
 #' `observed` is `NA` throughout when the fit carries no observed response,
 #' which happens for a prediction on new data.
 #'
-#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object.
+#' This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
+#' `BoostMLR` stores `mu` and `y` as flat observation-by-response matrices,
+#' with `tm` and `id` as parallel flat vectors, rather than boostmtree's
+#' nested per-subject lists -- entirely different layout for the same
+#' information. Response labels come from `y_Names`, since `mu` carries no
+#' column names. `BoostMLR` is natively multi-response, so a fit typically
+#' yields several response blocks even for a "single" model.
+#'
+#' @param object A fitted \code{\link[boostmtree]{boostmtree}} object, or a
+#'   fitted \code{BoostMLR} object.
 #' @param ... Not used; present for S3 consistency.
 #'
 #' @return A `gg_boost_trajectory` `data.frame` with columns:
@@ -169,6 +178,69 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
     })
 
     do.call(rbind, per_subject)
+  })
+
+  gg_dta <- do.call(rbind, blocks)
+  rownames(gg_dta) <- NULL
+  class(gg_dta) <- c("gg_boost_trajectory", class(gg_dta))
+  gg_dta
+}
+
+#' @export
+gg_boost_trajectory.BoostMLR <- function(object, ...) {
+  mu <- object$mu
+  y <- object$y
+  tm <- object$tm
+  id <- object$id
+
+  if (is.null(mu) || is.null(tm) || is.null(id)) {
+    stop(
+      "gg_boost_trajectory: this BoostMLR object records no fitted values, ",
+      "times or subject identifiers.",
+      call. = FALSE
+    )
+  }
+
+  # BoostMLR stores one row per observation and one column per response, where
+  # boostmtree nests per-subject vectors. Same information, different layout --
+  # which is the point: only this extractor changes, never a renderer.
+  mu <- as.matrix(mu)
+  n_obs <- nrow(mu)
+  if (length(tm) != n_obs || length(id) != n_obs) {
+    stop(
+      "gg_boost_trajectory: the fit records ", n_obs, " fitted row(s) but ",
+      length(tm), " time(s) and ", length(id), " identifier(s).",
+      call. = FALSE
+    )
+  }
+
+  labels <- object$y_Names %||% paste0("y", seq_len(ncol(mu)))
+  if (length(labels) != ncol(mu)) {
+    stop(
+      "gg_boost_trajectory: the fit names ", length(labels),
+      " response(s) but records ", ncol(mu), " fitted column(s).",
+      call. = FALSE
+    )
+  }
+
+  observed <- if (is.null(y)) {
+    matrix(NA_real_, nrow = n_obs, ncol = ncol(mu))
+  } else {
+    as.matrix(y)
+  }
+
+  id_levels <- as.character(unique(id))
+  ord <- order(match(as.character(id), id_levels), tm)
+
+  blocks <- lapply(seq_len(ncol(mu)), function(q) {
+    data.frame(
+      id = factor(as.character(id)[ord], levels = id_levels),
+      time = as.numeric(tm)[ord],
+      fitted = as.numeric(mu[, q])[ord],
+      observed = as.numeric(observed[, q])[ord],
+      response = factor(labels[q], levels = labels),
+      stringsAsFactors = FALSE
+    )
   })
 
   gg_dta <- do.call(rbind, blocks)
