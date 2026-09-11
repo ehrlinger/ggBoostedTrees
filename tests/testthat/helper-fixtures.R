@@ -86,3 +86,28 @@ marginal_factor_fixture <- function() {
 boostmlr_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "boostmlr_grow.rds"))
 }
+
+# The slimmed predict object: predict(fit, x = fit$x) on the committed fit,
+# keeping only the fields gg_boost_trajectory() reads. Every subject shares
+# one 15-point time grid. See fixtures/make-fixtures.R.
+boost_predict_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "boost_predict.rds"))
+}
+
+# A hand-built fit whose times are mostly tied at 0, as echoes at discharge
+# are in clinical data. Eight of twelve observations sit at time 0, so the
+# quantile edges collapse. Four bins requested give two:
+# [0, 5.25] with 9 observations and (5.25, 8] with 3.
+boost_tied_fixture <- function() {
+  structure(
+    list(
+      n.q = 1L,
+      q.set = NA,
+      id.unique = 1:4,
+      time = list(c(0, 0, 0, 5), c(0, 0, 6), c(0, 0, 7), c(0, 8)),
+      mu = list(c(1, 1, 1, 2), c(1, 1, 3), c(1, 1, 4), c(1, 5)),
+      y.org = list(c(1, 2, 3, 2), c(1, 2, 3), c(2, 1, 4), c(1, 5))
+    ),
+    class = c("boostmtree", "grow")
+  )
+}

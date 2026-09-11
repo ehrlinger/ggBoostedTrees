@@ -121,3 +121,36 @@ test_that("mu carries no column names, so labels must come from y_Names", {
 
   expect_null(colnames(f$mu))
 })
+
+test_that("the predict fixture is a slimmed boostmtree predict object", {
+  pred <- boost_predict_fixture()
+
+  expect_s3_class(pred, "boostmtree")
+  expect_identical(class(pred)[2], "predict")
+  expect_identical(
+    sort(names(pred)), sort(c("n.q", "q.set", "id.unique", "time", "mu"))
+  )
+  expect_length(pred$time, 25L)
+  expect_identical(lengths(pred$time), lengths(pred$mu))
+})
+
+test_that("the predict fixture puts every subject on one time grid", {
+  pred <- boost_predict_fixture()
+
+  expect_true(all(vapply(pred$time, identical, logical(1), pred$time[[1]])))
+})
+
+test_that("the predict fixture stays small", {
+  # The full predict object is about 4.4 MB. The slimmed one must stay far
+  # inside the 5 MB tarball budget.
+  expect_lt(file.size(test_path("fixtures", "boost_predict.rds")), 10000)
+})
+
+test_that("the tied helper has most observations at one time", {
+  obj <- boost_tied_fixture()
+  tm <- unlist(obj$time)
+
+  expect_length(tm, 12L)
+  expect_identical(sum(tm == 0), 8L)
+  expect_identical(lengths(obj$time), lengths(obj$y.org))
+})
