@@ -1,5 +1,21 @@
 # Changelog
 
+## ggBoostedTrees 0.0.7
+
+- New
+  [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md)
+  compares observed and fitted values over follow-up. Observations are
+  binned by time into equal-count bins, and each bin reports the
+  observed mean with a 95% interval, the fitted mean at the same
+  observations, and how many observations and distinct subjects stand
+  behind it. It accepts `boostmtree` and `BoostMLR` fits.
+- Supplying a `boostmtree` predict object as `pred` adds the cohort mean
+  curve. A predict object made with `tm` and `id` is refused, because
+  each subject is then predicted at its own times and a mean across
+  subjects would change composition along the curve.
+- The renderer draws each bin’s time span, so a thin tail shows as a
+  long late bin.
+
 ## ggBoostedTrees 0.0.6
 
 - `BoostMLR` fits are now accepted by

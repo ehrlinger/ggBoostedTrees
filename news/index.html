@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,12 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.7" id="ggboostedtrees-007">ggBoostedTrees 0.0.7<a class="anchor" aria-label="anchor" href="#ggboostedtrees-007"></a></h2>
+<ul><li>New <code><a href="../reference/gg_boost_calibration.html">gg_boost_calibration()</a></code> compares observed and fitted values over follow-up. Observations are binned by time into equal-count bins, and each bin reports the observed mean with a 95% interval, the fitted mean at the same observations, and how many observations and distinct subjects stand behind it. It accepts <code>boostmtree</code> and <code>BoostMLR</code> fits.</li>
+<li>Supplying a <code>boostmtree</code> predict object as <code>pred</code> adds the cohort mean curve. A predict object made with <code>tm</code> and <code>id</code> is refused, because each subject is then predicted at its own times and a mean across subjects would change composition along the curve.</li>
+<li>The renderer draws each bin’s time span, so a thin tail shows as a long late bin.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.6" id="ggboostedtrees-006">ggBoostedTrees 0.0.6<a class="anchor" aria-label="anchor" href="#ggboostedtrees-006"></a></h2>
 <ul><li>

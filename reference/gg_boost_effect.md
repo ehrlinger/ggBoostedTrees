@@ -91,8 +91,8 @@ level ordering.
 `$curves` / `$smooth` as `[[response]][[variable]]` and flattens the
 outer level only when the fit has a single response; a multi-response
 object is rejected with an informative error rather than mishandled.
-This is also why `gg_boost_effect` is the one class of the five without
-a `response` column.
+This is also why `gg_boost_effect` is the one class of the six without a
+`response` column.
 
 ## See also
 

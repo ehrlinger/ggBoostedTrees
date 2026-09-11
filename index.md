@@ -16,9 +16,10 @@ Pre-1.0 and under active development. What exists today:
 | Subject trajectories, observed against fitted | Implemented |
 | Variable importance | Implemented |
 | Partial and marginal effects | Implemented |
-| `BoostMLR` as a second backend | Partial — [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md), [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md) and [`gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_path.md) accept it; [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md) and [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md) remain `boostmtree` only |
+| Calibration over follow-up, observed against fitted, with the cohort mean curve | Implemented |
+| `BoostMLR` as a second backend | Partial — [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md), [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md), [`gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_path.md) and [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md) accept it; [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md) and [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md) remain `boostmtree` only |
 
-The five implemented figures are complete and tested. The API for what
+The six implemented figures are complete and tested. The API for what
 exists is not expected to change; the list above is what is missing, not
 what is provisional.
 
@@ -32,7 +33,7 @@ counterpart to
 follows the same two-step idiom: an extractor pulls a tidy data frame
 out of a fitted model, and `autoplot()` renders it. If you have a
 `boostmtree` fit and want to know whether it converged, this is the
-package; three of the five figures also accept a `BoostMLR` fit.
+package; four of the six figures also accept a `BoostMLR` fit.
 
 The full reference — every function and the changelog — is online at
 <https://ehrlinger.github.io/ggBoostedTrees/>.
