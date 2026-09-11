@@ -129,3 +129,48 @@ test_that("a BoostMLR fit refuses a cohort curve", {
     "boostmtree fits only"
   )
 })
+
+test_that("no pred means no cohort attribute", {
+  expect_null(attr(gg_boost_calibration(boost_fixture()), "cohort"))
+})
+
+test_that("the cohort curve is the mean predicted curve", {
+  pred <- boost_predict_fixture()
+  gg <- gg_boost_calibration(boost_fixture(), pred = pred)
+  cohort <- attr(gg, "cohort")
+
+  expect_identical(names(cohort), c("response", "time", "fitted"))
+  expect_s3_class(cohort$response, "factor")
+  expect_equal(cohort$time, sort(pred$time[[1]]))
+  # One column per subject, rows are grid times.
+  expect_equal(cohort$fitted, rowMeans(do.call(cbind, pred$mu)))
+})
+
+test_that("a pred of the wrong class is refused", {
+  expect_error(
+    gg_boost_calibration(boost_fixture(), pred = list(a = 1)),
+    "must be a boostmtree predict object"
+  )
+})
+
+test_that("a pred with a different response count is refused", {
+  pred <- boost_predict_fixture()
+  pred$n.q <- 2L
+
+  expect_error(
+    gg_boost_calibration(boost_fixture(), pred = pred),
+    "records 2 response"
+  )
+})
+
+test_that("a pred on subject-specific times is refused", {
+  pred <- boost_predict_fixture()
+  # What predict() produces when given tm and id: ragged time vectors.
+  pred$time[[1]] <- pred$time[[1]][-1]
+  pred$mu[[1]] <- pred$mu[[1]][-1]
+
+  expect_error(
+    gg_boost_calibration(boost_fixture(), pred = pred),
+    "without `tm` and `id`"
+  )
+})

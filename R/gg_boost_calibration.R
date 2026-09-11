@@ -111,7 +111,13 @@ gg_boost_calibration.boostmtree <- function(object, pred = NULL, n_bins = 10,
   }
   .boost_calibration_check_args(n_bins, breaks)
 
-  .boost_calibration_bins(gg_boost_trajectory(object), n_bins, breaks)
+  gg_dta <- .boost_calibration_bins(
+    gg_boost_trajectory(object), n_bins, breaks
+  )
+  if (!is.null(pred)) {
+    attr(gg_dta, "cohort") <- .boost_calibration_cohort(pred, object)
+  }
+  gg_dta
 }
 
 #' @export
@@ -232,4 +238,48 @@ gg_boost_calibration.BoostMLR <- function(object, pred = NULL, n_bins = 10,
   rownames(gg_dta) <- NULL
   class(gg_dta) <- c("gg_boost_calibration", "data.frame")
   gg_dta
+}
+
+# The cohort curve: the mean over subjects of the predicted curves. It is only
+# meaningful when every subject is predicted on the same grid, which is what
+# predict(fit, x = ...) does without tm and id. Averaging ragged time sets
+# would change which subjects contribute from one time to the next.
+.boost_calibration_cohort <- function(pred, object) {
+  if (!inherits(pred, "boostmtree") || !inherits(pred, "predict")) {
+    stop(
+      "gg_boost_calibration: `pred` must be a boostmtree predict object, ",
+      "from predict(fit, x = ...).",
+      call. = FALSE
+    )
+  }
+  n_q <- object$n.q %||% 1L
+  n_q_pred <- pred$n.q %||% 1L
+  if (n_q_pred != n_q) {
+    stop(
+      "gg_boost_calibration: `pred` records ", n_q_pred,
+      " response(s) but the fit records ", n_q, ".",
+      call. = FALSE
+    )
+  }
+
+  times <- pred$time
+  same_grid <- length(times) > 0L &&
+    all(vapply(times, identical, logical(1), times[[1L]]))
+  if (!same_grid) {
+    stop(
+      "gg_boost_calibration: `pred` does not predict every subject on ",
+      "one time grid. Call predict(fit, x = ...) without `tm` and `id`.",
+      call. = FALSE
+    )
+  }
+
+  traj <- gg_boost_trajectory(pred)
+  cohort <- stats::aggregate(
+    fitted ~ response + time, data = traj, FUN = mean
+  )
+  cohort <- cohort[
+    order(cohort$response, cohort$time), c("response", "time", "fitted")
+  ]
+  rownames(cohort) <- NULL
+  cohort
 }
