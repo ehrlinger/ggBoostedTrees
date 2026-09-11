@@ -1,5 +1,6 @@
 layer_geoms <- function(p) {
-  vapply(p$layers, function(l) class(l$geom)[1], character(1))
+  # ggplot2 4.x names the layers list; only the geom sequence is under test.
+  unname(vapply(p$layers, function(l) class(l$geom)[1], character(1)))
 }
 
 test_that("autoplot returns a ggplot", {
