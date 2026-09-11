@@ -26,7 +26,7 @@ A \code{gg_boost_calibration} \code{data.frame} with one row per response and
 bin, ordered by response then time, with columns:
 \describe{
 \item{response}{Factor naming the response.}
-\item{bin}{Factor bin label, ordered by time.}
+\item{bin}{Factor bin label, ordered by time within each response.}
 \item{time_lo, time_hi}{Numeric bin edges.}
 \item{time}{Numeric median observed time within the bin.}
 \item{n_obs}{Integer count of observations in the bin.}

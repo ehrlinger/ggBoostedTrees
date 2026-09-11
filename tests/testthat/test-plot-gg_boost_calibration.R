@@ -66,7 +66,9 @@ test_that("building does not warn, including single-observation bins", {
 })
 
 test_that("several responses facet and one does not", {
-  multi <- ggplot2::autoplot(gg_boost_calibration(boostmlr_fixture()))
+  multi <- ggplot2::autoplot(
+    suppressMessages(gg_boost_calibration(boostmlr_fixture()))
+  )
   single <- ggplot2::autoplot(gg_boost_calibration(boost_fixture()))
 
   expect_s3_class(multi$facet, "FacetWrap")
@@ -100,6 +102,8 @@ test_that("the multi-response calibration plot is stable", {
   skip_on_os(c("windows", "linux", "solaris"))
   vdiffr::expect_doppelganger(
     "calibration multi response",
-    ggplot2::autoplot(gg_boost_calibration(boostmlr_fixture()))
+    ggplot2::autoplot(
+      suppressMessages(gg_boost_calibration(boostmlr_fixture()))
+    )
   )
 })

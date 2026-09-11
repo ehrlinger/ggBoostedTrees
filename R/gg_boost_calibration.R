@@ -53,7 +53,7 @@
 #'   bin, ordered by response then time, with columns:
 #'   \describe{
 #'     \item{response}{Factor naming the response.}
-#'     \item{bin}{Factor bin label, ordered by time.}
+#'     \item{bin}{Factor bin label, ordered by time within each response.}
 #'     \item{time_lo, time_hi}{Numeric bin edges.}
 #'     \item{time}{Numeric median observed time within the bin.}
 #'     \item{n_obs}{Integer count of observations in the bin.}
@@ -138,7 +138,7 @@ gg_boost_calibration.BoostMLR <- function(object, pred = NULL, n_bins = 10,
 
 .boost_calibration_check_args <- function(n_bins, breaks) {
   if (!is.numeric(n_bins) || length(n_bins) != 1L || is.na(n_bins) ||
-        n_bins < 1 || n_bins != round(n_bins)) {
+        !is.finite(n_bins) || n_bins < 1 || n_bins != round(n_bins)) {
     stop(
       "gg_boost_calibration: `n_bins` must be a single whole number of ",
       "at least 1.",
@@ -173,6 +173,13 @@ gg_boost_calibration.BoostMLR <- function(object, pred = NULL, n_bins = 10,
   labels <- levels(traj$response)
   blocks <- lapply(labels, function(r) {
     d <- traj[traj$response == r, , drop = FALSE]
+    if (nrow(d) == 0L) {
+      stop(
+        "gg_boost_calibration: response '", r, "' has no rows with both ",
+        "an observed and a fitted value.",
+        call. = FALSE
+      )
+    }
 
     if (is.null(breaks)) {
       edges <- unique(stats::quantile(
@@ -201,6 +208,13 @@ gg_boost_calibration.BoostMLR <- function(object, pred = NULL, n_bins = 10,
           "' outside the range of `breaks`."
         )
         d <- d[!out, , drop = FALSE]
+      }
+      if (nrow(d) == 0L) {
+        stop(
+          "gg_boost_calibration: no observations of response '", r,
+          "' fall within the range of `breaks`.",
+          call. = FALSE
+        )
       }
     }
 

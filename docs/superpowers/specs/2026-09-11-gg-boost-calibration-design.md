@@ -1,7 +1,7 @@
 # gg_boost_calibration: observed against fitted over follow-up
 
 Date: 2026-09-11
-Status: approved design, not yet planned
+Status: approved design, implemented on feat/calibration
 Branch: `feat/calibration`
 
 ## Why
@@ -104,6 +104,10 @@ is correct, only coarser than asked.
 A supplied `breaks` is used as given after `sort(unique())`. Observations
 outside its range are dropped with a message giving the count. Fewer than two
 distinct edges is an error.
+
+A response left with no observations, because none fall within `breaks` or
+none has both an observed and a fitted value, is an error naming the
+response.
 
 `n_bins` must be a single whole number of at least 1; `breaks` must be numeric.
 Both are validated with messages naming `gg_boost_calibration`.
@@ -232,7 +236,9 @@ Cohort curve:
 Renderer:
 
 - Returns a `ggplot`; builds without warnings.
-- vdiffr snapshots with and without the cohort curve, and with `ci = FALSE`.
+- vdiffr snapshots with and without the cohort curve, and for a
+  multi-response fit; `ci = FALSE` is covered by a layer test rather than a
+  snapshot.
 - Faceting appears only for multiple responses.
 
 ## Package changes

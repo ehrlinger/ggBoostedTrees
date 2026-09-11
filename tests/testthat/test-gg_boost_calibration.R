@@ -93,12 +93,43 @@ test_that("a fit with no observed values is refused", {
   expect_error(gg_boost_calibration(obj), "no observed values")
 })
 
+test_that("all observations outside breaks is an error", {
+  expect_error(
+    suppressMessages(
+      gg_boost_calibration(boost_tied_fixture(), breaks = c(10, 20))
+    ),
+    "fall within the range of `breaks`"
+  )
+})
+
+test_that("a response with no complete rows is an error naming it", {
+  obj <- boostmlr_fixture()
+  obj$y[, 2] <- NA
+
+  expect_error(
+    suppressMessages(gg_boost_calibration(obj)),
+    "response 'y2' has no rows with both"
+  )
+})
+
+test_that("an empty middle bin from breaks is dropped", {
+  gg <- gg_boost_calibration(
+    boost_tied_fixture(), breaks = c(0, 1, 4, 8)
+  )
+
+  expect_identical(nrow(gg), 2L)
+  expect_identical(gg$n_obs, c(8L, 4L))
+  expect_equal(gg$time_lo, c(0, 4))
+  expect_equal(gg$time_hi, c(1, 8))
+})
+
 test_that("n_bins and breaks are validated", {
   fit <- boost_fixture()
 
   expect_error(gg_boost_calibration(fit, n_bins = 0), "n_bins")
   expect_error(gg_boost_calibration(fit, n_bins = 2.5), "n_bins")
   expect_error(gg_boost_calibration(fit, n_bins = c(2, 3)), "n_bins")
+  expect_error(gg_boost_calibration(fit, n_bins = Inf), "n_bins")
   expect_error(gg_boost_calibration(fit, breaks = "a"), "breaks")
   expect_error(gg_boost_calibration(fit, breaks = c(1, 1)), "breaks")
 })
@@ -116,7 +147,7 @@ test_that("a predict object passed as object is refused", {
 })
 
 test_that("a BoostMLR fit yields one block of bins per response", {
-  gg <- gg_boost_calibration(boostmlr_fixture())
+  gg <- suppressMessages(gg_boost_calibration(boostmlr_fixture()))
 
   expect_identical(levels(gg$response), c("y1", "y2", "y3"))
   expect_true(all(table(gg$response) > 0L))
