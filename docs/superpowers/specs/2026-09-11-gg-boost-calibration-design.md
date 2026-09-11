@@ -133,7 +133,7 @@ response then time:
 | Column | Type | Meaning |
 |---|---|---|
 | `response` | factor | Response label, levels as in `gg_boost_trajectory()` |
-| `bin` | factor | Bin label from `cut()`, ordered by time |
+| `bin` | factor | Bin label from `cut()`, ordered by time within each response |
 | `time_lo` | numeric | Lower bin edge |
 | `time_hi` | numeric | Upper bin edge |
 | `time` | numeric | Median observed time within the bin |
