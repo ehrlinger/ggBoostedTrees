@@ -21,9 +21,10 @@ Pre-1.0 and under active development. What exists today:
 | Subject trajectories, observed against fitted | Implemented |
 | Variable importance | Implemented |
 | Partial and marginal effects | Implemented |
-| `BoostMLR` as a second backend | Partial — `gg_boost_trajectory()`, `gg_boost_error()` and `gg_boost_path()` accept it; `gg_boost_vimp()` and `gg_boost_effect()` remain `boostmtree` only |
+| Calibration over follow-up, observed against fitted, with the cohort mean curve | Implemented |
+| `BoostMLR` as a second backend | Partial — `gg_boost_trajectory()`, `gg_boost_error()`, `gg_boost_path()` and `gg_boost_calibration()` accept it; `gg_boost_vimp()` and `gg_boost_effect()` remain `boostmtree` only |
 
-The five implemented figures are complete and tested. The API for what exists
+The six implemented figures are complete and tested. The API for what exists
 is not expected to change; the list above is what is missing, not what is
 provisional.
 
@@ -35,7 +36,7 @@ status table above). It is the boosting counterpart to
 [ggRandomForests](https://github.com/ehrlinger/ggRandomForests), and follows
 the same two-step idiom: an extractor pulls a tidy data frame out of a fitted
 model, and `autoplot()` renders it. If you have a `boostmtree` fit and want to
-know whether it converged, this is the package; three of the five figures
+know whether it converged, this is the package; four of the six figures
 also accept a `BoostMLR` fit.
 
 The full reference — every function and the changelog — is online at

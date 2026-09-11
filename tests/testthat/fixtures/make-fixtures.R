@@ -86,12 +86,28 @@ writeLines(
     }, " (CRAN); simLong(n = 20, N = 3, rho = 0.8, model = 1,"),
     "  q_x = 2, q_y = 0); BoostMLR(M = 50, VarFlag = TRUE); set.seed(3)",
     "  BoostMLR records no optimal iteration, so gg_boost_error()'s",
-    "  optimal column is all FALSE for this backend."
+    "  optimal column is all FALSE for this backend.",
+    "",
+    "Predict fixture: boost_predict.rds, predict(fit, x = fit$x) keeping n.q,",
+    "  q.set, id.unique, time and mu only (the full object is about 4.4 MB)."
   ),
   file.path(here, "boost_continuous.dcf")
 )
 
 cat("wrote fixture, m.opt =", fit$m.opt, "\n")
+
+## Slimmed predict fixture (calibration cohort curve).
+##
+## predict(fit, x = fit$x) on the committed fit is deterministic, but the full
+## object is about 4.4 MB. Only the fields gg_boost_trajectory() reads are
+## kept, with the class, which leaves under 1 KB.
+pred <- predict(fit, x = fit$x)
+pred.slim <- structure(
+  pred[c("n.q", "q.set", "id.unique", "time", "mu")],
+  class = class(pred)
+)
+saveRDS(pred.slim, file.path(here, "boost_predict.rds"), compress = "xz")
+cat("wrote slimmed predict fixture\n")
 
 ## Interpretation fixtures (Phase 3).
 ##

@@ -49,6 +49,7 @@ reference:
   - gg_boost_trajectory
   - gg_boost_vimp
   - gg_boost_effect
+  - gg_boost_calibration
 
 - title: "2. Render — draw the extracted object"
   desc: >
@@ -62,6 +63,7 @@ reference:
   - autoplot.gg_boost_trajectory
   - autoplot.gg_boost_vimp
   - autoplot.gg_boost_effect
+  - autoplot.gg_boost_calibration
 
 - title: "3. Shortcut — straight from a fit"
   desc: >
