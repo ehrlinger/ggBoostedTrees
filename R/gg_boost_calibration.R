@@ -161,11 +161,18 @@ gg_boost_calibration.BoostMLR <- function(object, pred = NULL, n_bins = 10,
 # are dropped first: a bin mean over mismatched rows would compare observed
 # and fitted values from different observations.
 .boost_calibration_bins <- function(traj, n_bins, breaks) {
-  traj <- traj[!is.na(traj$observed) & !is.na(traj$fitted), , drop = FALSE]
-  if (nrow(traj) == 0L) {
+  if (all(is.na(traj$observed))) {
     stop(
       "gg_boost_calibration: this fit records no observed values to ",
       "calibrate against.",
+      call. = FALSE
+    )
+  }
+  traj <- traj[!is.na(traj$observed) & !is.na(traj$fitted), , drop = FALSE]
+  if (nrow(traj) == 0L) {
+    stop(
+      "gg_boost_calibration: this fit records no rows with both an ",
+      "observed and a fitted value.",
       call. = FALSE
     )
   }
@@ -272,6 +279,17 @@ gg_boost_calibration.BoostMLR <- function(object, pred = NULL, n_bins = 10,
     stop(
       "gg_boost_calibration: `pred` records ", n_q_pred,
       " response(s) but the fit records ", n_q, ".",
+      call. = FALSE
+    )
+  }
+
+  labels <- .boost_response_labels(object)
+  labels_pred <- .boost_response_labels(pred)
+  if (!identical(labels_pred, labels)) {
+    stop(
+      "gg_boost_calibration: `pred` labels its response(s) ",
+      paste(labels_pred, collapse = ", "), " but the fit labels them ",
+      paste(labels, collapse = ", "), ".",
       call. = FALSE
     )
   }

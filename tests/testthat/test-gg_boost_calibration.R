@@ -205,3 +205,22 @@ test_that("a pred on subject-specific times is refused", {
     "without `tm` and `id`"
   )
 })
+
+test_that("fitted values all NA are refused with their own cause", {
+  obj <- boost_tied_fixture()
+  obj$mu <- lapply(obj$mu, function(v) rep(NA_real_, length(v)))
+
+  expect_error(
+    gg_boost_calibration(obj), "no rows with both an observed and a fitted"
+  )
+})
+
+test_that("a pred with different response labels is refused", {
+  pred <- boost_predict_fixture()
+  pred$q.set <- "other"
+
+  expect_error(
+    gg_boost_calibration(boost_fixture(), pred = pred),
+    "labels its response"
+  )
+})
