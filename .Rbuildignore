@@ -9,3 +9,5 @@
 ^\.claude$
 ^pkgdown-site$
 ^\.remember$
+^AGENTS\.md$
+^CLAUDE\.md$
