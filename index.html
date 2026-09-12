@@ -154,7 +154,7 @@
 <span><span class="co">#&gt; 3         3 0.9912097        y   FALSE</span></span>
 <span></span>
 <span><span class="co"># Returns a bare ggplot, so it composes with any theme or scale.</span></span>
-<span><span class="fu">autoplot</span><span class="op">(</span><span class="va">gg_dta</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">autoplot</span><span class="op">(</span><span class="va">gg_dta</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The variance and smoothing parameter paths diagnose whether the variance structure settled before boosting stopped. They are always faceted on a free y scale, because <code>rho</code>, <code>phi</code> and <code>lambda</code> span three orders of magnitude:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">autoplot</span><span class="op">(</span><span class="fu"><a href="reference/gg_boost_path.html">gg_boost_path</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
