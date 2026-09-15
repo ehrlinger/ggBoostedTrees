@@ -2,6 +2,10 @@
 
 ## ggBoostedTrees 0.0.7
 
+- The README function reference now lists
+  [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md)
+  and its `autoplot()` method alongside the other shipped figure-data
+  objects.
 - New
   [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md)
   compares observed and fitted values over follow-up. Observations are

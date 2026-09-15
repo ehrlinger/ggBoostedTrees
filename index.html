@@ -154,7 +154,7 @@
 <span><span class="co">#&gt; 3         3 0.9912097        y   FALSE</span></span>
 <span></span>
 <span><span class="co"># Returns a bare ggplot, so it composes with any theme or scale.</span></span>
-<span><span class="fu">autoplot</span><span class="op">(</span><span class="va">gg_dta</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">autoplot</span><span class="op">(</span><span class="va">gg_dta</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The variance and smoothing parameter paths diagnose whether the variance structure settled before boosting stopped. They are always faceted on a free y scale, because <code>rho</code>, <code>phi</code> and <code>lambda</code> span three orders of magnitude:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">autoplot</span><span class="op">(</span><span class="fu"><a href="reference/gg_boost_path.html">gg_boost_path</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -191,6 +191,10 @@
 <td>Observed and fitted subject trajectories over time, sorted within subject.</td>
 </tr>
 <tr>
+<td><code><a href="reference/gg_boost_calibration.html">gg_boost_calibration()</a></code></td>
+<td>Observed and fitted values over follow-up, summarized in equal-count time bins with observed confidence intervals.</td>
+</tr>
+<tr>
 <td><code><a href="reference/gg_boost_vimp.html">gg_boost_vimp()</a></code></td>
 <td>Variable importance for the main effect and the time interaction.</td>
 </tr>
@@ -225,6 +229,10 @@
 <tr>
 <td><code><a href="reference/autoplot.gg_boost_trajectory.html">autoplot.gg_boost_trajectory()</a></code></td>
 <td>Fitted trajectories as lines and observed values as points, thinned by <code>subset</code>/<code>n_max</code> with transparency scaled to cohort size.</td>
+</tr>
+<tr>
+<td><code><a href="reference/autoplot.gg_boost_calibration.html">autoplot.gg_boost_calibration()</a></code></td>
+<td>Observed and fitted bin means with observed confidence intervals and each bin’s time span.</td>
 </tr>
 <tr>
 <td><code><a href="reference/autoplot.boostmtree.html">autoplot.boostmtree()</a></code></td>

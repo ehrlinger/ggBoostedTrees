@@ -41,7 +41,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.7" id="ggboostedtrees-007">ggBoostedTrees 0.0.7<a class="anchor" aria-label="anchor" href="#ggboostedtrees-007"></a></h2>
-<ul><li>New <code><a href="../reference/gg_boost_calibration.html">gg_boost_calibration()</a></code> compares observed and fitted values over follow-up. Observations are binned by time into equal-count bins, and each bin reports the observed mean with a 95% interval, the fitted mean at the same observations, and how many observations and distinct subjects stand behind it. It accepts <code>boostmtree</code> and <code>BoostMLR</code> fits.</li>
+<ul><li>The README function reference now lists <code><a href="../reference/gg_boost_calibration.html">gg_boost_calibration()</a></code> and its <code>autoplot()</code> method alongside the other shipped figure-data objects.</li>
+<li>New <code><a href="../reference/gg_boost_calibration.html">gg_boost_calibration()</a></code> compares observed and fitted values over follow-up. Observations are binned by time into equal-count bins, and each bin reports the observed mean with a 95% interval, the fitted mean at the same observations, and how many observations and distinct subjects stand behind it. It accepts <code>boostmtree</code> and <code>BoostMLR</code> fits.</li>
 <li>Supplying a <code>boostmtree</code> predict object as <code>pred</code> adds the cohort mean curve. A predict object made with <code>tm</code> and <code>id</code> is refused, because each subject is then predicted at its own times and a mean across subjects would change composition along the curve.</li>
 <li>The renderer draws each bin’s time span, so a thin tail shows as a long late bin.</li>
 </ul></div>

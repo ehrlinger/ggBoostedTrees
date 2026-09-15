@@ -24,7 +24,7 @@ plot(x, ...)
 - ...:
 
   Passed to
-  [`geom_line`](https://rdrr.io/pkg/ggplot2/man/geom_path.html).
+  [`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html).
 
 - x:
 

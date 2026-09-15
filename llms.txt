@@ -136,6 +136,7 @@ autoplot(gg_boost_trajectory(fit))
 | [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md) | Boosting error path by iteration, with the cross-validated optimal iteration flagged. Requires `cv.flag = TRUE`. |
 | [`gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_path.md) | Estimated `rho`, `phi` and `lambda` by iteration. Available on any fit. |
 | [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md) | Observed and fitted subject trajectories over time, sorted within subject. |
+| [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md) | Observed and fitted values over follow-up, summarized in equal-count time bins with observed confidence intervals. |
 | [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md) | Variable importance for the main effect and the time interaction. |
 | [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md) | Partial and marginal covariate effects over time, for both continuous and discrete (factor) covariates. |
 
@@ -146,6 +147,7 @@ autoplot(gg_boost_trajectory(fit))
 | [`autoplot.gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_error.md) | Error path as a line, with a dashed rule at the optimal iteration. |
 | [`autoplot.gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_path.md) | Parameter paths, faceted by parameter on a free y scale. |
 | [`autoplot.gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_trajectory.md) | Fitted trajectories as lines and observed values as points, thinned by `subset`/`n_max` with transparency scaled to cohort size. |
+| [`autoplot.gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_calibration.md) | Observed and fitted bin means with observed confidence intervals and each bin’s time span. |
 | [`autoplot.boostmtree()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.boostmtree.md) | Shortcut from a fitted model straight to the error plot. |
 | [`autoplot.gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_vimp.md) | Ordered horizontal bars, faceted by component. |
 | [`autoplot.gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_effect.md) | Effect curves coloured by time, faceted by variable. |

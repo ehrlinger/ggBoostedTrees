@@ -23,7 +23,8 @@ plot(x, ...)
 
 - ...:
 
-  Passed to [`geom_col`](https://rdrr.io/pkg/ggplot2/man/geom_bar.html).
+  Passed to
+  [`geom_col`](https://ggplot2.tidyverse.org/reference/geom_bar.html).
 
 - x:
 

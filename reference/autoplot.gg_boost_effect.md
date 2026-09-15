@@ -23,9 +23,9 @@ plot(x, ...)
 - ...:
 
   Passed to
-  [`geom_line`](https://rdrr.io/pkg/ggplot2/man/geom_path.html)
+  [`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)
   (continuous covariates) or
-  [`geom_point`](https://rdrr.io/pkg/ggplot2/man/geom_point.html)
+  [`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)
   (discrete covariates).
 
 - x:
