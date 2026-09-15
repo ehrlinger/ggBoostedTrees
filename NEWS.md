@@ -3,6 +3,8 @@ Version: 0.0.7
 
 # ggBoostedTrees 0.0.7
 
+* The README function reference now lists `gg_boost_calibration()` and its
+  `autoplot()` method alongside the other shipped figure-data objects.
 * New `gg_boost_calibration()` compares observed and fitted values over
   follow-up. Observations are binned by time into equal-count bins, and each
   bin reports the observed mean with a 95% interval, the fitted mean at the
