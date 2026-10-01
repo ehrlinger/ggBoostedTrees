@@ -1,6 +1,6 @@
 # Changelog
 
-## ggBoostedTrees 0.0.9
+## ggBoostedTrees 0.9.0
 
 - [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
   accepts a `BoostMLR` predict object made with
@@ -17,11 +17,10 @@
   leaves unnamed.
   [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
   accepts the result and extracts the lowess-smoothed curves, one block
-  per response. All six figures now accept a `BoostMLR` fit
+  per response. All six figures now accept a `BoostMLR` fit. `BoostMLR`
+  support remains partial: marginal effects and joint importance are not
+  supported
   ([\#9](https://github.com/ehrlinger/ggBoostedTrees/issues/9)).
-
-## ggBoostedTrees 0.0.8
-
 - [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
   now accepts the `partial.plot()` and `marginal.plot()` output of a
   multi-response (ordinal or nominal) `boostmtree` fit, which it
