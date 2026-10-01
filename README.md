@@ -22,7 +22,7 @@ Pre-1.0 and under active development. What exists today:
 | Variable importance | Implemented |
 | Partial and marginal effects | Implemented |
 | Calibration over follow-up, observed against fitted, with the cohort mean curve | Implemented |
-| `BoostMLR` as a second backend | Implemented — all six figures accept it; partial effects through `boostmlr_partial()` |
+| `BoostMLR` as a second backend | Partial — all six figures accept a `BoostMLR` fit, with partial effects through `boostmlr_partial()`; marginal effects and joint importance are not supported |
 
 The six implemented figures are complete and tested. The API for what exists
 is not expected to change; the list above is what is missing, not what is
@@ -31,12 +31,13 @@ provisional.
 ggBoostedTrees draws diagnostic figures for boosted tree models fit with
 [boostmtree](https://cran.r-project.org/package=boostmtree), which implements
 Friedman's gradient descent boosting with multivariate tree base learners for
-longitudinal responses, and for `BoostMLR` fits. It is the boosting counterpart to
+longitudinal responses, with partial support for `BoostMLR` fits (see the
+status table above). It is the boosting counterpart to
 [ggRandomForests](https://github.com/ehrlinger/ggRandomForests), and follows
 the same two-step idiom: an extractor pulls a tidy data frame out of a fitted
 model, and `autoplot()` renders it. If you have a `boostmtree` fit and want to
 know whether it converged, this is the package. All six figures also accept
-a `BoostMLR` fit.
+a `BoostMLR` fit, within the limits in the status table.
 
 The full reference — every function and the changelog — is online at
 <https://ehrlinger.github.io/ggBoostedTrees/>.

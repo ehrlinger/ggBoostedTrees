@@ -1,7 +1,7 @@
 Package: ggBoostedTrees
-Version: 0.0.9
+Version: 0.9.0
 
-# ggBoostedTrees 0.0.9
+# ggBoostedTrees 0.9.0
 
 * `gg_boost_vimp()` accepts a `BoostMLR` predict object made with
   `predictBoostMLR(..., importance = TRUE)`. `BoostMLR` splits the
@@ -12,10 +12,8 @@ Version: 0.0.9
   covariates, naming the covariates and responses that
   `BoostMLR::partial.BoostMLR()` leaves unnamed. `gg_boost_effect()` accepts
   the result and extracts the lowess-smoothed curves, one block per response.
-  All six figures now accept a `BoostMLR` fit (#9).
-
-# ggBoostedTrees 0.0.8
-
+  All six figures now accept a `BoostMLR` fit. `BoostMLR` support remains
+  partial: marginal effects and joint importance are not supported (#9).
 * `gg_boost_effect()` now accepts the `partial.plot()` and `marginal.plot()`
   output of a multi-response (ordinal or nominal) `boostmtree` fit, which it
   previously refused. Every result gains a `response` factor, labelled from
