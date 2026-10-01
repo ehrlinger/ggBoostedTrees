@@ -90,3 +90,62 @@ test_that("duplicate components are de-duplicated rather than erroring", {
   expect_identical(levels(gg$component), "main")
   expect_identical(nrow(gg), 4L)
 })
+
+test_that("a BoostMLR predict object yields the vimp contract", {
+  gg <- gg_boost_vimp(boostmlr_vimp_fixture())
+
+  expect_s3_class(gg, "gg_boost_vimp")
+  expect_identical(
+    names(gg), c("variable", "importance", "component", "response")
+  )
+  expect_identical(levels(gg$response), c("y1", "y2", "y3"))
+  expect_identical(levels(gg$component), c("main", "interaction"))
+  expect_identical(nrow(gg), 6L * 3L * 2L)
+  expect_identical(attr(gg, "metric"), "Standardized VIMP")
+})
+
+test_that("BoostMLR main importance is the Main_Eff column", {
+  v <- boostmlr_vimp_fixture()
+  gg <- gg_boost_vimp(v, components = "main")
+
+  for (q in names(v$vimp)) {
+    expect_equal(
+      gg$importance[gg$response == q], unname(v$vimp[[q]][, "Main_Eff"])
+    )
+  }
+})
+
+test_that("BoostMLR interaction sums the per-interval columns", {
+  v <- boostmlr_vimp_fixture()
+  gg <- gg_boost_vimp(v, components = "interaction")
+  by_interval <- attr(gg, "interaction.by.interval")
+
+  expect_identical(names(by_interval), names(v$vimp))
+  for (q in names(v$vimp)) {
+    expect_equal(
+      gg$importance[gg$response == q],
+      unname(rowSums(v$vimp[[q]][, -1L, drop = FALSE]))
+    )
+    expect_equal(by_interval[[q]], v$vimp[[q]][, -1L, drop = FALSE])
+  }
+})
+
+test_that("a BoostMLR grow object is refused with guidance", {
+  expect_error(gg_boost_vimp(boostmlr_fixture()), "importance = TRUE")
+})
+
+test_that("a BoostMLR prediction made without importance is refused", {
+  # predictBoostMLR(importance = FALSE) records $vimp as one NULL per
+  # response, not as NULL.
+  v <- boostmlr_vimp_fixture()
+  v$vimp <- vector("list", length(v$vimp))
+
+  expect_error(gg_boost_vimp(v), "importance = TRUE")
+})
+
+test_that("components are validated for BoostMLR too", {
+  expect_error(
+    gg_boost_vimp(boostmlr_vimp_fixture(), components = "other"),
+    "unknown component"
+  )
+})

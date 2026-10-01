@@ -2,7 +2,8 @@
 #'
 #' Extract covariate effect curves over time from a
 #' \code{\link[boostmtree]{partial.plot}} or
-#' \code{\link[boostmtree]{marginal.plot}} object.
+#' \code{\link[boostmtree]{marginal.plot}} object, or from the
+#' \code{\link{boostmlr_partial}} result for a `BoostMLR` fit.
 #'
 #' @details
 #' The two differ in what they hold constant. A partial effect varies one
@@ -18,7 +19,12 @@
 #' no covariate column. `gg_boost_effect` extracts the smoothed curve instead,
 #' so that both levels of `kind` mean the same thing: the fitted effect.
 #'
-#' Neither source computes a confidence interval, so none is reported here.
+#' For `BoostMLR`, \code{\link{boostmlr_partial}} returns both the raw
+#' partial effect and a lowess smooth of it over time; the smooth is
+#' extracted, matching the `marginal` choice above. The result has `kind`
+#' `partial` and one block per response, labelled from the fit's `y_Names`.
+#'
+#' No source computes a confidence interval, so none is reported here.
 #'
 #' `boostmtree` accepts factor covariates. For those, `partial.plot()` and
 #' `marginal.plot()` return a character (or, for `marginal.plot()$data`,
@@ -39,7 +45,8 @@
 #'
 #' @param object A `partial.plot.boostmtree` or `marginal.plot.boostmtree`
 #'   object, as returned by `boostmtree::partial.plot()` or
-#'   `boostmtree::marginal.plot()` with `output = "data", verbose = FALSE`.
+#'   `boostmtree::marginal.plot()` with `output = "data", verbose = FALSE`,
+#'   or a \code{\link{boostmlr_partial}} object.
 #' @param ... Not used; present for S3 consistency.
 #'
 #' @return A `gg_boost_effect` `data.frame` with columns:
@@ -56,7 +63,8 @@
 #'     \item{response}{Factor naming the response.}
 #'   }
 #'
-#' @seealso \code{\link{plot.gg_boost_effect}}, \code{\link{gg_boost_vimp}}
+#' @seealso \code{\link{plot.gg_boost_effect}}, \code{\link{gg_boost_vimp}},
+#'   \code{\link{boostmlr_partial}}
 #'
 #' @examples
 #' \donttest{
@@ -81,7 +89,8 @@ gg_boost_effect <- function(object, ...) {
 gg_boost_effect.default <- function(object, ...) {
   stop(
     "gg_boost_effect: expected a 'partial.plot.boostmtree' or ",
-    "'marginal.plot.boostmtree' object; got an object of class ",
+    "'marginal.plot.boostmtree' object, or a 'boostmlr_partial' object; ",
+    "got an object of class ",
     paste(class(object), collapse = "/"),
     ". Produce one with boostmtree::partial.plot(",
     "fit, output = \"data\", verbose = FALSE).",
@@ -168,6 +177,50 @@ gg_boost_effect.marginal.plot.boostmtree <- function(object, ...) {
           time = as.numeric(time_points[k]),
           estimate = as.numeric(curve$y),
           kind = factor("marginal", levels = "marginal"),
+          stringsAsFactors = FALSE
+        )
+      }))
+    })
+  })
+}
+
+#' @export
+gg_boost_effect.boostmlr_partial <- function(object, ...) {
+  curves <- object$curves
+  if (is.null(curves) || length(curves) == 0L) {
+    stop("gg_boost_effect: this object records no effect curves.",
+         call. = FALSE)
+  }
+  labels <- as.character(object$response.labels)
+  var_levels <- names(curves)
+  # partial.BoostMLR() returns one smoothed covariate-by-time matrix per
+  # response; regroup them response-first to match the boostmtree methods.
+  by_response <- stats::setNames(lapply(seq_along(labels), function(q) {
+    lapply(curves, function(cv) {
+      if (length(cv$sList) != length(labels)) {
+        stop(
+          "gg_boost_effect: the object names ", length(labels),
+          " response(s) but records curves for ", length(cv$sList), ".",
+          call. = FALSE
+        )
+      }
+      cv$sList[[q]]
+    })
+  }), labels)
+
+  .gg_boost_effect_frame(by_response, function(mats) {
+    lapply(var_levels, function(nm) {
+      cv <- curves[[nm]]
+      mat <- mats[[nm]]
+      grid <- .boost_effect_grid(cv$x.unq)
+      do.call(rbind, lapply(seq_along(cv$tm.unq), function(k) {
+        data.frame(
+          variable = factor(nm, levels = var_levels),
+          x = grid$x,
+          x_label = grid$x_label,
+          time = as.numeric(cv$tm.unq[k]),
+          estimate = as.numeric(mat[, k]),
+          kind = factor("partial", levels = "partial"),
           stringsAsFactors = FALSE
         )
       }))

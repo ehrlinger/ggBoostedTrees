@@ -49,6 +49,7 @@ reference:
   - gg_boost_trajectory
   - gg_boost_vimp
   - gg_boost_effect
+  - boostmlr_partial
   - gg_boost_calibration
 
 - title: "2. Render — draw the extracted object"

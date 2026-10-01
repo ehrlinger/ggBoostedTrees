@@ -93,6 +93,9 @@ writeLines(
     "  q_x = 2, q_y = 0); BoostMLR(M = 50, VarFlag = TRUE); set.seed(3)",
     "  BoostMLR records no optimal iteration, so gg_boost_error()'s",
     "  optimal column is all FALSE for this backend.",
+    "  boostmlr_vimp.rds: predictBoostMLR(importance = TRUE,",
+    "  setting_seed = TRUE, seed_value = 3) on it, keeping vimp, x_Names,",
+    "  y_Names. boostmlr_partial.rds: boostmlr_partial(fit, c('x1', 'x2')).",
     "",
     "Predict fixture: boost_predict.rds, predict(fit, x = fit$x) keeping n.q,",
     "  q.set, id.unique, time and mu only (the full object is about 4.4 MB)."
@@ -206,6 +209,31 @@ if (!requireNamespace("BoostMLR", quietly = TRUE)) {
   saveRDS(mlr.fit, file.path(here, "boostmlr_grow.rds"), compress = "xz")
   cat("wrote BoostMLR fixture:", length(mlr.fit$tm), "observations,",
       ncol(mlr.fit$y), "responses\n")
+}
+
+## BoostMLR importance and partial-effect fixtures.
+##
+## Built from the COMMITTED grow fixture, so they stay consistent with it.
+## BoostMLR computes importance inside prediction; the full predict object is
+## large, so only the fields gg_boost_vimp() reads are kept, with the class.
+## boostmlr_partial() is this package's own wrapper, hence load_all().
+if (requireNamespace("BoostMLR", quietly = TRUE)) {
+  pkgload::load_all(quiet = TRUE)
+  mlr.fit <- readRDS(file.path(here, "boostmlr_grow.rds"))
+  mlr.pred <- BoostMLR::predictBoostMLR(
+    mlr.fit, x = mlr.fit$x, tm = mlr.fit$tm, id = mlr.fit$id, y = mlr.fit$y,
+    importance = TRUE, setting_seed = TRUE, seed_value = 3L
+  )
+  saveRDS(
+    structure(mlr.pred[c("vimp", "x_Names", "y_Names")],
+              class = class(mlr.pred)),
+    file.path(here, "boostmlr_vimp.rds"), compress = "xz"
+  )
+  saveRDS(
+    boostmlr_partial(mlr.fit, c("x1", "x2")),
+    file.path(here, "boostmlr_partial.rds"), compress = "xz"
+  )
+  cat("wrote BoostMLR importance and partial-effect fixtures\n")
 }
 
 ## Multi-response effect fixtures (ordinal and nominal).

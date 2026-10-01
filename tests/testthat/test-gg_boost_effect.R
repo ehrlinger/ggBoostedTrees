@@ -169,3 +169,41 @@ test_that("the marginal factor path extracts without warnings", {
   expect_setequal(unique(gg$x_label), c("high", "low"))
   expect_identical(levels(gg$kind), "marginal")
 })
+
+test_that("a boostmlr_partial object yields one block per response", {
+  bp <- boostmlr_partial_fixture()
+  gg <- gg_boost_effect(bp)
+
+  expect_s3_class(gg, "gg_boost_effect")
+  expect_identical(
+    names(gg),
+    c("variable", "x", "x_label", "time", "estimate", "kind", "response")
+  )
+  expect_identical(levels(gg$response), bp$response.labels)
+  expect_identical(levels(gg$variable), c("x1", "x2"))
+  expect_identical(levels(gg$kind), "partial")
+  expect_true(all(is.na(gg$x_label)))
+})
+
+test_that("BoostMLR estimates are the smoothed matrices pivoted long", {
+  bp <- boostmlr_partial_fixture()
+  gg <- gg_boost_effect(bp)
+  cv <- bp$curves$x2
+
+  for (q in seq_along(bp$response.labels)) {
+    for (k in c(1L, length(cv$tm.unq))) {
+      at <- gg[gg$variable == "x2" &
+                 gg$response == bp$response.labels[q] &
+                 gg$time == cv$tm.unq[k], ]
+      expect_equal(at$x, cv$x.unq)
+      expect_equal(at$estimate, cv$sList[[q]][, k])
+    }
+  }
+})
+
+test_that("a boostmlr_partial with mismatched responses is refused", {
+  bp <- boostmlr_partial_fixture()
+  bp$response.labels <- c("a", "b")
+
+  expect_error(gg_boost_effect(bp), "response")
+})

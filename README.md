@@ -22,7 +22,7 @@ Pre-1.0 and under active development. What exists today:
 | Variable importance | Implemented |
 | Partial and marginal effects | Implemented |
 | Calibration over follow-up, observed against fitted, with the cohort mean curve | Implemented |
-| `BoostMLR` as a second backend | Partial — `gg_boost_trajectory()`, `gg_boost_error()`, `gg_boost_path()` and `gg_boost_calibration()` accept it; `gg_boost_vimp()` and `gg_boost_effect()` remain `boostmtree` only |
+| `BoostMLR` as a second backend | Implemented — all six figures accept it; partial effects through `boostmlr_partial()` |
 
 The six implemented figures are complete and tested. The API for what exists
 is not expected to change; the list above is what is missing, not what is
@@ -31,13 +31,12 @@ provisional.
 ggBoostedTrees draws diagnostic figures for boosted tree models fit with
 [boostmtree](https://cran.r-project.org/package=boostmtree), which implements
 Friedman's gradient descent boosting with multivariate tree base learners for
-longitudinal responses, and with partial support for `BoostMLR` fits (see the
-status table above). It is the boosting counterpart to
+longitudinal responses, and for `BoostMLR` fits. It is the boosting counterpart to
 [ggRandomForests](https://github.com/ehrlinger/ggRandomForests), and follows
 the same two-step idiom: an extractor pulls a tidy data frame out of a fitted
 model, and `autoplot()` renders it. If you have a `boostmtree` fit and want to
-know whether it converged, this is the package; four of the six figures
-also accept a `BoostMLR` fit.
+know whether it converged, this is the package. All six figures also accept
+a `BoostMLR` fit.
 
 The full reference — every function and the changelog — is online at
 <https://ehrlinger.github.io/ggBoostedTrees/>.
@@ -131,7 +130,8 @@ autoplot(gg_boost_trajectory(fit))
 | `gg_boost_trajectory()` | Observed and fitted subject trajectories over time, sorted within subject. |
 | `gg_boost_calibration()` | Observed and fitted values over follow-up, summarized in equal-count time bins with observed confidence intervals. |
 | `gg_boost_vimp()` | Variable importance for the main effect and the time interaction. |
-| `gg_boost_effect()` | Partial and marginal covariate effects over time, for both continuous and discrete (factor) covariates. |
+| `gg_boost_effect()` | Partial and marginal covariate effects over time, for both continuous and discrete (factor) covariates, and per response for ordinal, nominal and `BoostMLR` fits. |
+| `boostmlr_partial()` | Computes `BoostMLR` partial effects for one or more covariates, in the form `gg_boost_effect()` accepts. |
 
 ### Rendering
 
@@ -143,7 +143,7 @@ autoplot(gg_boost_trajectory(fit))
 | `autoplot.gg_boost_calibration()` | Observed and fitted bin means with observed confidence intervals and each bin's time span. |
 | `autoplot.boostmtree()` | Shortcut from a fitted model straight to the error plot. |
 | `autoplot.gg_boost_vimp()` | Ordered horizontal bars, faceted by component. |
-| `autoplot.gg_boost_effect()` | Effect curves coloured by time, faceted by variable. |
+| `autoplot.gg_boost_effect()` | Effect curves coloured by time, faceted by variable and, for several responses, by response. |
 
 `plot()` is an alias for `autoplot()` on every `gg_boost_*` object.
 
