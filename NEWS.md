@@ -1,5 +1,18 @@
 Package: ggBoostedTrees
-Version: 0.0.8
+Version: 0.0.9
+
+# ggBoostedTrees 0.0.9
+
+* `gg_boost_vimp()` accepts a `BoostMLR` predict object made with
+  `predictBoostMLR(..., importance = TRUE)`. `BoostMLR` splits the
+  covariate-time interaction over its time intervals; these are summed to one
+  `interaction` value per covariate, and the per-interval matrices are kept
+  in the `interaction.by.interval` attribute (#9).
+* New `boostmlr_partial()` computes `BoostMLR` partial effects for one or more
+  covariates, naming the covariates and responses that
+  `BoostMLR::partial.BoostMLR()` leaves unnamed. `gg_boost_effect()` accepts
+  the result and extracts the lowess-smoothed curves, one block per response.
+  All six figures now accept a `BoostMLR` fit (#9).
 
 # ggBoostedTrees 0.0.8
 

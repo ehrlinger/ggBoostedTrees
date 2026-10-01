@@ -9,7 +9,8 @@ gg_boost_effect(object, ...)
 \arguments{
 \item{object}{A \code{partial.plot.boostmtree} or \code{marginal.plot.boostmtree}
 object, as returned by \code{boostmtree::partial.plot()} or
-\code{boostmtree::marginal.plot()} with \verb{output = "data", verbose = FALSE}.}
+\code{boostmtree::marginal.plot()} with \verb{output = "data", verbose = FALSE},
+or a \code{\link{boostmlr_partial}} object.}
 
 \item{...}{Not used; present for S3 consistency.}
 }
@@ -31,7 +32,8 @@ for a continuous one.}
 \description{
 Extract covariate effect curves over time from a
 \code{\link[boostmtree]{partial.plot}} or
-\code{\link[boostmtree]{marginal.plot}} object.
+\code{\link[boostmtree]{marginal.plot}} object, or from the
+\code{\link{boostmlr_partial}} result for a \code{BoostMLR} fit.
 }
 \details{
 The two differ in what they hold constant. A partial effect varies one
@@ -47,7 +49,12 @@ not reconstructable from \code{\link{gg_boost_trajectory}}, which carries
 no covariate column. \code{gg_boost_effect} extracts the smoothed curve instead,
 so that both levels of \code{kind} mean the same thing: the fitted effect.
 
-Neither source computes a confidence interval, so none is reported here.
+For \code{BoostMLR}, \code{\link{boostmlr_partial}} returns both the raw
+partial effect and a lowess smooth of it over time; the smooth is
+extracted, matching the \code{marginal} choice above. The result has \code{kind}
+\code{partial} and one block per response, labelled from the fit's \code{y_Names}.
+
+No source computes a confidence interval, so none is reported here.
 
 \code{boostmtree} accepts factor covariates. For those, \code{partial.plot()} and
 \code{marginal.plot()} return a character (or, for \code{marginal.plot()$data},
@@ -81,5 +88,6 @@ plot(gg_boost_effect(pp))
 
 }
 \seealso{
-\code{\link{plot.gg_boost_effect}}, \code{\link{gg_boost_vimp}}
+\code{\link{plot.gg_boost_effect}}, \code{\link{gg_boost_vimp}},
+\code{\link{boostmlr_partial}}
 }

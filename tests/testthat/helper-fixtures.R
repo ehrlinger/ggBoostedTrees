@@ -104,6 +104,18 @@ boostmlr_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "boostmlr_grow.rds"))
 }
 
+# BoostMLR importance: predictBoostMLR(importance = TRUE) on the committed
+# grow fixture, keeping vimp, x_Names and y_Names. Each $vimp matrix has a
+# Main_Eff column then one Int_Eff.k column per time interval.
+boostmlr_vimp_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "boostmlr_vimp.rds"))
+}
+
+# boostmlr_partial(fit, c("x1", "x2")) on the committed grow fixture.
+boostmlr_partial_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "boostmlr_partial.rds"))
+}
+
 # The slimmed predict object: predict(fit, x = fit$x) on the committed fit,
 # keeping only the fields gg_boost_trajectory() reads. Every subject shares
 # one 15-point time grid. See fixtures/make-fixtures.R.

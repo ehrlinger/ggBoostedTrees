@@ -7,7 +7,8 @@
 gg_boost_vimp(object, components = c("main", "interaction"), ...)
 }
 \arguments{
-\item{object}{A \code{\link[boostmtree]{vimp.boostmtree}} object.}
+\item{object}{A \code{\link[boostmtree]{vimp.boostmtree}} object, or a
+\code{BoostMLR} predict object made with \code{importance = TRUE}.}
 
 \item{components}{Character vector naming the components to extract, any of
 \code{"main"} and \code{"interaction"}. Defaults to both.}
@@ -22,12 +23,13 @@ A \code{gg_boost_vimp} \code{data.frame} with columns:
 \item{component}{Factor, \code{main} or \code{interaction}.}
 \item{response}{Factor naming the response.}
 }
-with attributes \code{metric} (the importance metric) and \code{time.effect}.
+with attributes \code{metric} (the importance metric) and \code{time.effect}, plus
+\code{interaction.by.interval} for \code{BoostMLR}.
 }
 \description{
 Extract variable importance from a \code{\link[boostmtree]{vimp.boostmtree}}
-object, for both the main effect of each covariate and its interaction with
-time.
+object, or from a \code{BoostMLR} predict object, for both the main effect of
+each covariate and its interaction with time.
 }
 \details{
 \code{boostmtree} reports importance in two parts. The main effect asks what is
@@ -49,6 +51,17 @@ A joint importance object (\code{vimp.boostmtree(fit, joint = TRUE)}) reports a
 single combined value, labelled \code{joint.vimp}. Note that CRAN \code{boostmtree}
 2.0.0 cannot produce one at all; the patched build this package requires is
 needed to compute it.
+
+\code{BoostMLR} computes importance inside prediction: pass the object returned
+by \code{BoostMLR::predictBoostMLR(fit, x, tm, id, y, importance = TRUE)}, whose
+\verb{$vimp} holds one matrix per response. \code{BoostMLR} splits the covariate-time
+interaction across its overlapping time intervals (columns \code{Int_Eff.1},
+\code{Int_Eff.2}, ...); these are summed here to one \code{interaction} value per
+covariate so the result has the same shape as for \code{boostmtree}. The
+per-interval matrices travel unsummed as the \code{interaction.by.interval}
+attribute, one per response. The \code{metric} is \code{"Standardized VIMP"}, and no
+\code{time.effect} is recorded. A joint importance from
+\code{BoostMLR::vimp.BoostMLR(joint = TRUE)} is a bare list and is not accepted.
 }
 \examples{
 \donttest{
