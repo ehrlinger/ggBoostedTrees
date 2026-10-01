@@ -1,7 +1,7 @@
 Package: ggBoostedTrees
-Version: 0.0.9
+Version: 0.9.0
 
-# ggBoostedTrees 0.0.9
+# ggBoostedTrees 0.9.0
 
 * `gg_boost_vimp()` accepts a `BoostMLR` predict object made with
   `predictBoostMLR(..., importance = TRUE)`. `BoostMLR` splits the
