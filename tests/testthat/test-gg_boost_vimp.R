@@ -134,6 +134,15 @@ test_that("a BoostMLR grow object is refused with guidance", {
   expect_error(gg_boost_vimp(boostmlr_fixture()), "importance = TRUE")
 })
 
+test_that("a BoostMLR prediction made without importance is refused", {
+  # predictBoostMLR(importance = FALSE) records $vimp as one NULL per
+  # response, not as NULL.
+  v <- boostmlr_vimp_fixture()
+  v$vimp <- vector("list", length(v$vimp))
+
+  expect_error(gg_boost_vimp(v), "importance = TRUE")
+})
+
 test_that("components are validated for BoostMLR too", {
   expect_error(
     gg_boost_vimp(boostmlr_vimp_fixture(), components = "other"),

@@ -153,15 +153,18 @@ gg_boost_vimp.BoostMLR <- function(object,
                                    components = c("main", "interaction"),
                                    ...) {
   components <- .boost_vimp_components(components)
-  if (!inherits(object, "predict") || is.null(object$vimp)) {
+  # predictBoostMLR(importance = FALSE) still records $vimp, as one NULL per
+  # response, so a non-NULL $vimp alone does not mean importance was computed.
+  vimp <- object$vimp
+  has_vimp <- length(vimp) > 0L && all(vapply(vimp, is.matrix, logical(1)))
+  if (!inherits(object, "predict") || !has_vimp) {
     stop(
       "gg_boost_vimp: this BoostMLR object records no importance. Pass the ",
       "result of BoostMLR::predictBoostMLR(fit, x, tm, id, y, ",
-      "importance = TRUE) rather than the grow object.",
+      "importance = TRUE).",
       call. = FALSE
     )
   }
-  vimp <- object$vimp
   labels <- names(vimp) %||% object$y_Names %||% paste0("y", seq_along(vimp))
   var_levels <- rownames(vimp[[1L]]) %||% object$x_Names
 
