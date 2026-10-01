@@ -3,7 +3,8 @@ test_that("gg_boost_effect returns the documented column contract", {
 
   expect_s3_class(gg, "gg_boost_effect")
   expect_identical(
-    names(gg), c("variable", "x", "x_label", "time", "estimate", "kind")
+    names(gg),
+    c("variable", "x", "x_label", "time", "estimate", "kind", "response")
   )
   expect_s3_class(gg$variable, "factor")
   expect_type(gg$x, "double")
@@ -69,25 +70,62 @@ test_that("gg_boost_effect rejects a non-effect object", {
   expect_error(gg_boost_effect(boost_fixture()), "partial.plot")
 })
 
-test_that("a nested (multi-response) partial object is rejected", {
-  p <- partial_fixture()
-  p$curves <- list(y1 = p$curves, y2 = p$curves)
+test_that("a single-response object carries its own response label", {
+  gg <- gg_boost_effect(partial_fixture())
 
-  expect_error(gg_boost_effect(p), "single-response")
+  expect_s3_class(gg$response, "factor")
+  expect_identical(levels(gg$response), partial_fixture()$response.labels)
 })
 
-test_that("a nested (multi-response) marginal object is rejected", {
-  m <- marginal_fixture()
-  m$smooth <- list(y1 = m$smooth, y2 = m$smooth)
+for (family in c("ordinal", "nominal")) {
+  test_that(paste("a", family, "partial object gives one block per response"), {
+    p <- partial_multi_fixture(family)
+    gg <- gg_boost_effect(p)
 
-  expect_error(gg_boost_effect(m), "single-response")
+    expect_s3_class(gg, "gg_boost_effect")
+    expect_identical(levels(gg$response), p$response.labels)
+    expect_identical(levels(gg$kind), "partial")
+    expect_identical(
+      nrow(gg),
+      length(p$response.labels) * nrow(p$curves[[1]]$x1) *
+        length(p$time.points)
+    )
+    # Each response's rows are that response's own curves, not a copy.
+    for (q in seq_along(p$response.labels)) {
+      at <- gg[gg$response == p$response.labels[q] &
+                 gg$time == p$time.points[1], ]
+      expect_equal(at$estimate, p$curves[[q]]$x1[[2L]])
+    }
+  })
+
+  test_that(paste("a", family, "marginal object gives a block per response"), {
+    m <- marginal_multi_fixture(family)
+    gg <- gg_boost_effect(m)
+
+    expect_identical(levels(gg$response), m$response.labels)
+    expect_identical(levels(gg$kind), "marginal")
+    for (q in seq_along(m$response.labels)) {
+      at <- gg[gg$response == m$response.labels[q] &
+                 gg$time == m$time.points[1], ]
+      expect_equal(at$estimate, m$smooth[[q]]$x1[[1L]]$y)
+    }
+  })
+}
+
+test_that("a multi-response object without response labels still works", {
+  p <- partial_multi_fixture("ordinal")
+  p$response.labels <- NULL
+
+  gg <- gg_boost_effect(p)
+  expect_identical(levels(gg$response), names(p$curves))
 })
 
 test_that("the contract carries an x_label column", {
   gg <- gg_boost_effect(partial_fixture())
 
   expect_identical(
-    names(gg), c("variable", "x", "x_label", "time", "estimate", "kind")
+    names(gg),
+    c("variable", "x", "x_label", "time", "estimate", "kind", "response")
   )
   expect_type(gg$x_label, "character")
 })

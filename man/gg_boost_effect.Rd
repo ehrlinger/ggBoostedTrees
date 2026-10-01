@@ -25,6 +25,7 @@ for a continuous one.}
 \item{time}{Numeric time point.}
 \item{estimate}{Numeric fitted effect.}
 \item{kind}{Factor, \code{partial} or \code{marginal}.}
+\item{response}{Factor naming the response.}
 }
 }
 \description{
@@ -57,12 +58,13 @@ keeps its numeric value in \code{x} and leaves \code{x_label} \code{NA}. The gri
 resolved once per variable so every time point shares the same level
 ordering.
 
-\code{gg_boost_effect} is currently single-response only. \code{boostmtree} nests
-\verb{$curves} / \verb{$smooth} as \verb{[[response]][[variable]]} and flattens the outer
-level only when the fit has a single response; a multi-response object is
-rejected with an informative error rather than mishandled. This is also
-why \code{gg_boost_effect} is the one class of the six without a \code{response}
-column.
+A multi-response fit (\code{family = "ordinal"} or \code{"nominal"}) nests
+\verb{$curves} / \verb{$smooth} as \verb{[[response]][[variable]]}; a single-response fit
+flattens the outer level. \code{gg_boost_effect} accepts both and records the
+response in a \code{response} column, labelled from the object's
+\verb{$response.labels} (\code{"response"} for a single-response fit). Each response
+of an ordinal or nominal fit is one model component, so its curves are on
+that component's scale.
 }
 \examples{
 \donttest{

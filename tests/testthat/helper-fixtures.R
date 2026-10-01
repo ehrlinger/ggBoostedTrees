@@ -80,6 +80,23 @@ marginal_factor_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "effect_marginal_factor.rds"))
 }
 
+# Multi-response effect fixtures, from a three-level ordinal or nominal fit.
+# $curves / $smooth nest as [[response]][[variable]], labelled by
+# $response.labels: "1", "2" for ordinal, "mid", "high" for nominal.
+partial_multi_fixture <- function(family = c("ordinal", "nominal")) {
+  family <- match.arg(family)
+  readRDS(testthat::test_path(
+    "fixtures", paste0("effect_partial_", family, ".rds")
+  ))
+}
+
+marginal_multi_fixture <- function(family = c("ordinal", "nominal")) {
+  family <- match.arg(family)
+  readRDS(testthat::test_path(
+    "fixtures", paste0("effect_marginal_", family, ".rds")
+  ))
+}
+
 # The BoostMLR grow object. Read from disk, never refit. BoostMLR stores the
 # same information as boostmtree in a flat layout: mu and y are
 # observation-by-response matrices, tm and id flat vectors.

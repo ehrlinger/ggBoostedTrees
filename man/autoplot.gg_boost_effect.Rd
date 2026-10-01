@@ -21,7 +21,8 @@ covariates) or \code{\link[ggplot2]{geom_point}} (discrete covariates).}
 A \code{ggplot} object.
 }
 \description{
-Covariate effect curves, one line per time point, faceted by variable.
+Covariate effect curves, one line per time point, faceted by variable
+and, for a multi-response fit, by response.
 }
 \details{
 Time is mapped to colour rather than to a facet because the question this

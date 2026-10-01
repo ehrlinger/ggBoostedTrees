@@ -1,6 +1,7 @@
 #' Plot a \code{\link{gg_boost_effect}} object
 #'
-#' Covariate effect curves, one line per time point, faceted by variable.
+#' Covariate effect curves, one line per time point, faceted by variable
+#' and, for a multi-response fit, by response.
 #'
 #' @details
 #' Time is mapped to colour rather than to a facet because the question this
@@ -41,7 +42,8 @@
 #' plot(gg_boost_effect(pp))
 #' }
 #'
-#' @importFrom ggplot2 autoplot ggplot aes geom_line geom_point facet_wrap labs
+#' @importFrom ggplot2 autoplot ggplot aes geom_line geom_point facet_wrap
+#'   facet_grid labs
 #' @export
 autoplot.gg_boost_effect <- function(object, ...) {
   .boost_check_gg(object, "gg_boost_effect")
@@ -90,9 +92,20 @@ autoplot.gg_boost_effect <- function(object, ...) {
   gg_plt <- gg_plt +
     ggplot2::labs(x = "Covariate value", y = "Effect", colour = "Time")
 
-  if (nlevels(object$variable) > 1L) {
+  # Variables have unrelated x scales, so x is free across them. Responses
+  # of one fit are components on a common scale, so y stays shared and the
+  # components can be compared by eye.
+  multi_variable <- nlevels(object$variable) > 1L
+  multi_response <- nlevels(object$response) > 1L
+  if (multi_variable && multi_response) {
+    gg_plt <- gg_plt +
+      ggplot2::facet_grid(response ~ variable, scales = "free_x")
+  } else if (multi_variable) {
     gg_plt <- gg_plt +
       ggplot2::facet_wrap(~ variable, scales = "free_x")
+  } else if (multi_response) {
+    gg_plt <- gg_plt +
+      ggplot2::facet_wrap(~ response)
   }
 
   gg_plt
