@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,12 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.9" id="ggboostedtrees-009">ggBoostedTrees 0.0.9<a class="anchor" aria-label="anchor" href="#ggboostedtrees-009"></a></h2>
+<ul><li>
+<code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> accepts a <code>BoostMLR</code> predict object made with <code>predictBoostMLR(..., importance = TRUE)</code>. <code>BoostMLR</code> splits the covariate-time interaction over its time intervals; these are summed to one <code>interaction</code> value per covariate, and the per-interval matrices are kept in the <code>interaction.by.interval</code> attribute (<a href="https://github.com/ehrlinger/ggBoostedTrees/issues/9" class="external-link">#9</a>).</li>
+<li>New <code><a href="../reference/boostmlr_partial.html">boostmlr_partial()</a></code> computes <code>BoostMLR</code> partial effects for one or more covariates, naming the covariates and responses that <code><a href="https://rdrr.io/pkg/BoostMLR/man/partial.BoostMLR.html" class="external-link">BoostMLR::partial.BoostMLR()</a></code> leaves unnamed. <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> accepts the result and extracts the lowess-smoothed curves, one block per response. All six figures now accept a <code>BoostMLR</code> fit (<a href="https://github.com/ehrlinger/ggBoostedTrees/issues/9" class="external-link">#9</a>).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.8" id="ggboostedtrees-008">ggBoostedTrees 0.0.8<a class="anchor" aria-label="anchor" href="#ggboostedtrees-008"></a></h2>
 <ul><li>

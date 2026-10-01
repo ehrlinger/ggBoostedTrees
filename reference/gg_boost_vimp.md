@@ -2,8 +2,8 @@
 
 Extract variable importance from a
 [`vimp.boostmtree`](https://rdrr.io/pkg/boostmtree/man/vimp.boostmtree.html)
-object, for both the main effect of each covariate and its interaction
-with time.
+object, or from a `BoostMLR` predict object, for both the main effect of
+each covariate and its interaction with time.
 
 ## Usage
 
@@ -17,7 +17,7 @@ gg_boost_vimp(object, components = c("main", "interaction"), ...)
 
   A
   [`vimp.boostmtree`](https://rdrr.io/pkg/boostmtree/man/vimp.boostmtree.html)
-  object.
+  object, or a `BoostMLR` predict object made with `importance = TRUE`.
 
 - components:
 
@@ -48,7 +48,8 @@ A `gg_boost_vimp` `data.frame` with columns:
 
   Factor naming the response.
 
-with attributes `metric` (the importance metric) and `time.effect`.
+with attributes `metric` (the importance metric) and `time.effect`, plus
+`interaction.by.interval` for `BoostMLR`.
 
 ## Details
 
@@ -71,6 +72,19 @@ A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports
 a single combined value, labelled `joint.vimp`. Note that CRAN
 `boostmtree` 2.0.0 cannot produce one at all; the patched build this
 package requires is needed to compute it.
+
+`BoostMLR` computes importance inside prediction: pass the object
+returned by
+`BoostMLR::predictBoostMLR(fit, x, tm, id, y, importance = TRUE)`, whose
+`$vimp` holds one matrix per response. `BoostMLR` splits the
+covariate-time interaction across its overlapping time intervals
+(columns `Int_Eff.1`, `Int_Eff.2`, ...); these are summed here to one
+`interaction` value per covariate so the result has the same shape as
+for `boostmtree`. The per-interval matrices travel unsummed as the
+`interaction.by.interval` attribute, one per response. The `metric` is
+`"Standardized VIMP"`, and no `time.effect` is recorded. A joint
+importance from `BoostMLR::vimp.BoostMLR(joint = TRUE)` is a bare list
+and is not accepted.
 
 ## See also
 

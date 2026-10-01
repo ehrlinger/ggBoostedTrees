@@ -4,7 +4,9 @@ Extract covariate effect curves over time from a
 [`partial.plot`](https://rdrr.io/pkg/boostmtree/man/partial.plot.boostmtree.html)
 or
 [`marginal.plot`](https://rdrr.io/pkg/boostmtree/man/marginal.plot.boostmtree.html)
-object.
+object, or from the
+[`boostmlr_partial`](https://ehrlinger.github.io/ggBoostedTrees/reference/boostmlr_partial.md)
+result for a `BoostMLR` fit.
 
 ## Usage
 
@@ -21,7 +23,9 @@ gg_boost_effect(object, ...)
   [`boostmtree::partial.plot()`](https://rdrr.io/pkg/boostmtree/man/partial.plot.boostmtree.html)
   or
   [`boostmtree::marginal.plot()`](https://rdrr.io/pkg/boostmtree/man/marginal.plot.boostmtree.html)
-  with `output = "data", verbose = FALSE`.
+  with `output = "data", verbose = FALSE`, or a
+  [`boostmlr_partial`](https://ehrlinger.github.io/ggBoostedTrees/reference/boostmlr_partial.md)
+  object.
 
 - ...:
 
@@ -80,7 +84,14 @@ which carries no covariate column. `gg_boost_effect` extracts the
 smoothed curve instead, so that both levels of `kind` mean the same
 thing: the fitted effect.
 
-Neither source computes a confidence interval, so none is reported here.
+For `BoostMLR`,
+[`boostmlr_partial`](https://ehrlinger.github.io/ggBoostedTrees/reference/boostmlr_partial.md)
+returns both the raw partial effect and a lowess smooth of it over time;
+the smooth is extracted, matching the `marginal` choice above. The
+result has `kind` `partial` and one block per response, labelled from
+the fit's `y_Names`.
+
+No source computes a confidence interval, so none is reported here.
 
 `boostmtree` accepts factor covariates. For those, `partial.plot()` and
 `marginal.plot()` return a character (or, for `marginal.plot()$data`,
@@ -102,7 +113,8 @@ curves are on that component's scale.
 ## See also
 
 [`plot.gg_boost_effect`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_effect.md),
-[`gg_boost_vimp`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
+[`gg_boost_vimp`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md),
+[`boostmlr_partial`](https://ehrlinger.github.io/ggBoostedTrees/reference/boostmlr_partial.md)
 
 ## Examples
 

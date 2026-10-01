@@ -11,13 +11,13 @@ Source:
 [`DESCRIPTION`](https://github.com/ehrlinger/ggBoostedTrees/blob/main/DESCRIPTION)
 
 Ehrlinger J (2026). *ggBoostedTrees: Visually Exploring Boosted Tree
-Models*. R package version 0.0.8,
+Models*. R package version 0.0.9,
 <https://github.com/ehrlinger/ggBoostedTrees>.
 
     @Manual{,
       title = {ggBoostedTrees: Visually Exploring Boosted Tree Models},
       author = {John Ehrlinger},
       year = {2026},
-      note = {R package version 0.0.8},
+      note = {R package version 0.0.9},
       url = {https://github.com/ehrlinger/ggBoostedTrees},
     }
