@@ -58,6 +58,10 @@ A `gg_boost_effect` `data.frame` with columns:
 
   Factor, `partial` or `marginal`.
 
+- response:
+
+  Factor naming the response.
+
 ## Details
 
 The two differ in what they hold constant. A partial effect varies one
@@ -87,12 +91,13 @@ covariate keeps its numeric value in `x` and leaves `x_label` `NA`. The
 grid is resolved once per variable so every time point shares the same
 level ordering.
 
-`gg_boost_effect` is currently single-response only. `boostmtree` nests
-`$curves` / `$smooth` as `[[response]][[variable]]` and flattens the
-outer level only when the fit has a single response; a multi-response
-object is rejected with an informative error rather than mishandled.
-This is also why `gg_boost_effect` is the one class of the six without a
-`response` column.
+A multi-response fit (`family = "ordinal"` or `"nominal"`) nests
+`$curves` / `$smooth` as `[[response]][[variable]]`; a single-response
+fit flattens the outer level. `gg_boost_effect` accepts both and records
+the response in a `response` column, labelled from the object's
+`$response.labels` (`"response"` for a single-response fit). Each
+response of an ordinal or nominal fit is one model component, so its
+curves are on that component's scale.
 
 ## See also
 

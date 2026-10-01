@@ -1,6 +1,7 @@
 # Plot a [`gg_boost_effect`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md) object
 
-Covariate effect curves, one line per time point, faceted by variable.
+Covariate effect curves, one line per time point, faceted by variable
+and, for a multi-response fit, by response.
 
 ## Usage
 

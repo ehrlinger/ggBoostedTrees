@@ -11,7 +11,7 @@ marginal.plot object."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,6 +92,9 @@ for a continuous one.</p></dd>
 <dt>kind</dt>
 <dd><p>Factor, <code>partial</code> or <code>marginal</code>.</p></dd>
 
+<dt>response</dt>
+<dd><p>Factor naming the response.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
@@ -116,12 +119,13 @@ in <code>x</code>, carrying the level itself in <code>x_label</code>; a continuo
 keeps its numeric value in <code>x</code> and leaves <code>x_label</code> <code>NA</code>. The grid is
 resolved once per variable so every time point shares the same level
 ordering.</p>
-<p><code>gg_boost_effect</code> is currently single-response only. <code>boostmtree</code> nests
-<code>$curves</code> / <code>$smooth</code> as <code>[[response]][[variable]]</code> and flattens the outer
-level only when the fit has a single response; a multi-response object is
-rejected with an informative error rather than mishandled. This is also
-why <code>gg_boost_effect</code> is the one class of the six without a <code>response</code>
-column.</p>
+<p>A multi-response fit (<code>family = "ordinal"</code> or <code>"nominal"</code>) nests
+<code>$curves</code> / <code>$smooth</code> as <code>[[response]][[variable]]</code>; a single-response fit
+flattens the outer level. <code>gg_boost_effect</code> accepts both and records the
+response in a <code>response</code> column, labelled from the object's
+<code>$response.labels</code> (<code>"response"</code> for a single-response fit). Each response
+of an ordinal or nominal fit is one model component, so its curves are on
+that component's scale.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

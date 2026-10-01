@@ -1,5 +1,16 @@
 # Changelog
 
+## ggBoostedTrees 0.0.8
+
+- [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
+  now accepts the `partial.plot()` and `marginal.plot()` output of a
+  multi-response (ordinal or nominal) `boostmtree` fit, which it
+  previously refused. Every result gains a `response` factor, labelled
+  from the object’s `response.labels`; a single-response fit is labelled
+  `"response"` and otherwise unchanged. `autoplot()` facets by response,
+  as a grid of response by variable when there are several of each
+  ([\#19](https://github.com/ehrlinger/ggBoostedTrees/issues/19)).
+
 ## ggBoostedTrees 0.0.7
 
 - The README function reference now lists
