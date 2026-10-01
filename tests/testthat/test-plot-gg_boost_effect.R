@@ -108,3 +108,38 @@ test_that("the discrete effect plot is stable", {
     ggplot2::autoplot(gg_boost_effect(partial_factor_fixture()))
   )
 })
+
+test_that("a single response is not faceted by response", {
+  p <- ggplot2::autoplot(gg_boost_effect(partial_fixture()))
+
+  expect_false("response" %in% names(p$facet$params$rows))
+  expect_s3_class(p$facet, "FacetWrap")
+})
+
+test_that("a multi-response object is faceted by response", {
+  p <- ggplot2::autoplot(gg_boost_effect(partial_multi_fixture("ordinal")))
+  built <- ggplot2::ggplot_build(p)
+
+  expect_true("response" %in% names(built$layout$layout))
+  expect_identical(nrow(built$layout$layout), 2L)
+})
+
+test_that("several responses and variables share one grid", {
+  gg <- gg_boost_effect(partial_multi_fixture("nominal"))
+  two_vars <- rbind(gg, transform(gg, variable = factor("x9")))
+  two_vars$variable <- factor(two_vars$variable, levels = c("x1", "x9"))
+  class(two_vars) <- class(gg)
+
+  built <- ggplot2::ggplot_build(ggplot2::autoplot(two_vars))
+  expect_s3_class(ggplot2::autoplot(two_vars)$facet, "FacetGrid")
+  expect_identical(nrow(built$layout$layout), 4L)
+})
+
+test_that("the multi-response effect plot is stable", {
+  skip_on_cran()
+  skip_on_os(c("windows", "linux", "solaris"))
+  vdiffr::expect_doppelganger(
+    "effect partial ordinal",
+    ggplot2::autoplot(gg_boost_effect(partial_multi_fixture("ordinal")))
+  )
+})

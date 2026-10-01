@@ -29,12 +29,13 @@
 #' resolved once per variable so every time point shares the same level
 #' ordering.
 #'
-#' `gg_boost_effect` is currently single-response only. `boostmtree` nests
-#' `$curves` / `$smooth` as `[[response]][[variable]]` and flattens the outer
-#' level only when the fit has a single response; a multi-response object is
-#' rejected with an informative error rather than mishandled. This is also
-#' why `gg_boost_effect` is the one class of the six without a `response`
-#' column.
+#' A multi-response fit (`family = "ordinal"` or `"nominal"`) nests
+#' `$curves` / `$smooth` as `[[response]][[variable]]`; a single-response fit
+#' flattens the outer level. `gg_boost_effect` accepts both and records the
+#' response in a `response` column, labelled from the object's
+#' `$response.labels` (`"response"` for a single-response fit). Each response
+#' of an ordinal or nominal fit is one model component, so its curves are on
+#' that component's scale.
 #'
 #' @param object A `partial.plot.boostmtree` or `marginal.plot.boostmtree`
 #'   object, as returned by `boostmtree::partial.plot()` or
@@ -52,6 +53,7 @@
 #'     \item{time}{Numeric time point.}
 #'     \item{estimate}{Numeric fitted effect.}
 #'     \item{kind}{Factor, `partial` or `marginal`.}
+#'     \item{response}{Factor naming the response.}
 #'   }
 #'
 #' @seealso \code{\link{plot.gg_boost_effect}}, \code{\link{gg_boost_vimp}}
@@ -94,46 +96,42 @@ gg_boost_effect.partial.plot.boostmtree <- function(object, ...) {
     stop("gg_boost_effect: this object records no effect curves.",
          call. = FALSE)
   }
-  if (!is.data.frame(curves[[1L]])) {
-    stop(
-      "gg_boost_effect: this partial.plot object is nested by response ",
-      "(multi-response fit); gg_boost_effect() supports single-response ",
-      "'partial.plot.boostmtree' objects only.",
-      call. = FALSE
-    )
-  }
+  by_response <- .boost_effect_responses(
+    curves, object$response.labels, flat = is.data.frame(curves[[1L]])
+  )
   time_points <- object$time.points
-  var_levels <- names(curves)
 
-  blocks <- lapply(var_levels, function(nm) {
-    wide <- curves[[nm]]
-    # Column 1 is the covariate grid; the rest are one column per time point,
-    # named time.0.50 and so on. Take the times from $time.points rather than
-    # parsing those labels, so precision is not lost to the label's rounding.
-    value_cols <- seq_len(ncol(wide))[-1]
-    if (length(value_cols) != length(time_points)) {
-      stop(
-        "gg_boost_effect: variable '", nm, "' has ", length(value_cols),
-        " curve column(s) but the object records ", length(time_points),
-        " time point(s).",
-        call. = FALSE
-      )
-    }
-    grid <- .boost_effect_grid(wide[[1]])
-    do.call(rbind, lapply(seq_along(value_cols), function(k) {
-      data.frame(
-        variable = factor(nm, levels = var_levels),
-        x = grid$x,
-        x_label = grid$x_label,
-        time = as.numeric(time_points[k]),
-        estimate = as.numeric(wide[[value_cols[k]]]),
-        kind = factor("partial", levels = "partial"),
-        stringsAsFactors = FALSE
-      )
-    }))
+  .gg_boost_effect_frame(by_response, function(curves) {
+    var_levels <- names(curves)
+    lapply(var_levels, function(nm) {
+      wide <- curves[[nm]]
+      # Column 1 is the covariate grid; the rest are one column per time
+      # point, named time.0.50 and so on. Take the times from $time.points
+      # rather than parsing those labels, so precision is not lost to the
+      # label's rounding.
+      value_cols <- seq_len(ncol(wide))[-1]
+      if (length(value_cols) != length(time_points)) {
+        stop(
+          "gg_boost_effect: variable '", nm, "' has ", length(value_cols),
+          " curve column(s) but the object records ", length(time_points),
+          " time point(s).",
+          call. = FALSE
+        )
+      }
+      grid <- .boost_effect_grid(wide[[1]])
+      do.call(rbind, lapply(seq_along(value_cols), function(k) {
+        data.frame(
+          variable = factor(nm, levels = var_levels),
+          x = grid$x,
+          x_label = grid$x_label,
+          time = as.numeric(time_points[k]),
+          estimate = as.numeric(wide[[value_cols[k]]]),
+          kind = factor("partial", levels = "partial"),
+          stringsAsFactors = FALSE
+        )
+      }))
+    })
   })
-
-  .gg_boost_effect_frame(blocks)
 }
 
 #' @export
@@ -143,43 +141,64 @@ gg_boost_effect.marginal.plot.boostmtree <- function(object, ...) {
     stop("gg_boost_effect: this object records no smoothed effect curves.",
          call. = FALSE)
   }
-  if (!is.data.frame(smooth[[1L]][[1L]])) {
+  by_response <- .boost_effect_responses(
+    smooth, object$response.labels, flat = is.data.frame(smooth[[1L]][[1L]])
+  )
+  time_points <- object$time.points
+
+  .gg_boost_effect_frame(by_response, function(smooth) {
+    var_levels <- names(smooth)
+    lapply(var_levels, function(nm) {
+      per_time <- smooth[[nm]]
+      if (length(per_time) != length(time_points)) {
+        stop(
+          "gg_boost_effect: variable '", nm, "' has ", length(per_time),
+          " smoothed curve(s) but the object records ", length(time_points),
+          " time point(s).",
+          call. = FALSE
+        )
+      }
+      grid <- .boost_effect_grid(per_time[[1L]]$x)
+      do.call(rbind, lapply(seq_along(per_time), function(k) {
+        curve <- per_time[[k]]
+        data.frame(
+          variable = factor(nm, levels = var_levels),
+          x = grid$x,
+          x_label = grid$x_label,
+          time = as.numeric(time_points[k]),
+          estimate = as.numeric(curve$y),
+          kind = factor("marginal", levels = "marginal"),
+          stringsAsFactors = FALSE
+        )
+      }))
+    })
+  })
+}
+
+# Normalise $curves / $smooth to one named list per response.
+#
+# boostmtree nests these as [[response]][[variable]] for a multi-response fit
+# and drops the outer level for a single response. Wrapping the flat case
+# gives both one shape. Labels come from $response.labels, which boostmtree
+# records for both ("response" when single); the list names and then y1, y2,
+# ... are fallbacks for an object that lacks it.
+.boost_effect_responses <- function(nested, labels, flat) {
+  if (flat) {
+    nested <- list(nested)
+  }
+  if (is.null(labels)) {
+    labels <- names(nested) %||% paste0("y", seq_along(nested))
+    if (flat) labels <- "response"
+  }
+  labels <- as.character(labels)
+  if (length(labels) != length(nested)) {
     stop(
-      "gg_boost_effect: this marginal.plot object is nested by response ",
-      "(multi-response fit); gg_boost_effect() supports single-response ",
-      "'marginal.plot.boostmtree' objects only.",
+      "gg_boost_effect: the object names ", length(labels),
+      " response(s) but records curves for ", length(nested), ".",
       call. = FALSE
     )
   }
-  time_points <- object$time.points
-  var_levels <- names(smooth)
-
-  blocks <- lapply(var_levels, function(nm) {
-    per_time <- smooth[[nm]]
-    if (length(per_time) != length(time_points)) {
-      stop(
-        "gg_boost_effect: variable '", nm, "' has ", length(per_time),
-        " smoothed curve(s) but the object records ", length(time_points),
-        " time point(s).",
-        call. = FALSE
-      )
-    }
-    grid <- .boost_effect_grid(per_time[[1L]]$x)
-    do.call(rbind, lapply(seq_along(per_time), function(k) {
-      curve <- per_time[[k]]
-      data.frame(
-        variable = factor(nm, levels = var_levels),
-        x = grid$x,
-        x_label = grid$x_label,
-        time = as.numeric(time_points[k]),
-        estimate = as.numeric(curve$y),
-        kind = factor("marginal", levels = "marginal"),
-        stringsAsFactors = FALSE
-      )
-    }))
-  })
-
-  .gg_boost_effect_frame(blocks)
+  stats::setNames(nested, labels)
 }
 
 # Resolve a covariate grid into a numeric position and an optional label.
@@ -204,10 +223,16 @@ gg_boost_effect.marginal.plot.boostmtree <- function(object, ...) {
   )
 }
 
-# Shared tail of both methods: bind the per-variable blocks and class the
-# result. The two methods differ only in how they reach a list of blocks.
-.gg_boost_effect_frame <- function(blocks) {
-  gg_dta <- do.call(rbind, blocks)
+# Shared tail of both methods: build each response's per-variable blocks,
+# tag them with the response, bind, and class the result. The two methods
+# differ only in how they reach a list of blocks for one response.
+.gg_boost_effect_frame <- function(by_response, blocks_for) {
+  labels <- names(by_response)
+  gg_dta <- do.call(rbind, lapply(seq_along(by_response), function(q) {
+    block <- do.call(rbind, blocks_for(by_response[[q]]))
+    block$response <- factor(labels[q], levels = labels)
+    block
+  }))
   rownames(gg_dta) <- NULL
   class(gg_dta) <- c("gg_boost_effect", class(gg_dta))
   gg_dta

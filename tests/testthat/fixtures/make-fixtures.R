@@ -78,6 +78,12 @@ writeLines(
     "  The underlying fit is deliberately NOT committed; only the effect",
     "  objects are needed and they are small.",
     "",
+    "Multi-response effect fixtures: effect_{partial,marginal}_{ordinal,",
+    "  nominal}.rds (covariate x1; three-level response, two components).",
+    "  simLong(n = 20, n.time = 4, model = 1); boostmtree(M = 20,",
+    "  control = boostmtree.control(seed = 19)); set.seed(19). Fits not",
+    "  committed.",
+    "",
     "BoostMLR fixture: boostmlr_grow.rds",
     paste0("  BoostMLR ", if (requireNamespace("BoostMLR", quietly = TRUE)) {
       as.character(utils::packageVersion("BoostMLR"))
@@ -201,3 +207,45 @@ if (!requireNamespace("BoostMLR", quietly = TRUE)) {
   cat("wrote BoostMLR fixture:", length(mlr.fit$tm), "observations,",
       ncol(mlr.fit$y), "responses\n")
 }
+
+## Multi-response effect fixtures (ordinal and nominal).
+##
+## n.q > 1 is reachable only for family = "ordinal" or "nominal". partial.plot()
+## and marginal.plot() then nest $curves / $smooth one level deeper, as
+## [[response]][[variable]], and label the outer level in $response.labels.
+## A three-level response gives two components for either family. One
+## variable keeps the files small. The fits are not committed.
+set.seed(19)
+mr.sim <- simLong(n = 20, n.time = 4, model = 1)$data.list
+mr.cut <- cut(
+  mr.sim$y, c(-Inf, quantile(mr.sim$y, c(1 / 3, 2 / 3)), Inf),
+  labels = c("low", "mid", "high")
+)
+mr.fits <- list(
+  ordinal = boostmtree(
+    x = mr.sim$features, tm = mr.sim$time, id = mr.sim$id,
+    y = as.integer(mr.cut), family = "ordinal", M = 20, verbose = FALSE,
+    control = boostmtree.control(seed = 19)
+  ),
+  nominal = boostmtree(
+    x = mr.sim$features, tm = mr.sim$time, id = mr.sim$id,
+    y = mr.cut, family = "nominal", M = 20, verbose = FALSE,
+    control = boostmtree.control(seed = 19)
+  )
+)
+for (fam in names(mr.fits)) {
+  saveRDS(
+    partial.plot(
+      mr.fits[[fam]], x.var.names = "x1", output = "data", verbose = FALSE
+    ),
+    file.path(here, paste0("effect_partial_", fam, ".rds")), compress = "xz"
+  )
+  saveRDS(
+    marginal.plot(
+      mr.fits[[fam]], x.var.names = "x1", output = "data", verbose = FALSE
+    ),
+    file.path(here, paste0("effect_marginal_", fam, ".rds")), compress = "xz"
+  )
+}
+
+cat("wrote multi-response effect fixtures\n")
