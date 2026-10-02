@@ -1,5 +1,13 @@
 Package: ggBoostedTrees
-Version: 0.9.0
+Version: 0.9.1
+
+# ggBoostedTrees 0.9.1
+
+* `Remotes:` now pins the `boostmtree` fork at `v2.0.3-ccf` (was
+  `v2.0.2-ccf`). That release only drops an unused `parallel` import; the
+  `cv.flag` fix came in 2.0.2, so the `boostmtree (>= 2.0.1)` floor is
+  unchanged. Downstream packages that pin their own `boostmtree` ref can now
+  move to `v2.0.3-ccf` without handing `pak` two refs for one package.
 
 # ggBoostedTrees 0.9.0
 

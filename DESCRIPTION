@@ -1,8 +1,8 @@
 Package: ggBoostedTrees
 Type: Package
 Title: Visually Exploring Boosted Tree Models
-Version: 0.9.0
-Date: 2026-10-01
+Version: 0.9.1
+Date: 2026-10-02
 Authors@R: person("John", "Ehrlinger",
   role = c("aut", "cre"),
   email = "john.ehrlinger@gmail.com",
@@ -34,7 +34,7 @@ Suggests:
     testthat,
     vdiffr
 Remotes:
-    boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.2-ccf
+    boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.3-ccf
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.1.0
