@@ -64,7 +64,7 @@ installed for you. To install the backend on its own:
 ``` r
 
 remotes::install_github("ehrlinger/boostmtree_src", subdir = "boostmtree",
-                        ref = "v2.0.2-ccf")
+                        ref = "v2.0.3-ccf")
 ```
 
 ## Quick Start

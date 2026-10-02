@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,11 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.1" id="ggboostedtrees-091">ggBoostedTrees 0.9.1<a class="anchor" aria-label="anchor" href="#ggboostedtrees-091"></a></h2>
+<ul><li>
+<code>Remotes:</code> now pins the <code>boostmtree</code> fork at <code>v2.0.3-ccf</code> (was <code>v2.0.2-ccf</code>). That release only drops an unused <code>parallel</code> import; the <code>cv.flag</code> fix came in 2.0.2, so the <code>boostmtree (&gt;= 2.0.1)</code> floor is unchanged. Downstream packages that pin their own <code>boostmtree</code> ref can now move to <code>v2.0.3-ccf</code> without handing <code>pak</code> two refs for one package.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.0" id="ggboostedtrees-090">ggBoostedTrees 0.9.0<a class="anchor" aria-label="anchor" href="#ggboostedtrees-090"></a></h2>
 <ul><li>
