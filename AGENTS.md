@@ -37,8 +37,15 @@ GitHub Release must not redeploy an older tagged site.
 - Never push directly to `main`. Use a branch and pull request.
 - Versions use three numeric components. Patch bumps are the default; minor
   and major bumps are maintainer decisions.
-- A shipped change gets a `NEWS.md` entry. Name the version when preparing the
-  release, not once per pull request.
+- A shipped change gets a NEWS entry, written to a file of its own,
+  `news/<branch>.md` (`/` in the branch name replaced by `-`): the bullets
+  exactly as they will read in `NEWS.md`, no heading. Do not edit `NEWS.md`
+  itself; two open pull requests would conflict there. The `news-fragment` job
+  in `lint.yaml` fails a shipping change with no fragment.
+- Name the version when preparing the release, not once per pull request: move
+  `Version:` in `DESCRIPTION`, then run
+  `python3 .github/scripts/news.py collect`, which files the fragments under
+  that version's heading in merge order and deletes them.
 - Do not force-push release tags. A GitHub Release must point at the tested
   commit already on `main`.
 
