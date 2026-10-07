@@ -35,6 +35,7 @@ Suggests:
     vdiffr
 Remotes:
     boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.3-ccf
+VignetteBuilder: quarto
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.1.0
