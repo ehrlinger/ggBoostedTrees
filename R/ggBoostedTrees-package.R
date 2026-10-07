@@ -6,6 +6,9 @@
 #' that data frame. Adding a new modelling backend means writing extractor
 #' methods only.
 #'
+#' The Overview vignette, `vignette("ggBoostedTrees")`, walks the
+#' workflow end to end.
+#'
 #' @keywords internal
 "_PACKAGE"
 
