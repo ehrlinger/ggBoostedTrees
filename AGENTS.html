@@ -71,7 +71,8 @@
 <h2 id="git-and-versioning">Git and versioning<a class="anchor" aria-label="anchor" href="#git-and-versioning"></a></h2>
 <ul><li>Never push directly to <code>main</code>. Use a branch and pull request.</li>
 <li>Versions use three numeric components. Patch bumps are the default; minor and major bumps are maintainer decisions.</li>
-<li>A shipped change gets a <code>NEWS.md</code> entry. Name the version when preparing the release, not once per pull request.</li>
+<li>A shipped change gets a NEWS entry, written to a file of its own, <code>news/&lt;branch&gt;.md</code> (<code>/</code> in the branch name replaced by <code>-</code>): the bullets exactly as they will read in <code>NEWS.md</code>, no heading. Do not edit <code>NEWS.md</code> itself; two open pull requests would conflict there. The <code>news-fragment</code> job in <code>lint.yaml</code> fails a shipping change with no fragment.</li>
+<li>Name the version when preparing the release, not once per pull request: move <code>Version:</code> in <code>DESCRIPTION</code>, then run <code>python3 .github/scripts/news.py collect</code>, which files the fragments under that version’s heading in merge order and deletes them.</li>
 <li>Do not force-push release tags. A GitHub Release must point at the tested commit already on <code>main</code>.</li>
 </ul></div>
 <div class="section level2">
