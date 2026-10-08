@@ -3,11 +3,6 @@ Version: 0.9.1
 
 # ggBoostedTrees (unreleased)
 
-* New overview vignette, `vignette("ggBoostedTrees")`, walks one small
-  simulated `boostmtree` fit through every figure the package draws, in the
-  order you would look at them. Vignettes put the table of contents on the
-  left, as in the other HVTI packages.
-
 * `DESCRIPTION` now declares the Quarto command line tool in
   `SystemRequirements`, which the new vignette needs to build.
 
