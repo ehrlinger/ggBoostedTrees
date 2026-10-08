@@ -6,6 +6,12 @@ frame with a documented column contract out of a fitted model, and
 `autoplot()` renders that data frame. Adding a new modelling backend
 means writing extractor methods only.
 
+## Details
+
+The Overview vignette,
+[`vignette("ggBoostedTrees")`](https://ehrlinger.github.io/ggBoostedTrees/articles/ggBoostedTrees.md),
+walks the workflow end to end.
+
 ## See also
 
 Useful links:

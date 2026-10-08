@@ -35,16 +35,19 @@
   multi-response (ordinal or nominal) `boostmtree` fit, which it
   previously refused. Every result gains a `response` factor, labelled
   from the object’s `response.labels`; a single-response fit is labelled
-  `"response"` and otherwise unchanged. `autoplot()` facets by response,
-  as a grid of response by variable when there are several of each
+  `"response"` and otherwise unchanged.
+  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+  facets by response, as a grid of response by variable when there are
+  several of each
   ([\#19](https://github.com/ehrlinger/ggBoostedTrees/issues/19)).
 
 ## ggBoostedTrees 0.0.7
 
 - The README function reference now lists
   [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md)
-  and its `autoplot()` method alongside the other shipped figure-data
-  objects.
+  and its
+  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+  method alongside the other shipped figure-data objects.
 - New
   [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md)
   compares observed and fitted values over follow-up. Observations are
@@ -122,13 +125,13 @@
 
 - [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
   and
-  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/`autoplot()`
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   for variable importance, covering both the main effect of each
   covariate and its interaction with time. The axis is labelled with the
   metric recorded on the source object rather than a hard-coded string.
 - [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
   and
-  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/`autoplot()`
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   for partial and marginal covariate effects over time, as one class
   distinguished by `kind`.
 - Neither `partial.plot()` nor `marginal.plot()` computes a confidence
@@ -140,7 +143,7 @@
 
 - [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md)
   and
-  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/`autoplot()`
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   for observed and fitted subject trajectories over time. Rows are
   sorted within subject, because `boostmtree` stores observations in
   input order and a line drawn from that order zigzags.
@@ -152,14 +155,15 @@
 
 - [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)
   and
-  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/`autoplot()`
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   for the boosting error path, marking the cross-validated optimal
   iteration. Requires a fit grown with `cv.flag = TRUE`.
 - [`gg_boost_path()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_path.md)
   and
-  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/`autoplot()`
+  [`plot()`](https://rdrr.io/r/graphics/plot.default.html)/[`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   for the `rho`, `phi` and `lambda` parameter paths.
-- `autoplot()` on a `boostmtree` fit as a shortcut to the error path.
+- [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+  on a `boostmtree` fit as a shortcut to the error path.
 
 ## ggBoostedTrees 0.0.1
 

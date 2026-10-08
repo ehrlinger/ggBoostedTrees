@@ -12,7 +12,8 @@
 <link href="deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Visually Exploring Boosted Tree Models">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Visually Exploring Boosted Tree Models">
 <meta name="description" content="Graphic elements for exploring boosted tree models fit with boostmtree and BoostMLR, which implement Friedman's gradient descent boosting with multivariate tree base learners for longitudinal responses. Separates data extraction from rendering so that additional boosting backends can be added without changes to the plotting layer.">
 <meta property="og:description" content="Graphic elements for exploring boosted tree models fit with boostmtree and BoostMLR, which implement Friedman's gradient descent boosting with multivariate tree base learners for longitudinal responses. Separates data extraction from rendering so that additional boosting backends can be added without changes to the plotting layer.">
 </head>
@@ -33,7 +34,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/ggBoostedTrees.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -254,6 +257,14 @@
 </table>
 <p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> is an alias for <code>autoplot()</code> on every <code>gg_boost_*</code> object.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<ul>
+<li>
+<a href="https://ehrlinger.github.io/ggBoostedTrees/articles/ggBoostedTrees.html">Overview</a>, <code><a href="articles/ggBoostedTrees.html">vignette("ggBoostedTrees")</a></code>, fits one small simulated model and walks it through every figure, from the error path to partial effects, then finishes a plot with <code>+</code>.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="related-packages">Related packages<a class="anchor" aria-label="anchor" href="#related-packages"></a>
