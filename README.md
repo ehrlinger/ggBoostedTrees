@@ -148,6 +148,10 @@ autoplot(gg_boost_trajectory(fit))
 
 `plot()` is an alias for `autoplot()` on every `gg_boost_*` object.
 
+## Documentation
+
+- [Overview](https://ehrlinger.github.io/ggBoostedTrees/articles/ggBoostedTrees.html), `vignette("ggBoostedTrees")`, fits one small simulated model and walks it through every figure, from the error path to partial effects, then finishes a plot with `+`.
+
 ## Related packages
 
 - [ggRandomForests](https://github.com/ehrlinger/ggRandomForests) — the same

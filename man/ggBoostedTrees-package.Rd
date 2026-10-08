@@ -12,6 +12,10 @@ documented column contract out of a fitted model, and \code{autoplot()} renders
 that data frame. Adding a new modelling backend means writing extractor
 methods only.
 }
+\details{
+The Overview vignette, \code{vignette("ggBoostedTrees")}, walks the
+workflow end to end.
+}
 \seealso{
 Useful links:
 \itemize{

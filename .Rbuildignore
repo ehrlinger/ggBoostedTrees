@@ -11,3 +11,6 @@
 ^\.remember$
 ^AGENTS\.md$
 ^CLAUDE\.md$
+^pkgdown$
+^vignettes/\.quarto$
+^vignettes/.*_files$

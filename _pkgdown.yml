@@ -27,7 +27,7 @@ home:
 
 navbar:
   structure:
-    left: [reference, news]
+    left: [intro, reference, articles, news]
     right: [search, github, my_linkedin, lightswitch]
   components:
     my_linkedin:
@@ -79,6 +79,14 @@ reference:
     is.
   contents:
   - ggBoostedTrees-package
+
+articles:
+- title: "Overview"
+  desc: >
+    What the package is for and the whole workflow on one small fit, from the
+    error path to partial effects.
+  contents:
+  - ggBoostedTrees
 
 footer:
   structure:
