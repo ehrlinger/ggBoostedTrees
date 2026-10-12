@@ -18,10 +18,13 @@ model backend can be added without changing the plotting layer.
 
 ## Automated gates
 
-The repository runs package checks on macOS, Windows, Ubuntu release,
-and Ubuntu oldrel. It also runs manual checks, coverage, lint, pkgdown,
-and the family house-style check. The pkgdown site deploys from `main`;
-a GitHub Release must not redeploy an older tagged site.
+Package checks are Linux-first. A pull request runs Ubuntu release, the
+only required check leg. A push to `main` adds macOS release and Ubuntu
+oldrel. The weekly sweep (Mondays) and a manual `workflow_dispatch` add
+Windows release and Ubuntu devel. The repository also runs manual
+checks, coverage, lint, pkgdown, and the family house-style check. The
+pkgdown site deploys from `main`; a GitHub Release must not redeploy an
+older tagged site.
 
 ## Package rules
 

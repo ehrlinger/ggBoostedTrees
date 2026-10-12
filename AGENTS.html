@@ -57,7 +57,7 @@
 </ul></div>
 <div class="section level2">
 <h2 id="automated-gates">Automated gates<a class="anchor" aria-label="anchor" href="#automated-gates"></a></h2>
-<p>The repository runs package checks on macOS, Windows, Ubuntu release, and Ubuntu oldrel. It also runs manual checks, coverage, lint, pkgdown, and the family house-style check. The pkgdown site deploys from <code>main</code>; a GitHub Release must not redeploy an older tagged site.</p>
+<p>Package checks are Linux-first. A pull request runs Ubuntu release, the only required check leg. A push to <code>main</code> adds macOS release and Ubuntu oldrel. The weekly sweep (Mondays) and a manual <code>workflow_dispatch</code> add Windows release and Ubuntu devel. The repository also runs manual checks, coverage, lint, pkgdown, and the family house-style check. The pkgdown site deploys from <code>main</code>; a GitHub Release must not redeploy an older tagged site.</p>
 </div>
 <div class="section level2">
 <h2 id="package-rules">Package rules<a class="anchor" aria-label="anchor" href="#package-rules"></a></h2>
