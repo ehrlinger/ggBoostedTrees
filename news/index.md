@@ -1,5 +1,17 @@
 # Changelog
 
+## ggBoostedTrees 0.9.2
+
+- `DESCRIPTION` now declares the Quarto command line tool in
+  `SystemRequirements`, which the new vignette needs to build.
+
+- New overview vignette,
+  [`vignette("ggBoostedTrees")`](https://ehrlinger.github.io/ggBoostedTrees/articles/ggBoostedTrees.md),
+  walks one small simulated `boostmtree` fit through every figure the
+  package draws, in the order you would look at them. On the pkgdown
+  site, the article puts the table of contents on the left, as in the
+  other HVTI packages.
+
 ## ggBoostedTrees 0.9.1
 
 - `Remotes:` now pins the `boostmtree` fork at `v2.0.3-ccf` (was
