@@ -44,6 +44,26 @@ The full reference — every function and the changelog — is online at
 
 ## Installation
 
+ggBoostedTrees is part of the HVTI R family. Install it with the rest of
+the family through [hvtiR](https://github.com/ehrlinger/hvtiR):
+
+```r
+# install.packages("pak")
+pak::pak("ehrlinger/hvtiR")
+hvtiR::install()
+```
+
+`hvtiR::install()` installs every member in one call, so the versions the
+members require of one another resolve together. Update later with
+`hvtiR::update()`, from a fresh R session: it will not overwrite a package
+that is already loaded.
+
+To install ggBoostedTrees on its own:
+
+```r
+pak::pak("ehrlinger/ggBoostedTrees")
+```
+
 ggBoostedTrees requires a **patched build of boostmtree**, not the CRAN
 release. CRAN's `boostmtree` 2.0.0 has three defects that reach these figures:
 frozen residuals under `cv.flag = TRUE` (which is exactly the flag the error
@@ -55,16 +75,11 @@ That requirement is enforced rather than documented: the `Imports` floor is
 against the defective backend fails to resolve instead of silently producing
 wrong figures.
 
-```r
-remotes::install_github("ehrlinger/ggBoostedTrees")
-```
-
-The `Remotes:` field points at the fork, so the correct `boostmtree` is
-installed for you. To install the backend on its own:
+The `Remotes:` field points at the fork, so either command above installs the
+correct `boostmtree` for you. To install the backend on its own:
 
 ```r
-remotes::install_github("ehrlinger/boostmtree_src", subdir = "boostmtree",
-                        ref = "v2.0.3-ccf")
+pak::pak("ehrlinger/boostmtree_src/boostmtree@v2.0.3-ccf")
 ```
 
 ## Quick Start
