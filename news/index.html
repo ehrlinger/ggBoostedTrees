@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,12 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.3" id="ggboostedtrees-093">ggBoostedTrees 0.9.3<a class="anchor" aria-label="anchor" href="#ggboostedtrees-093"></a></h2>
+<ul><li><p>The README’s Installation section now leads with <code>hvtiR::install()</code>, which installs the whole HVTI R family in one call, and then gives <code>pak::pak("ehrlinger/ggBoostedTrees")</code> for this package alone.</p></li>
+<li><p><code>Remotes:</code> installs <code>boostmtree</code> 2.0.4 from the CCF fork (<code>v2.0.4-ccf</code>), and the README’s backend install line names that tag. 2.0.4 adds <code>boostmtree.control(cv.cores = )</code>, which runs the cross-validated fit’s out-of-bag update on several cores, and is about 30% faster on one core; the fit is identical to 2.0.3’s. The <code>Imports:</code> floor stays at 2.0.1, because nothing in this package uses the new argument.</p></li>
+<li><p>The README and the getting-started vignette say what <code>cv.flag = TRUE</code> costs: cross-validation’s time grows with the square of the number of subjects, with measured timings, and <code>boostmtree</code> 2.0.4’s <code>boostmtree.control(cv.cores = )</code> runs it on several cores without changing the fit.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.2" id="ggboostedtrees-092">ggBoostedTrees 0.9.2<a class="anchor" aria-label="anchor" href="#ggboostedtrees-092"></a></h2>
 <ul><li><p><code>DESCRIPTION</code> now declares the Quarto command line tool in <code>SystemRequirements</code>, which the new vignette needs to build.</p></li>
