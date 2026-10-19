@@ -79,7 +79,7 @@ The `Remotes:` field points at the fork, so either command above installs the
 correct `boostmtree` for you. To install the backend on its own:
 
 ```r
-pak::pak("ehrlinger/boostmtree_src/boostmtree@v2.0.4-ccf")
+pak::pak("ehrlinger/boostmtree_src/boostmtree@v2.0.5-ccf")
 ```
 
 ## Quick Start
