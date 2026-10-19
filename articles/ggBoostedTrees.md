@@ -68,6 +68,12 @@ and
 [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)
 will tell you so rather than draw something misleading.
 
+Cross-validation is also most of the fit’s cost, and that cost grows
+with the square of the number of subjects. On a large study, pass
+`control = boostmtree::boostmtree.control(cv.cores = 4)` (boostmtree
+2.0.4 or later) to run it on several cores; the fit is the same either
+way. The package README has the timings.
+
 ## Did it converge?
 
 The error path is the first thing worth looking at, so a fitted model

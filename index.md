@@ -110,6 +110,18 @@ default fit has no error path to draw and
 [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)
 will say so.
 
+It is also where the time goes. Cross-validation refits each step once
+for every subject left out of the tree, so its cost grows with the
+square of the number of subjects: profiled on simulated data with 5
+visits each, a 50-step fit on boostmtree 2.0.3 took 2.9 s at 75
+subjects, 29 s at 300 and 108 s at 600, about 9 times the cost of the
+same fit without it at 300. Studies with thousands of visits have taken
+hours. `boostmtree` 2.0.4 runs those refits in parallel through
+`boostmtree.control(cv.cores = )`, and the fit is identical on any
+number of cores; at 600 subjects, 4 cores took 33 s. The more subjects,
+the larger the share that runs in parallel. Windows cannot fork and uses
+one core.
+
 Every figure is available as data as well as a plot, because the tidy
 frame is the point rather than an implementation detail:
 

@@ -103,6 +103,7 @@
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <p><code>cv.flag = TRUE</code> matters here. <code>boostmtree</code> records the error path and the cross-validated optimal iteration (<code>m.opt</code>) only when cross-validation ran. A fit grown without it has no error path to draw, and <code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> will tell you so rather than draw something misleading.</p>
+<p>Cross-validation is also most of the fit’s cost, and that cost grows with the square of the number of subjects. On a large study, pass <code>control = boostmtree::boostmtree.control(cv.cores = 4)</code> (boostmtree 2.0.4 or later) to run it on several cores; the fit is the same either way. The package README has the timings.</p>
 </section><section class="level2"><h2 id="did-it-converge">Did it converge?<a class="anchor" aria-label="anchor" href="#did-it-converge"></a>
 </h2>
 <p>The error path is the first thing worth looking at, so a fitted model goes straight to it:</p>
