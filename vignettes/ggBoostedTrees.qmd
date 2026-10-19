@@ -80,6 +80,12 @@ cross-validated optimal iteration (`m.opt`) only when cross-validation ran. A
 fit grown without it has no error path to draw, and `gg_boost_error()` will
 tell you so rather than draw something misleading.
 
+Cross-validation is also most of the fit's cost, and that cost grows with the
+square of the number of subjects. On a large study, pass
+`control = boostmtree::boostmtree.control(cv.cores = 4)` (boostmtree 2.0.4 or
+later) to run it on several cores; the fit is the same either way. The
+package README has the timings.
+
 ## Did it converge?
 
 The error path is the first thing worth looking at, so a fitted model goes
