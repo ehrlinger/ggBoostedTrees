@@ -1,5 +1,24 @@
 Package: ggBoostedTrees
-Version: 0.9.2
+Version: 0.9.3
+
+# ggBoostedTrees 0.9.3
+
+* The README's Installation section now leads with `hvtiR::install()`, which
+  installs the whole HVTI R family in one call, and then gives
+  `pak::pak("ehrlinger/ggBoostedTrees")` for this package alone.
+
+* `Remotes:` installs `boostmtree` 2.0.4 from the CCF fork (`v2.0.4-ccf`), and
+  the README's backend install line names that tag. 2.0.4 adds
+  `boostmtree.control(cv.cores = )`, which runs the cross-validated fit's
+  out-of-bag update on several cores, and is about 30% faster on one core;
+  the fit is identical to 2.0.3's. The `Imports:` floor stays at 2.0.1,
+  because nothing in this package uses the new argument.
+
+* The README and the getting-started vignette say what `cv.flag = TRUE`
+  costs: cross-validation's time grows with the square of the number of
+  subjects, with measured timings, and `boostmtree` 2.0.4's
+  `boostmtree.control(cv.cores = )` runs it on several cores without changing
+  the fit.
 
 # ggBoostedTrees 0.9.2
 
