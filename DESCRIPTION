@@ -34,7 +34,7 @@ Suggests:
     testthat,
     vdiffr
 Remotes:
-    boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.6-ccf
+    boostmtree=ehrlinger/boostmtree_src/boostmtree@v2.0.7-ccf
 VignetteBuilder: quarto
 SystemRequirements: Quarto command line tool
     (<https://github.com/quarto-dev/quarto-cli>)
