@@ -118,8 +118,7 @@ one core.
 On a shared server the limit is memory, not speed. Each core is a forked copy
 of R, and about 80% of the fit runs in parallel, so speed levels off near 4 to 5
 times however many cores it has. Measured on our server (boostmtree 2.0.4, an
-ordinal response, 10 steps; the time grows in proportion to the number of
-steps, the memory does not):
+ordinal response, 10 steps), with peak memory at those 10 steps:
 
 | subjects | 1 core | 4 cores | 8 cores |
 |---|---|---|---|
@@ -127,8 +126,12 @@ steps, the memory does not):
 | 2,000 | 2,552 s, 3 GB | 1,006 s, 19 GB | 790 s, 30 GB |
 | 4,000 | 11,003 s, 13 GB | 3,987 s, 69 GB | ran out of memory |
 
-Memory there is an upper bound. At 4,000 subjects and 1,000 steps, the fit
-takes between four and five days on 4 cores.
+Time grows in proportion to the number of steps: at 4,000 subjects and 1,000
+steps, the fit takes between four and five days on 4 cores. Memory grows with
+the steps too, because the fit keeps every one, about 0.35 MB per step per
+1,000 visits for an ordinal response. The figures above are upper bounds at 10
+steps only; at 1,000 steps add about 11 GB at 4,000 subjects for the fit
+itself, and possibly more for each core, which has not been measured.
 
 Every figure is available as data as well as a plot, because the tidy frame is
 the point rather than an implementation detail:
