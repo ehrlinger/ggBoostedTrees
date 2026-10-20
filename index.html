@@ -153,7 +153,37 @@
 <span><span class="co"># The error path, with the cross-validated optimal iteration marked.</span></span>
 <span><span class="fu">autoplot</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><code>cv.flag = TRUE</code> is not optional for the error path. <code>boostmtree</code> records <code>err.rate</code> and <code>m.opt</code> only when cross-validation ran, so a default fit has no error path to draw and <code><a href="reference/gg_boost_error.html">gg_boost_error()</a></code> will say so.</p>
-<p>It is also where the time goes. Cross-validation refits each step once for every subject left out of the tree, so its cost grows with the square of the number of subjects: profiled on simulated data with 5 visits each, a 50-step fit on boostmtree 2.0.3 took 2.9 s at 75 subjects, 29 s at 300 and 108 s at 600, about 9 times the cost of the same fit without it at 300. Studies with thousands of visits have taken hours. <code>boostmtree</code> 2.0.4 runs those refits in parallel through <code>boostmtree.control(cv.cores = )</code>, and the fit is identical on any number of cores; at 600 subjects, 4 cores took 33 s. The more subjects, the larger the share that runs in parallel. Windows cannot fork and uses one core.</p>
+<p>It is also where the time goes. Cross-validation refits each step once for every subject left out of the tree, so its cost grows with the square of the number of subjects. Profiled on a laptop with simulated data of about 9 visits per subject, a 50-step fit on boostmtree 2.0.3 took 2.9 s at 75 subjects, 29 s at 300 and 108 s at 600, about 9 times the cost of the same fit without it at 300. <code>boostmtree</code> 2.0.4 runs those refits in parallel through <code>boostmtree.control(cv.cores = )</code>, and the fit is identical on any number of cores; at 600 subjects, 4 laptop cores took 33 s. Windows cannot fork and uses one core.</p>
+<p>On a shared server the limit is memory, not speed. Each core is a forked copy of R, and about 80% of the fit runs in parallel, so speed levels off near 4 to 5 times however many cores it has. Measured on our server (boostmtree 2.0.4, an ordinal response, 10 steps), with peak memory at those 10 steps:</p>
+<table class="table">
+<thead><tr>
+<th>subjects</th>
+<th>1 core</th>
+<th>4 cores</th>
+<th>8 cores</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1,000</td>
+<td>654 s, 1 GB</td>
+<td>263 s, 5 GB</td>
+<td>184 s, 11 GB</td>
+</tr>
+<tr>
+<td>2,000</td>
+<td>2,552 s, 3 GB</td>
+<td>1,006 s, 19 GB</td>
+<td>790 s, 30 GB</td>
+</tr>
+<tr>
+<td>4,000</td>
+<td>11,003 s, 13 GB</td>
+<td>3,987 s, 69 GB</td>
+<td>ran out of memory</td>
+</tr>
+</tbody>
+</table>
+<p>Time grows in proportion to the number of steps: at 4,000 subjects and 1,000 steps, the fit takes between four and five days on 4 cores. Memory grows with the steps too, because the fit keeps every one, about 0.35 MB per step per 1,000 visits for an ordinal response. The figures above are upper bounds at 10 steps only; at 1,000 steps add about 11 GB at 4,000 subjects for the fit itself, and possibly more for each core, which has not been measured.</p>
 <p>Every figure is available as data as well as a plot, because the tidy frame is the point rather than an implementation detail:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gg_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gg_boost_error.html">gg_boost_error</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
