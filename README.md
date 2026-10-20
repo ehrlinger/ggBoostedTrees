@@ -107,13 +107,31 @@ error path to draw and `gg_boost_error()` will say so.
 
 It is also where the time goes. Cross-validation refits each step once for
 every subject left out of the tree, so its cost grows with the square of the
-number of subjects: profiled on simulated data with 5 visits each, a 50-step
-fit on boostmtree 2.0.3 took 2.9 s at 75 subjects, 29 s at 300 and 108 s at 600, about 9 times
-the cost of the same fit without it at 300. Studies with thousands of
-visits have taken hours. `boostmtree` 2.0.4 runs those refits in parallel through
+number of subjects. Profiled on a laptop with simulated data of about 9 visits
+per subject, a 50-step fit on boostmtree 2.0.3 took 2.9 s at 75 subjects, 29 s
+at 300 and 108 s at 600, about 9 times the cost of the same fit without it at
+300. `boostmtree` 2.0.4 runs those refits in parallel through
 `boostmtree.control(cv.cores = )`, and the fit is identical on any number of
-cores; at 600 subjects, 4 cores took 33 s. The more subjects, the larger the
-share that runs in parallel. Windows cannot fork and uses one core.
+cores; at 600 subjects, 4 laptop cores took 33 s. Windows cannot fork and uses
+one core.
+
+On a shared server the limit is memory, not speed. Each core is a forked copy
+of R, and about 80% of the fit runs in parallel, so speed levels off near 4 to 5
+times however many cores it has. Measured on our server (boostmtree 2.0.4, an
+ordinal response, 10 steps), with peak memory at those 10 steps:
+
+| subjects | 1 core | 4 cores | 8 cores |
+|---|---|---|---|
+| 1,000 | 654 s, 1 GB | 263 s, 5 GB | 184 s, 11 GB |
+| 2,000 | 2,552 s, 3 GB | 1,006 s, 19 GB | 790 s, 30 GB |
+| 4,000 | 11,003 s, 13 GB | 3,987 s, 69 GB | ran out of memory |
+
+Time grows in proportion to the number of steps: at 4,000 subjects and 1,000
+steps, the fit takes between four and five days on 4 cores. Memory grows with
+the steps too, because the fit keeps every one, about 0.35 MB per step per
+1,000 visits for an ordinal response. The figures above are upper bounds at 10
+steps only; at 1,000 steps add about 11 GB at 4,000 subjects for the fit
+itself, and possibly more for each core, which has not been measured.
 
 Every figure is available as data as well as a plot, because the tidy frame is
 the point rather than an implementation detail:
