@@ -52,6 +52,7 @@ test_that("the parameter path plot is stable", {
   # rendering change; use vdiffr variants if per-platform references are ever
   # wanted.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "path all parameters",
     ggplot2::autoplot(gg_boost_path(boost_fixture()))
@@ -66,6 +67,7 @@ test_that("the multi-response path plot is stable", {
   # rendering change; use vdiffr variants if per-platform references are ever
   # wanted.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "path multi response",
     ggplot2::autoplot(gg_boost_path(boost_multi_fixture()))

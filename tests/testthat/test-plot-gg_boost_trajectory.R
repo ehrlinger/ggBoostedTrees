@@ -153,6 +153,7 @@ test_that("the trajectory plot is stable", {
   # Text rendering is not byte-identical across platforms, and the committed
   # reference SVGs were generated on macOS.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "trajectory univariate",
     ggplot2::autoplot(gg_boost_trajectory(boost_fixture()), n_max = Inf)
@@ -162,6 +163,7 @@ test_that("the trajectory plot is stable", {
 test_that("the multi-response trajectory plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "trajectory multi response",
     ggplot2::autoplot(gg_boost_trajectory(boost_multi_fixture()))

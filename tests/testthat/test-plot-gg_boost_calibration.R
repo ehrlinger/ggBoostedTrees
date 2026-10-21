@@ -80,6 +80,7 @@ test_that("the univariate calibration plot is stable", {
   # Text rendering is not byte-identical across platforms, and the committed
   # reference SVGs were generated on macOS.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "calibration univariate",
     ggplot2::autoplot(gg_boost_calibration(boost_fixture()))
@@ -89,6 +90,7 @@ test_that("the univariate calibration plot is stable", {
 test_that("the calibration plot with a cohort curve is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "calibration cohort",
     ggplot2::autoplot(
@@ -100,6 +102,7 @@ test_that("the calibration plot with a cohort curve is stable", {
 test_that("the multi-response calibration plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "calibration multi response",
     ggplot2::autoplot(

@@ -3,6 +3,10 @@ Version: 0.10.0
 
 # ggBoostedTrees 0.10.0
 
+* The plot snapshot tests skip when `vdiffr` is not installed instead of
+  failing, and `patchwork`, which nothing uses, leaves `Suggests`. Both from
+  the CRAN Cookbook audit for this release.
+
 * The README's section on what `cv.flag = TRUE` costs gains timings and peak
   memory from a server, measured at 10 steps, by subjects and cores, and says
   that memory, not speed, limits the cores on a large fit: the parallel share

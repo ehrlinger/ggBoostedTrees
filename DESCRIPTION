@@ -29,7 +29,6 @@ Suggests:
     covr,
     knitr,
     lintr,
-    patchwork,
     quarto,
     testthat,
     vdiffr

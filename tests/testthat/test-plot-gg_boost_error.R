@@ -60,6 +60,7 @@ test_that("the univariate error plot is stable", {
   # rendering change; use vdiffr variants if per-platform references are ever
   # wanted.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "error univariate",
     ggplot2::autoplot(gg_boost_error(boost_fixture()))
@@ -74,6 +75,7 @@ test_that("the multi-response error plot is stable", {
   # rendering change; use vdiffr variants if per-platform references are ever
   # wanted.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "error multi response",
     ggplot2::autoplot(gg_boost_error(boost_multi_fixture()))
