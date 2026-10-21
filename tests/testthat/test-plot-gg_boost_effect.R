@@ -48,6 +48,7 @@ test_that("variables are faceted", {
 test_that("the partial effect plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "effect partial",
     ggplot2::autoplot(gg_boost_effect(partial_fixture()))
@@ -57,6 +58,7 @@ test_that("the partial effect plot is stable", {
 test_that("the marginal effect plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "effect marginal",
     ggplot2::autoplot(gg_boost_effect(marginal_fixture()))
@@ -103,6 +105,7 @@ test_that("a mixed object is refused with guidance", {
 test_that("the discrete effect plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "effect partial factor",
     ggplot2::autoplot(gg_boost_effect(partial_factor_fixture()))
@@ -138,6 +141,7 @@ test_that("several responses and variables share one grid", {
 test_that("the multi-response effect plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "effect partial ordinal",
     ggplot2::autoplot(gg_boost_effect(partial_multi_fixture("ordinal")))

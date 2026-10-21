@@ -1,8 +1,8 @@
 Package: ggBoostedTrees
 Type: Package
 Title: Visually Exploring Boosted Tree Models
-Version: 0.9.3
-Date: 2026-10-19
+Version: 0.10.0
+Date: 2026-10-21
 Authors@R: person("John", "Ehrlinger",
   role = c("aut", "cre"),
   email = "john.ehrlinger@gmail.com",
@@ -29,7 +29,6 @@ Suggests:
     covr,
     knitr,
     lintr,
-    patchwork,
     quarto,
     testthat,
     vdiffr

@@ -58,6 +58,7 @@ test_that("the importance plot is stable", {
   # Text rendering is not byte-identical across platforms, and the committed
   # reference SVGs were generated on macOS.
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "vimp both components",
     ggplot2::autoplot(gg_boost_vimp(vimp_fixture()))
@@ -67,6 +68,7 @@ test_that("the importance plot is stable", {
 test_that("the joint importance plot is stable", {
   skip_on_cran()
   skip_on_os(c("windows", "linux", "solaris"))
+  skip_if_not_installed("vdiffr")
   vdiffr::expect_doppelganger(
     "vimp joint",
     ggplot2::autoplot(gg_boost_vimp(vimp_joint_fixture()))
