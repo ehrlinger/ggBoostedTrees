@@ -184,6 +184,32 @@
 </tbody>
 </table>
 <p>Time grows in proportion to the number of steps: at 4,000 subjects and 1,000 steps, the fit takes between four and five days on 4 cores. Memory grows with the steps too, because the fit keeps every one, about 0.35 MB per step per 1,000 visits for an ordinal response. The figures above are upper bounds at 10 steps only; at 1,000 steps add about 11 GB at 4,000 subjects for the fit itself, and possibly more for each core, which has not been measured.</p>
+<p>A full run at study size, measured on our server on 2026-10-21: a continuous response, 1,391 subjects and 4,771 visits (about 3.4 per subject), 1,000 steps, <code>nu = 0.05</code>, <code>mtry = 8</code>, 8 cores, in Workbench’s Medium profile (64 GiB), whose memory limit is enforced at 76.8 GiB, 1.2 times the profile. Partial effects are three variables, 56 predictions. Memory is RStudio’s session memory, the figure in its memory report and its limit warning: everything in the session, including the fitted model and every forked worker, not R’s own allocation. Each reading was taken once during the step, so the step’s true peak may be higher.</p>
+<table class="table">
+<thead><tr>
+<th>step</th>
+<th>boostmtree 2.0.7</th>
+<th>boostmtree 2.0.8</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>cross-validated fit, saved</td>
+<td>74 min</td>
+<td>64 min</td>
+</tr>
+<tr>
+<td>variable importance</td>
+<td>12 min</td>
+<td>13 min</td>
+</tr>
+<tr>
+<td>partial effects</td>
+<td>94 min, 70.0 GiB</td>
+<td>32 min, 11.3 GiB</td>
+</tr>
+</tbody>
+</table>
+<p>The two runs give identical error paths, importances and partial effects. On 2.0.7 the partial-effects step reached 70.0 GiB of that 76.8 GiB limit, so a study this size needed more memory for its partial effects than for its fit; 2.0.8 removes that.</p>
 <p>Every figure is available as data as well as a plot, because the tidy frame is the point rather than an implementation detail:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gg_dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gg_boost_error.html">gg_boost_error</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
