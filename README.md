@@ -133,6 +133,27 @@ the steps too, because the fit keeps every one, about 0.35 MB per step per
 steps only; at 1,000 steps add about 11 GB at 4,000 subjects for the fit
 itself, and possibly more for each core, which has not been measured.
 
+A full run at study size, measured on our server on 2026-10-21: a continuous
+response, 1,391 subjects and 4,771 visits (about 3.4 per subject), 1,000 steps,
+`nu = 0.05`, `mtry = 8`, 8 cores, in Workbench's Medium profile (64 GiB), whose
+memory limit is enforced at 76.8 GiB, 1.2 times the profile. Partial effects are
+three variables, 56 predictions. Memory is RStudio's session memory, the figure
+in its memory report and its limit warning: everything in the session,
+including the fitted model and every forked worker, not R's own allocation.
+Each reading was taken once during the step, so the step's true peak may be
+higher.
+
+| step | boostmtree 2.0.7 | boostmtree 2.0.8 |
+|---|---|---|
+| cross-validated fit, saved | 74 min | 64 min |
+| variable importance | 12 min | 13 min |
+| partial effects | 94 min, 70.0 GiB | 32 min, 11.3 GiB |
+
+The two runs give identical error paths, importances and partial effects. On
+2.0.7 the partial-effects step reached 70.0 GiB of that 76.8 GiB limit, so a
+study this size needed more memory for its partial effects than for its fit;
+2.0.8 removes that.
+
 Every figure is available as data as well as a plot, because the tidy frame is
 the point rather than an implementation detail:
 
