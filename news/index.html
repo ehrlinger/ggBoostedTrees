@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,19 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.10.0" id="ggboostedtrees-0100">ggBoostedTrees 0.10.0<a class="anchor" aria-label="anchor" href="#ggboostedtrees-0100"></a></h2>
+<ul><li><p>The plot snapshot tests skip when <code>vdiffr</code> is not installed instead of failing, and <code>patchwork</code>, which nothing uses, leaves <code>Suggests</code>. Both from the CRAN Cookbook audit for this release.</p></li>
+<li><p>The README’s section on what <code>cv.flag = TRUE</code> costs gains timings and peak memory from a server, measured at 10 steps, by subjects and cores, and says that memory, not speed, limits the cores on a large fit: the parallel share levels off near 80%. It says the fit’s memory also grows with the number of steps, so the 10-step figures do not bound a longer fit. It drops the claim that the share keeps rising with the number of subjects, which the server measurements did not bear out past about 1,000, and corrects the simulated data’s visits per subject from 5 to about 9.</p></li>
+<li><p>The README adds a measured full run at study size (1,391 subjects, 4,771 visits, 1,000 steps, 8 cores) on boostmtree 2.0.7 and 2.0.8: partial effects fell from 94 minutes and 70.0 GiB of session memory to 32 minutes and 11.3 GiB, with identical results.</p></li>
+<li>
+<p><code>Remotes:</code> installs <code>boostmtree</code> 2.0.8 from the CCF fork (<code>v2.0.8-ccf</code>), and the README’s backend install line names that tag. The <code>Imports:</code> floor stays at 2.0.1. Since 2.0.4, the fork’s releases have made long fits faster and smaller without changing their results:</p>
+<ul><li>2.0.5 makes an ordinal fit’s cross-validation about 23% faster (600 subjects, 4 cores).</li>
+<li>2.0.6 stores the cross-validation state as one vector per subject, so each forked worker holds about a quarter of the memory it did: on a server at 4,000 subjects, 8 and 16 cores now finish where 2.0.4 ran out of memory.</li>
+<li>2.0.7 runs each forked worker on one BLAS thread. On a server whose R links a multithreaded OpenBLAS, 2.0.6’s workers each started a thread per CPU and overloaded the machine: at 1,000 subjects on 4 cores, 2.0.7 took 616 s where 2.0.6 took 1,488 s.</li>
+<li>2.0.8 makes partial effects walk the boosting steps one at a time instead of holding every step for every subject at once. On a synthetic ordinal fit one <code>partial.plot()</code> call fell from 87 s and 4.5 GB to 2.4 s and 0.4 GB, and it adds a <code>progress</code> callback to <code>boostmtree()</code> and <code>partial.plot()</code>.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.3" id="ggboostedtrees-093">ggBoostedTrees 0.9.3<a class="anchor" aria-label="anchor" href="#ggboostedtrees-093"></a></h2>
 <ul><li><p>The README’s Installation section now leads with <code>hvtiR::install()</code>, which installs the whole HVTI R family in one call, and then gives <code>pak::pak("ehrlinger/ggBoostedTrees")</code> for this package alone.</p></li>
