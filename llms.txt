@@ -81,7 +81,7 @@ own:
 
 ``` r
 
-pak::pak("ehrlinger/boostmtree_src/boostmtree@v2.0.8-ccf")
+pak::pak("ehrlinger/boostmtree_src/boostmtree@v2.0.11-ccf")
 ```
 
 ## Quick Start

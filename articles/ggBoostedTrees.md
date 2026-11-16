@@ -97,10 +97,10 @@ then the renderer, and the extractor’s result is an ordinary data frame:
 
 gg_dta <- gg_boost_error(fit)
 head(gg_dta, 3)
-#>   iteration     value response optimal
-#> 1         1 1.0118738        y   FALSE
-#> 2         2 1.0008788        y   FALSE
-#> 3         3 0.9912097        y   FALSE
+#>   iteration    value response optimal
+#> 1         1 1.019540        y   FALSE
+#> 2         2 1.015774        y   FALSE
+#> 3         3 1.012867        y   FALSE
 ```
 
 The `optimal` column flags the row for `m.opt`. Everything else in the
