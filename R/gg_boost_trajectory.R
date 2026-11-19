@@ -19,6 +19,19 @@
 #' `observed` is `NA` throughout when the fit carries no observed response,
 #' which happens for a prediction on new data.
 #'
+#' What `fitted` holds depends on how the model was grown. With
+#' `cv.flag = FALSE` it is the in-sample fit. With `cv.flag = TRUE`,
+#' `boostmtree` replaces `mu` with the out-of-bag prediction at `m.opt`, the
+#' same values that produce the cross-validated error, so it sits further from
+#' `observed` than an in-sample fit would. A subject's out-of-bag prediction
+#' moves only at iterations where that subject is out of bag. A subject never
+#' out of bag keeps the starting value, a constant equal to the mean response
+#' of the other subjects. `boostmtree` 2.0.x passes `control$seed` unchanged to
+#' every tree, so a fixed seed leaves the same subjects out of bag at every
+#' iteration and roughly 60 percent of subjects flat. Grow with
+#' `control$seed = NULL` after `set.seed()`, which is still reproducible, or
+#' plot an in-sample fit from `predict()` instead.
+#'
 #' This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
 #' `BoostMLR` stores `mu` and `y` as flat observation-by-response matrices,
 #' with `tm` and `id` as parallel flat vectors, rather than boostmtree's
