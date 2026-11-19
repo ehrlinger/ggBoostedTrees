@@ -186,7 +186,7 @@
 </div>
 </div>
 </div>
-<p>Don’t read too much into importance from 25 subjects. The values are noisy at this size. A value below zero means permuting that covariate did not make the error worse, so the model is not leaning on it, and the largest such value sets the grey noise band. Only a filled dot, to the right of the band, is a detectable effect. The article <em>Four Figures From One boostmtree Fit</em> walks through reading this figure in detail.</p>
+<p>Don’t read too much into importance from 25 subjects. The values are noisy at this size. A value below zero means permuting that covariate did not make the error worse, so the model is not leaning on it. This fit has no noise reference, so the plot draws no band and marks nothing detectable; the caption says so. Adding shuffled copies of the covariates with <code><a href="../reference/boost_shadow.html">boost_shadow()</a></code> before fitting gives the plot that reference. The article <em>Four Figures From One boostmtree Fit</em> walks through it.</p>
 <p>To see the shape of an effect rather than its size, ask <code>boostmtree</code> for a partial effect and hand the result to <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">

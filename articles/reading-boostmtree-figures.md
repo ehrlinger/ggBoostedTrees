@@ -24,18 +24,59 @@ library(ggplot2)
 
 set.seed(11)
 sim <- boostmtree::simLong(n = 100, n.time = 6, model = 2)$data.list
+x <- boost_shadow(sim$features, sim$id)
 
 fit <- boostmtree::boostmtree(
-  x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
-  M = 100, cv.flag = TRUE, verbose = FALSE,
-  control = boostmtree::boostmtree.control(seed = 11)
+  x = x, tm = sim$time, id = sim$id, y = sim$y,
+  M = 400, nu = 0.25, cv.flag = TRUE, verbose = FALSE
 )
+c(m.opt = fit$m.opt, M = fit$M)
+#> m.opt     M 
+#>   397   400
 ```
 
-`cv.flag = TRUE` is needed for two of the figures below: variable
-importance is computed from the out-of-bag subjects that
-cross-validation sets aside, and the fixed-time prediction uses the
-cross-validated number of iterations.
+Four settings matter here.
+
+- [`boost_shadow()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
+  adds five shuffled copies of each covariate, 20 columns in all, before
+  fitting. They carry no signal and give figure B its noise reference;
+  the section on that figure explains how. They cost fitting time and,
+  being noise the trees can split on, a little accuracy.
+- `cv.flag = TRUE` is needed for two of the figures below: variable
+  importance is computed from the out-of-bag subjects that
+  cross-validation sets aside, and the fixed-time prediction uses the
+  cross-validated number of iterations.
+- The seed is set with
+  [`set.seed()`](https://rdrr.io/r/base/Random.html), not
+  `boostmtree.control(seed = )`. A fixed control seed is passed
+  unchanged to every tree, so every tree draws the same subsample and
+  most subjects are never out of bag. Their out-of-bag predictions never
+  move, and importance is computed from the few that are.
+- The fit has to have converged before any figure below means anything.
+  The next section checks it.
+
+## Before the figures: did it converge?
+
+Boosting adds small trees one at a time, and cross-validation records
+the out-of-bag error after each. `m.opt` is the step where that error
+was lowest. Draw the path:
+
+``` r
+
+autoplot(gg_boost_error(fit))
+```
+
+![](reading-boostmtree-figures_files/figure-html/error-1.png)
+
+**Reading it.** The error should fall steeply and then flatten. If
+`m.opt` sits well inside `M`, the minimum was found. If `m.opt` equals
+`M`, as it does here, the error was still going down when boosting
+stopped, and the question is by how much. Here it fell 11% between steps
+100 and 400 but only about 1% over the last 100 steps: the curve has
+flattened, and more steps would change the figures below very little. A
+curve still falling steeply at `M` is a fit to refit with a larger `M`
+or a larger learning rate `nu`. At the default `nu = 0.05` this model
+was still improving at 600 steps, which is why it uses `nu = 0.25`.
 
 ## A. How do subjects change over follow-up?
 
@@ -102,13 +143,19 @@ smaller coefficients, and at 100 subjects neither clears the band. A
 hollow dot means “not detected in this fit”, not “has no effect”.
 
 The importance is the relative increase in out-of-bag error, so 0.3
-means the error rose 30% when that covariate was scrambled. A covariate
-that contributes nothing scores near zero, and is as likely to land
-slightly below zero as slightly above. The negative values are therefore
-a ruler for noise: the grey band runs from minus to plus the largest of
-them. A filled dot on a stem lies to the right of the band. A hollow dot
-lies inside it, and you should not read anything into it, whichever side
-of zero it falls.
+means the error rose 30% when that covariate was scrambled. It has no
+fixed scale: how much a covariate with no signal scores depends on the
+fit, and climbs with the amount of boosting. That is what the shadows
+added in the fit are for. Each is a copy of a covariate shuffled between
+subjects, so it carries no information about the response, and the grey
+band in each panel runs up to the largest importance any shadow reached
+there. A filled dot on a stem lies to the right of the band. A hollow
+dot lies inside it: this fit cannot tell it from a shuffled copy,
+whichever side of zero it falls. Shadows set the band but are not drawn.
+
+With 20 shadows, a covariate with no effect clears the band about once
+in 21 fits. A fit without shadows still draws, but with no band and no
+filled-or-hollow verdict, and the caption says so.
 
 The caption reports the **overall time effect**: how much worse the
 model predicts when time itself is scrambled. A value near zero says the
@@ -125,23 +172,33 @@ term and no `x2` at all, so no covariate can truly interact with time:
 
 set.seed(12)
 sim0 <- boostmtree::simLong(n = 100, n.time = 6, model = 0)$data.list
+x0 <- boost_shadow(sim0$features, sim0$id)
 fit0 <- boostmtree::boostmtree(
-  x = sim0$features, tm = sim0$time, id = sim0$id, y = sim0$y,
-  M = 100, cv.flag = TRUE, verbose = FALSE,
-  control = boostmtree::boostmtree.control(seed = 12)
+  x = x0, tm = sim0$time, id = sim0$id, y = sim0$y,
+  M = 400, nu = 0.25, cv.flag = TRUE, verbose = FALSE
 )
 autoplot(gg_boost_vimp(boostmtree::vimp.boostmtree(fit0)))
 ```
 
 ![](reading-boostmtree-figures_files/figure-html/vimp-none-1.png)
 
-Two things to notice. The overall time effect is about zero, correctly:
-the response does not change over follow-up. And `x2`, which is not in
-the model at all, still has an interaction that clears the band. The
-band is set by the largest negative value among only eight, so it is a
-rough ruler, and with several covariates one of them can clear it by
-chance. A lone, small interaction with a near-zero time effect is a
-reason to look at figure C for that covariate, not a finding on its own.
+Three things to notice. The overall time effect is about zero,
+correctly: the response does not change over follow-up. `x1`, the
+largest term, is detected. And `x2`, which is not in the model at all,
+has an interaction just to the right of the band.
+
+That last one is the band doing what it promises, no more. Shadows set
+the odds of a no-signal covariate clearing the band at about one in 21,
+so in a plot with eight values one false detection is not rare. It is
+also not stable: `vimp.boostmtree()` scrambles each covariate at random,
+and running it again on this same fit with `set.seed(1)` puts `x2`’s
+interaction at 0.036, inside the band, and moves `x3`’s main effect,
+which is real, out of it. A value close to the edge of the band can land
+on either side from one run to the next. Before reporting one, run
+`vimp.boostmtree()` a few times; an effect that matters clears the band
+every time, as `x1` does here. A lone, small interaction with a
+near-zero time effect is a reason to look at figure C for that
+covariate, not a finding on its own.
 
 When every interaction falls inside the band, the panel says *None
 detectable*. That is a finding, not a failure: the covariates shift

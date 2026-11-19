@@ -83,6 +83,10 @@ each covariate and its interaction with time.</p>
 <dt>importance</dt>
 <dd><p>Numeric importance.</p></dd>
 
+<dt>shadow</dt>
+<dd><p>Logical, <code>TRUE</code> for a shadow covariate added by
+<code><a href="boost_shadow.html">boost_shadow</a></code>.</p></dd>
+
 <dt>component</dt>
 <dd><p>Factor, <code>main</code> or <code>interaction</code>.</p></dd>
 
@@ -107,6 +111,10 @@ components and can be compared or dodged against itself.</p>
 quantity, so it travels as the <code>metric</code> attribute and the renderer uses it to
 label the axis. The overall time effect has no variable to attach to and
 travels as the <code>time.effect</code> attribute.</p>
+<p>A covariate named like the shadows <code><a href="boost_shadow.html">boost_shadow</a></code> adds
+(<code>shadow1.x1</code>, ...) is flagged in the <code>shadow</code> column. Shadows are permuted
+copies with no signal; the renderer uses them as the noise reference and
+does not draw them as variables.</p>
 <p>A joint importance object (<code>vimp.boostmtree(fit, joint = TRUE)</code>) reports a
 single combined value, labelled <code>joint.vimp</code>. Note that CRAN <code>boostmtree</code>
 2.0.0 cannot produce one at all; the patched build this package requires is
@@ -124,7 +132,8 @@ attribute, one per response. The <code>metric</code> is <code>"Standardized VIMP
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="autoplot.gg_boost_vimp.html">plot.gg_boost_vimp</a></code>, <code><a href="gg_boost_effect.html">gg_boost_effect</a></code></p></div>
+    <div class="dont-index"><p><code><a href="autoplot.gg_boost_vimp.html">plot.gg_boost_vimp</a></code>, <code><a href="boost_shadow.html">boost_shadow</a></code>,
+<code><a href="gg_boost_effect.html">gg_boost_effect</a></code></p></div>
     </div>
 
     <div class="section level2">

@@ -2,7 +2,8 @@
 
 Variable importance as a dot chart: one panel for the main effect of
 each covariate and one for its interaction with time, sharing a variable
-axis, with the noise band shaded in each.
+axis. When the fit carries shadow covariates, the noise they set is
+shaded.
 
 ## Usage
 
@@ -46,30 +47,36 @@ stem in the second panel means its effect changes with time. Variables
 run top to bottom by the largest importance they reach in either
 component. Both panels share one importance scale, so an interaction can
 be judged against the main effects, not only against other interactions.
+Every value is drawn at its signed importance.
 
-`boostmtree` reports importance as the relative increase in error after
-perturbing a covariate, so a covariate that contributes nothing scores
-near zero and is as often slightly negative as slightly positive. The
-negative values therefore show how far noise alone reaches. The shaded
-band runs from minus to plus the largest absolute negative importance
-for the response, across both components; a value is detectable only
-when it lies to the right of the band, and is then drawn as a filled dot
-on a stem. Values inside the band are hollow. With no negative values
-there is no band and any positive value is detectable. This is a reading
-aid, not a test.
+`boostmtree` importance has no fixed scale: what a covariate with no
+signal scores rises with the amount of boosting. The reference is
+therefore measured in the fit itself, from shadow covariates added
+before fitting with
+[`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md).
+In each panel the shaded band runs up to the largest importance any
+shadow reached in that component (or zero, if every shadow scored below
+zero). A covariate right of the band is detectable and drawn as a filled
+dot on a stem; one inside it is hollow. Shadows set the band but are not
+drawn as variables. This is a reading aid, not a test, and a hollow dot
+means "not detected in this fit", not "no effect": a real but small
+effect often falls inside the band.
 
-Every value is drawn at its signed importance. When no covariate has a
-detectable interaction with time, that panel says so in words. The
-overall time effect, when the source object records one, is reported in
-the caption: it says whether the trajectory has a shape at all, which
-the per-covariate interactions cannot.
+Without shadows there is no noise reference, so no band is drawn and no
+value is marked detectable or not; the caption says so.
+
+When no covariate has a detectable interaction with time, that panel
+says so in words. The overall time effect, when the source object
+records one, is reported in the caption: it says whether the trajectory
+has a shape at all, which the per-covariate interactions cannot.
 
 The x axis is labelled with the `metric` attribute carried by the
 extracted object. The returned plot carries no theme.
 
 ## See also
 
-[`gg_boost_vimp`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
+[`gg_boost_vimp`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md),
+[`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
 
 ## Examples
 

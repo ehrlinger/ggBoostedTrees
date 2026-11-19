@@ -19,6 +19,8 @@ path and the optimal iteration only when cross-validation ran.
   : Subject trajectory data object
 - [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
   : Variable importance data object
+- [`boost_shadow()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
+  : Add shadow covariates before fitting
 - [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
   : Partial and marginal effect data object
 - [`gg_boost_prediction()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_prediction.md)

@@ -40,6 +40,11 @@ A `gg_boost_vimp` `data.frame` with columns:
 
   Numeric importance.
 
+- shadow:
+
+  Logical, `TRUE` for a shadow covariate added by
+  [`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md).
+
 - component:
 
   Factor, `main` or `interaction`.
@@ -68,6 +73,12 @@ fixed quantity, so it travels as the `metric` attribute and the renderer
 uses it to label the axis. The overall time effect has no variable to
 attach to and travels as the `time.effect` attribute.
 
+A covariate named like the shadows
+[`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
+adds (`shadow1.x1`, ...) is flagged in the `shadow` column. Shadows are
+permuted copies with no signal; the renderer uses them as the noise
+reference and does not draw them as variables.
+
 A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports
 a single combined value, labelled `joint.vimp`. Note that CRAN
 `boostmtree` 2.0.0 cannot produce one at all; the patched build this
@@ -89,6 +100,7 @@ and is not accepted.
 ## See also
 
 [`plot.gg_boost_vimp`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_vimp.md),
+[`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md),
 [`gg_boost_effect`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
 
 ## Examples
