@@ -15,3 +15,4 @@
 ^vignettes/\.quarto$
 ^vignettes/.*_files$
 ^news$
+^vignettes/articles$
