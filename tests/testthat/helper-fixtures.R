@@ -155,12 +155,28 @@ boost_seed_defect_fixture <- function() {
   readRDS(testthat::test_path("fixtures", "boost_seed_defect.rds"))
 }
 
-# A fixture with one clear main effect (x1) and one clear interaction (x2),
-# against a noise band of 0.05 set by x4's negative main importance.
-vimp_signal_fixture <- function() {
+# The recorded vimp fixture with two shadow covariates appended, and values
+# set so the verdicts are known. Real covariates: x1 a clear main effect,
+# x2 a clear interaction. Shadows set the band at 0.03 (main) and 0.05
+# (interaction), so x2's main 0.02 and x3's interaction 0.04 fall inside it.
+vimp_shadow_fixture <- function(shadow_main = c(0.03, -0.01),
+                                shadow_inter = c(0.05, 0.01)) {
   v <- vimp_fixture()
-  v$main[, 1] <- c(0.60, 0.02, 0.01, -0.05)
-  v$interaction[, 1] <- c(-0.03, 0.40, 0.04, -0.02)
+  shadows <- c("shadow1.x1", "shadow1.x2")
+  v$main <- rbind(
+    matrix(c(0.60, 0.02, 0.01, -0.05), ncol = 1,
+           dimnames = list(rownames(v$main), colnames(v$main))),
+    matrix(shadow_main, ncol = 1,
+           dimnames = list(shadows, colnames(v$main)))
+  )
+  v$interaction <- rbind(
+    matrix(c(-0.03, 0.40, 0.04, -0.02), ncol = 1,
+           dimnames = list(rownames(v$interaction),
+                           colnames(v$interaction))),
+    matrix(shadow_inter, ncol = 1,
+           dimnames = list(paste0(shadows, ":time"),
+                           colnames(v$interaction)))
+  )
   v
 }
 

@@ -20,6 +20,11 @@
 #' label the axis. The overall time effect has no variable to attach to and
 #' travels as the `time.effect` attribute.
 #'
+#' A covariate named like the shadows \code{\link{boost_shadow}} adds
+#' (`shadow1.x1`, ...) is flagged in the `shadow` column. Shadows are permuted
+#' copies with no signal; the renderer uses them as the noise reference and
+#' does not draw them as variables.
+#'
 #' A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports a
 #' single combined value, labelled `joint.vimp`. Note that CRAN `boostmtree`
 #' 2.0.0 cannot produce one at all; the patched build this package requires is
@@ -46,13 +51,16 @@
 #'   \describe{
 #'     \item{variable}{Factor covariate name.}
 #'     \item{importance}{Numeric importance.}
+#'     \item{shadow}{Logical, `TRUE` for a shadow covariate added by
+#'       \code{\link{boost_shadow}}.}
 #'     \item{component}{Factor, `main` or `interaction`.}
 #'     \item{response}{Factor naming the response.}
 #'   }
 #'   with attributes `metric` (the importance metric) and `time.effect`, plus
 #'   `interaction.by.interval` for `BoostMLR`.
 #'
-#' @seealso \code{\link{plot.gg_boost_vimp}}, \code{\link{gg_boost_effect}}
+#' @seealso \code{\link{plot.gg_boost_vimp}}, \code{\link{boost_shadow}},
+#'   \code{\link{gg_boost_effect}}
 #'
 #' @examples
 #' \donttest{
@@ -133,6 +141,7 @@ gg_boost_vimp.vimp.boostmtree <- function(object,
       data.frame(
         variable = factor(variables, levels = var_levels),
         importance = as.numeric(mat[, q]),
+        shadow = .is_shadow(variables),
         component = factor(cm, levels = present),
         response = factor(response_labels[q], levels = response_labels),
         stringsAsFactors = FALSE
@@ -188,6 +197,7 @@ gg_boost_vimp.BoostMLR <- function(object,
       data.frame(
         variable = factor(var_levels, levels = var_levels),
         importance = as.numeric(by_component[[cm]](mat)),
+        shadow = .is_shadow(var_levels),
         component = factor(cm, levels = components),
         response = factor(labels[q], levels = labels),
         stringsAsFactors = FALSE

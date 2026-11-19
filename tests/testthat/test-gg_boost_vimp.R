@@ -3,10 +3,12 @@ test_that("gg_boost_vimp returns the documented column contract", {
 
   expect_s3_class(gg, "gg_boost_vimp")
   expect_identical(
-    names(gg), c("variable", "importance", "component", "response")
+    names(gg),
+    c("variable", "importance", "shadow", "component", "response")
   )
   expect_s3_class(gg$variable, "factor")
   expect_type(gg$importance, "double")
+  expect_type(gg$shadow, "logical")
   expect_s3_class(gg$component, "factor")
   expect_s3_class(gg$response, "factor")
 })
@@ -96,7 +98,8 @@ test_that("a BoostMLR predict object yields the vimp contract", {
 
   expect_s3_class(gg, "gg_boost_vimp")
   expect_identical(
-    names(gg), c("variable", "importance", "component", "response")
+    names(gg),
+    c("variable", "importance", "shadow", "component", "response")
   )
   expect_identical(levels(gg$response), c("y1", "y2", "y3"))
   expect_identical(levels(gg$component), c("main", "interaction"))
@@ -148,4 +151,18 @@ test_that("components are validated for BoostMLR too", {
     gg_boost_vimp(boostmlr_vimp_fixture(), components = "other"),
     "unknown component"
   )
+})
+
+test_that("shadow covariates are flagged by name in both components", {
+  gg <- gg_boost_vimp(vimp_shadow_fixture())
+
+  flagged <- unique(as.character(gg$variable[gg$shadow]))
+  expect_identical(flagged, c("shadow1.x1", "shadow1.x2"))
+  expect_false(any(gg$shadow[gg$variable %in% c("x1", "x2", "x3", "x4")]))
+  # The interaction rows lose their ':time' suffix before the flag is set.
+  expect_identical(sum(gg$shadow & gg$component == "interaction"), 2L)
+})
+
+test_that("a fit without shadows flags nothing", {
+  expect_false(any(gg_boost_vimp(vimp_fixture())$shadow))
 })
