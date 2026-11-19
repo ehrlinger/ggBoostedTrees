@@ -102,38 +102,84 @@ test_that("the reference fixture has no flat out-of-bag trajectory", {
   expect_true(all(n_fitted > 1L))
 })
 
-test_that("a cross-validated fit with flat subjects warns with the count", {
-  fit <- boost_fixture()
-  # What a never-out-of-bag subject looks like: one value at every time.
-  fit$mu[1:3] <- lapply(fit$mu[1:3], function(v) rep(-5.5, length(v)))
+# What the seed-reuse defect leaves behind: subjects absent from every
+# iteration's out-of-bag record up to m.opt, with mu at the starting value.
+never_oob <- function(fit, subjects, value = -5.5) {
+  fit$gamma.i.list[[1]] <- lapply(fit$gamma.i.list[[1]], function(step) {
+    step[subjects] <- list(NULL)
+    step
+  })
+  fit$mu[subjects] <- lapply(
+    fit$mu[subjects], function(v) rep(value, length(v))
+  )
+  fit
+}
+
+test_that("subjects never out of bag by m.opt warn with the count", {
+  fit <- never_oob(boost_fixture(), 1:3)
 
   expect_warning(
     gg <- gg_boost_trajectory(fit),
-    "3 of 25 subject\\(s\\) have a constant fitted trajectory"
+    "3 of 25 subject\\(s\\) were never out of bag by m.opt"
   )
   # The warning flags the data; it does not drop or alter rows.
   expect_identical(nrow(gg), length(unlist(fit$time)))
   expect_true(all(gg$fitted[gg$id %in% fit$id.unique[1:3]] == -5.5))
 })
 
-test_that("a flat in-sample fit or a single observation does not warn", {
+test_that("a real pre-2.0.13 seeded fit still warns", {
+  expect_warning(
+    gg_boost_trajectory(boost_seed_defect_fixture()),
+    "16 of 25 subject\\(s\\) were never out of bag by m.opt"
+  )
+})
+
+test_that("out of bag only after m.opt still counts as never out of bag", {
+  fit <- boost_fixture()
+  steps <- fit$gamma.i.list[[1]]
+  before <- seq_len(fit$m.opt)
+  steps[before] <- lapply(steps[before], function(step) {
+    step[1] <- list(NULL)
+    step
+  })
+  fit$gamma.i.list[[1]] <- steps
+
+  expect_warning(gg_boost_trajectory(fit), "1 of 25 subject")
+})
+
+test_that("an intercept-only time design (d = 0) is flat but does not warn", {
+  fit <- boost_d0_fixture()
+  expect_true(isTRUE(fit$cv.flag))
+
+  expect_no_warning(gg <- gg_boost_trajectory(fit))
+  # Flat by construction: one fitted value per subject across 4 times.
+  n_fitted <- tapply(gg$fitted, gg$id, function(v) length(unique(v)))
+  n_time <- tapply(gg$time, gg$id, function(v) length(unique(v)))
+  expect_true(all(n_fitted == 1L))
+  expect_true(all(n_time > 1L))
+})
+
+test_that("a flat subject that was out of bag does not warn", {
   fit <- boost_fixture()
   fit$mu[1:3] <- lapply(fit$mu[1:3], function(v) rep(-5.5, length(v)))
-  fit$cv.flag <- FALSE
-  expect_no_warning(gg_boost_trajectory(fit))
 
-  fit <- boost_fixture()
-  fit$time[[1]] <- fit$time[[1]][1]
-  fit$mu[[1]] <- fit$mu[[1]][1]
-  fit$y.org[[1]] <- fit$y.org[[1]][1]
   expect_no_warning(gg_boost_trajectory(fit))
 })
 
-test_that("calibration passes the flat-trajectory warning through", {
-  fit <- boost_fixture()
-  fit$mu[1:3] <- lapply(fit$mu[1:3], function(v) rep(-5.5, length(v)))
+test_that("no out-of-bag record, or no cross-validation, means no warning", {
+  fit <- never_oob(boost_fixture(), 1:3)
+  fit$cv.flag <- FALSE
+  expect_no_warning(gg_boost_trajectory(fit))
 
-  expect_warning(gg_boost_calibration(fit), "constant fitted trajectory")
+  fit <- never_oob(boost_fixture(), 1:3)
+  fit$gamma.i.list <- NULL
+  expect_no_warning(gg_boost_trajectory(fit))
+})
+
+test_that("calibration passes the never-out-of-bag warning through", {
+  fit <- never_oob(boost_fixture(), 1:3)
+
+  expect_warning(gg_boost_calibration(fit), "never out of bag")
 })
 
 test_that("gg_boost_trajectory errors when the fit records no fitted values", {

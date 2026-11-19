@@ -42,3 +42,13 @@ BoostMLR fixture: boostmlr_grow.rds
 
 Predict fixture: boost_predict.rds, predict(fit, x = fit$x) keeping n.q,
   q.set, id.unique, time and mu only (the full object is about 4.4 MB).
+
+Intercept-only fixture: boost_d0.rds, simLong(n = 20, n.time = 4,
+  model = 1); boostmtree(M = 15, d = 0, cv.flag = TRUE,
+  control = boostmtree.control(seed = 4)); set.seed(4). Only the fields
+  gg_boost_trajectory() reads, gamma.i.list included.
+
+Seed-defect fixture: boost_seed_defect.rds, FROZEN, not written by this
+  script. The same fields taken from boost_continuous.rds as fitted
+  with boostmtree 2.0.2 (M = 50, seed = 7; m.opt 19), before 2.0.13
+  drew a fresh subsample per tree: 16 of 25 subjects never out of bag.
