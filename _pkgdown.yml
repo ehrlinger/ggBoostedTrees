@@ -49,6 +49,7 @@ reference:
   - gg_boost_trajectory
   - gg_boost_vimp
   - gg_boost_effect
+  - gg_boost_prediction
   - boostmlr_partial
   - gg_boost_calibration
 
@@ -64,6 +65,7 @@ reference:
   - autoplot.gg_boost_trajectory
   - autoplot.gg_boost_vimp
   - autoplot.gg_boost_effect
+  - autoplot.gg_boost_prediction
   - autoplot.gg_boost_calibration
 
 - title: "3. Shortcut — straight from a fit"
@@ -87,6 +89,12 @@ articles:
     error path to partial effects.
   contents:
   - ggBoostedTrees
+- title: "Reading the figures"
+  desc: >
+    The four figures a longitudinal boosted-tree analysis is usually reported
+    with, how to make each from one fit, and how to read it.
+  contents:
+  - articles/reading-boostmtree-figures
 
 footer:
   structure:

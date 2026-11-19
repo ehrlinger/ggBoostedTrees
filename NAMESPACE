@@ -5,6 +5,7 @@ S3method(autoplot,gg_boost_calibration)
 S3method(autoplot,gg_boost_effect)
 S3method(autoplot,gg_boost_error)
 S3method(autoplot,gg_boost_path)
+S3method(autoplot,gg_boost_prediction)
 S3method(autoplot,gg_boost_trajectory)
 S3method(autoplot,gg_boost_vimp)
 S3method(gg_boost_calibration,BoostMLR)
@@ -20,6 +21,9 @@ S3method(gg_boost_error,default)
 S3method(gg_boost_path,BoostMLR)
 S3method(gg_boost_path,boostmtree)
 S3method(gg_boost_path,default)
+S3method(gg_boost_prediction,BoostMLR)
+S3method(gg_boost_prediction,boostmtree)
+S3method(gg_boost_prediction,default)
 S3method(gg_boost_trajectory,BoostMLR)
 S3method(gg_boost_trajectory,boostmtree)
 S3method(gg_boost_trajectory,default)
@@ -30,6 +34,7 @@ S3method(plot,gg_boost_calibration)
 S3method(plot,gg_boost_effect)
 S3method(plot,gg_boost_error)
 S3method(plot,gg_boost_path)
+S3method(plot,gg_boost_prediction)
 S3method(plot,gg_boost_trajectory)
 S3method(plot,gg_boost_vimp)
 export(boostmlr_partial)
@@ -37,22 +42,28 @@ export(gg_boost_calibration)
 export(gg_boost_effect)
 export(gg_boost_error)
 export(gg_boost_path)
+export(gg_boost_prediction)
 export(gg_boost_trajectory)
 export(gg_boost_vimp)
 importFrom(boostmtree,boostmtree)
 importFrom(ggplot2,
   aes,
+  as_labeller,
   autoplot,
-  coord_flip,
   facet_grid,
   facet_wrap,
-  geom_col,
   geom_line,
   geom_linerange,
   geom_point,
+  geom_rect,
   geom_segment,
+  geom_smooth,
+  geom_text,
   geom_vline,
   ggplot,
-  labs
+  labs,
+  scale_shape_manual,
+  scale_y_discrete,
+  stat_summary
 )
 importFrom(rlang,.data)
