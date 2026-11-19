@@ -43,10 +43,13 @@ this fit.
 draws the largest shadow importance as a band, and reads a covariate as
 detectable only when it clears that band.
 
-A covariate with no effect beats the largest of `k` shadows of each of
-`p` covariates about once in `p * k + 1` fits, so `k` sets how strict
-the band is. The default of 5 keeps that near 3% for six covariates.
-Each shadow widens `x` by one column and slows the fit in proportion.
+More shadows make the band stricter, because the largest of more noise
+scores is higher. The band is a reference measured in the fit, not a
+test with a known error rate. Each copy shuffles the subjects once for
+every covariate, so the shadows keep the covariates' correlations with
+each other; and a covariate with no effect of its own can clear the band
+when it is correlated with one that has an effect. Each shadow widens
+`x` by one column and slows the fit in proportion.
 
 Values are shuffled between subjects, not between rows, so each shadow
 is constant within a subject, as a baseline covariate is. Covariates

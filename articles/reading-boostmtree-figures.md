@@ -47,11 +47,13 @@ Four settings matter here.
   cross-validation sets aside, and the fixed-time prediction uses the
   cross-validated number of iterations.
 - The seed is set with
-  [`set.seed()`](https://rdrr.io/r/base/Random.html), not
-  `boostmtree.control(seed = )`. A fixed control seed is passed
-  unchanged to every tree, so every tree draws the same subsample and
-  most subjects are never out of bag. Their out-of-bag predictions never
-  move, and importance is computed from the few that are.
+  [`set.seed()`](https://rdrr.io/r/base/Random.html), which reproduces
+  the fit on any `boostmtree` version. Before `boostmtree` 2.0.13, a
+  fixed `boostmtree.control(seed = )` was passed unchanged to every
+  tree, so every tree drew the same subsample and most subjects were
+  never out of bag; importance was then computed from the few that were.
+  2.0.13, the version this package pins, draws a fresh subsample at each
+  iteration.
 - The fit has to have converged before any figure below means anything.
   The next section checks it.
 
@@ -155,9 +157,11 @@ there. A filled dot on a stem lies to the right of the band. A hollow
 dot lies inside it: this fit cannot tell it from a shuffled copy,
 whichever side of zero it falls. Shadows set the band but are not drawn.
 
-With 20 shadows, a covariate with no effect clears the band about once
-in 21 fits. A fit without shadows still draws, but with no band and no
-filled-or-hollow verdict, and the caption says so.
+More shadows make the band stricter, but it is a reference, not a test
+with a known error rate: a covariate with no effect of its own can clear
+it, especially one correlated with a covariate that has an effect. A fit
+without shadows still draws, but with no band and no filled-or-hollow
+verdict, and the caption says so.
 
 The caption reports the **overall time effect**: how much worse the
 model predicts when time itself is scrambled. A value near zero says the
@@ -189,11 +193,11 @@ correctly: the response does not change over follow-up. `x1`, the
 largest term, is detected. And `x2`, which is not in the model at all,
 has an interaction just to the right of the band.
 
-That last one is the band doing what it promises, no more. Shadows set
-the odds of a no-signal covariate clearing the band at about one in 21,
-so in a plot with eight values one false detection is not rare. It is
-also not stable: `vimp.boostmtree()` scrambles each covariate at random,
-and running it again on this same fit with `set.seed(1)` puts `x2`’s
+That last one is the band doing what it promises, no more. It is set by
+the largest of 20 noise scores, and in a plot with eight values one
+no-signal covariate landing just past it is not rare. It is also not
+stable: `vimp.boostmtree()` scrambles each covariate at random, and
+running it again on this same fit with `set.seed(1)` puts `x2`’s
 interaction at 0.036, inside the band, and moves `x3`’s main effect,
 which is real, out of it. A value close to the edge of the band can land
 on either side from one run to the next. Before reporting one, run
