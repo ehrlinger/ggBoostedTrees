@@ -1,7 +1,8 @@
 # Plot a [`gg_boost_vimp`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md) object
 
-Variable importance as a horizontal bar chart, ordered by importance and
-faceted by component.
+Variable importance as a dot chart: one panel for the main effect of
+each covariate and one for its interaction with time, sharing a variable
+axis, with the noise band shaded in each.
 
 ## Usage
 
@@ -24,7 +25,7 @@ plot(x, ...)
 - ...:
 
   Passed to
-  [`geom_col`](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+  [`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html).
 
 - x:
 
@@ -38,21 +39,33 @@ A `ggplot` object.
 
 ## Details
 
-Bars run horizontally because variable names are text and read better
-along the y axis than rotated beneath it, and variables are ordered by
-importance because an importance chart in arbitrary order is close to
-unreadable.
+The two panels share one variable axis, so a covariate reads across a
+row: a long stem under "Main effect" and a hollow dot under "Interaction
+with time" is a covariate whose effect is constant over follow-up; a
+stem in the second panel means its effect changes with time. Variables
+run top to bottom by the largest importance they reach in either
+component. Both panels share one importance scale, so an interaction can
+be judged against the main effects, not only against other interactions.
+
+`boostmtree` reports importance as the relative increase in error after
+perturbing a covariate, so a covariate that contributes nothing scores
+near zero and is as often slightly negative as slightly positive. The
+negative values therefore show how far noise alone reaches. The shaded
+band runs from minus to plus the largest absolute negative importance
+for the response, across both components; a value is detectable only
+when it lies to the right of the band, and is then drawn as a filled dot
+on a stem. Values inside the band are hollow. With no negative values
+there is no band and any positive value is detectable. This is a reading
+aid, not a test.
+
+Every value is drawn at its signed importance. When no covariate has a
+detectable interaction with time, that panel says so in words. The
+overall time effect, when the source object records one, is reported in
+the caption: it says whether the trajectory has a shape at all, which
+the per-covariate interactions cannot.
 
 The x axis is labelled with the `metric` attribute carried by the
-extracted object. That metric is a property of how importance was
-computed rather than a fixed quantity, so a hard-coded label would
-misdescribe some objects.
-
-A negative importance is not an error: with a permutation-style metric a
-variable that contributes nothing can score slightly below zero by
-chance.
-
-The returned plot carries no theme.
+extracted object. The returned plot carries no theme.
 
 ## See also
 

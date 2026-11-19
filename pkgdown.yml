@@ -3,7 +3,8 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   ggBoostedTrees: ggBoostedTrees.html
-last_built: 2026-11-16T17:57Z
+  articles/reading-boostmtree-figures: reading-boostmtree-figures.html
+last_built: 2026-11-19T19:47Z
 urls:
   reference: https://ehrlinger.github.io/ggBoostedTrees/reference
   article: https://ehrlinger.github.io/ggBoostedTrees/articles

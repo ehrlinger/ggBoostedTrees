@@ -188,9 +188,10 @@ autoplot(gg_boost_vimp(vimp))
 
 Don’t read too much into importance from 25 subjects. The values are
 noisy at this size. A value below zero means permuting that covariate
-did not make the error worse, so the model is not leaning on it. Here
-only the main effect of `x1` clears zero, and the simulation did give
-`x1` the largest coefficient.
+did not make the error worse, so the model is not leaning on it, and the
+largest such value sets the grey noise band. Only a filled dot, to the
+right of the band, is a detectable effect. The article *Four Figures
+From One boostmtree Fit* walks through reading this figure in detail.
 
 To see the shape of an effect rather than its size, ask `boostmtree` for
 a partial effect and hand the result to

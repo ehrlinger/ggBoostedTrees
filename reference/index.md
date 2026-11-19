@@ -21,6 +21,8 @@ path and the optimal iteration only when cross-validation ran.
   : Variable importance data object
 - [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
   : Partial and marginal effect data object
+- [`gg_boost_prediction()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_prediction.md)
+  : Fixed-time prediction data object
 - [`boostmlr_partial()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boostmlr_partial.md)
   : Partial effects from a BoostMLR fit
 - [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md)
@@ -65,6 +67,12 @@ else.
   :
 
   Plot a `gg_boost_effect` object
+
+- [`autoplot(`*`<gg_boost_prediction>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_prediction.md)
+  [`plot(`*`<gg_boost_prediction>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_prediction.md)
+  :
+
+  Plot a `gg_boost_prediction` object
 
 - [`autoplot(`*`<gg_boost_calibration>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_calibration.md)
   [`plot(`*`<gg_boost_calibration>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_calibration.md)

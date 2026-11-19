@@ -64,7 +64,7 @@
       <h1>Getting Started with ggBoostedTrees</h1>
 
       <p class="author">John Ehrlinger</p>
-      <p class="date">2026-11-16</p>
+      <p class="date">2026-11-19</p>
 
       <small class="dont-index">Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/vignettes/ggBoostedTrees.qmd" class="external-link"><code>vignettes/ggBoostedTrees.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -186,7 +186,7 @@
 </div>
 </div>
 </div>
-<p>Don’t read too much into importance from 25 subjects. The values are noisy at this size. A value below zero means permuting that covariate did not make the error worse, so the model is not leaning on it. Here only the main effect of <code>x1</code> clears zero, and the simulation did give <code>x1</code> the largest coefficient.</p>
+<p>Don’t read too much into importance from 25 subjects. The values are noisy at this size. A value below zero means permuting that covariate did not make the error worse, so the model is not leaning on it, and the largest such value sets the grey noise band. Only a filled dot, to the right of the band, is a detectable effect. The article <em>Four Figures From One boostmtree Fit</em> walks through reading this figure in detail.</p>
 <p>To see the shape of an effect rather than its size, ask <code>boostmtree</code> for a partial effect and hand the result to <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">

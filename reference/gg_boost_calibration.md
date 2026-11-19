@@ -134,6 +134,7 @@ fit <- boostmtree::boostmtree(
 )
 pred <- predict(fit, x = fit$x)
 gg <- gg_boost_calibration(fit, pred = pred)
+#> gg_boost_calibration: tied times left 9 of 10 bins for response 'y'.
 plot(gg)
 
 
