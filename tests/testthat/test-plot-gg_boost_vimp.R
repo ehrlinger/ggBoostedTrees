@@ -1,18 +1,3 @@
-# A fixture with one clear main effect (x1) and one clear interaction (x2),
-# against a noise band of 0.05 set by x4's negative main importance.
-vimp_signal_fixture <- function() {
-  v <- vimp_fixture()
-  v$main[, 1] <- c(0.60, 0.02, 0.01, -0.05)
-  v$interaction[, 1] <- c(-0.03, 0.40, 0.04, -0.02)
-  v
-}
-
-layer_of <- function(p, geom) {
-  i <- which(vapply(p$layers, function(l) inherits(l$geom, geom),
-                    logical(1)))
-  ggplot2::ggplot_build(p)$data[[i[1]]]
-}
-
 test_that("autoplot returns a ggplot", {
   p <- ggplot2::autoplot(gg_boost_vimp(vimp_fixture()))
 
