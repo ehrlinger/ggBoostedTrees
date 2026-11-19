@@ -93,6 +93,49 @@ test_that("observed is NA when the fit records no observed values", {
   expect_false(any(is.na(gg$fitted)))
 })
 
+test_that("the reference fixture has no flat out-of-bag trajectory", {
+  fit <- boost_fixture()
+
+  expect_true(isTRUE(fit$cv.flag))
+  expect_no_warning(gg <- gg_boost_trajectory(fit))
+  n_fitted <- tapply(gg$fitted, gg$id, function(v) length(unique(v)))
+  expect_true(all(n_fitted > 1L))
+})
+
+test_that("a cross-validated fit with flat subjects warns with the count", {
+  fit <- boost_fixture()
+  # What a never-out-of-bag subject looks like: one value at every time.
+  fit$mu[1:3] <- lapply(fit$mu[1:3], function(v) rep(-5.5, length(v)))
+
+  expect_warning(
+    gg <- gg_boost_trajectory(fit),
+    "3 of 25 subject\\(s\\) have a constant fitted trajectory"
+  )
+  # The warning flags the data; it does not drop or alter rows.
+  expect_identical(nrow(gg), length(unlist(fit$time)))
+  expect_true(all(gg$fitted[gg$id %in% fit$id.unique[1:3]] == -5.5))
+})
+
+test_that("a flat in-sample fit or a single observation does not warn", {
+  fit <- boost_fixture()
+  fit$mu[1:3] <- lapply(fit$mu[1:3], function(v) rep(-5.5, length(v)))
+  fit$cv.flag <- FALSE
+  expect_no_warning(gg_boost_trajectory(fit))
+
+  fit <- boost_fixture()
+  fit$time[[1]] <- fit$time[[1]][1]
+  fit$mu[[1]] <- fit$mu[[1]][1]
+  fit$y.org[[1]] <- fit$y.org[[1]][1]
+  expect_no_warning(gg_boost_trajectory(fit))
+})
+
+test_that("calibration passes the flat-trajectory warning through", {
+  fit <- boost_fixture()
+  fit$mu[1:3] <- lapply(fit$mu[1:3], function(v) rep(-5.5, length(v)))
+
+  expect_warning(gg_boost_calibration(fit), "constant fitted trajectory")
+})
+
 test_that("gg_boost_trajectory errors when the fit records no fitted values", {
   fit <- boost_fixture()
   fit$mu <- NULL

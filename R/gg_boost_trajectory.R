@@ -25,12 +25,12 @@
 #' same values that produce the cross-validated error, so it sits further from
 #' `observed` than an in-sample fit would. A subject's out-of-bag prediction
 #' moves only at iterations where that subject is out of bag. A subject never
-#' out of bag keeps the starting value, a constant equal to the mean response
-#' of the other subjects. `boostmtree` 2.0.x passes `control$seed` unchanged to
-#' every tree, so a fixed seed leaves the same subjects out of bag at every
-#' iteration and roughly 60 percent of subjects flat. Grow with
-#' `control$seed = NULL` after `set.seed()`, which is still reproducible, or
-#' plot an in-sample fit from `predict()` instead.
+#' out of bag by `m.opt` keeps the starting value, a constant equal to the
+#' mean response of the other subjects, and the extractor warns when it finds
+#' one. Before `boostmtree` 2.0.13, a fixed `control$seed` drew the same
+#' subsample for every tree, which left roughly 60 percent of subjects flat.
+#' Refit with 2.0.13 or later, or grow with `control$seed = NULL` after
+#' `set.seed()`, which is still reproducible.
 #'
 #' This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
 #' `BoostMLR` stores `mu` and `y` as flat observation-by-response matrices,
@@ -195,8 +195,41 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
 
   gg_dta <- do.call(rbind, blocks)
   rownames(gg_dta) <- NULL
+
+  if (isTRUE(object$cv.flag)) {
+    .boost_warn_flat_oob(gg_dta)
+  }
+
   class(gg_dta) <- c("gg_boost_trajectory", class(gg_dta))
   gg_dta
+}
+
+# With cv.flag = TRUE, boostmtree stores out-of-bag predictions in mu, and a
+# subject never out of bag by m.opt keeps its starting value exactly. A
+# subject seen at two or more times with one fitted value throughout is that
+# case. Before boostmtree 2.0.13 a fixed control$seed made it most subjects.
+.boost_warn_flat_oob <- function(gg_dta) {
+  key <- paste(gg_dta$response, gg_dta$id, sep = "\r")
+  flat <- tapply(seq_len(nrow(gg_dta)), key, function(rows) {
+    fitted <- gg_dta$fitted[rows]
+    length(unique(gg_dta$time[rows])) > 1L && !anyNA(fitted) &&
+      length(unique(fitted)) == 1L
+  })
+  flat_ids <- unique(as.character(gg_dta$id[key %in% names(flat)[flat]]))
+  if (length(flat_ids) == 0L) {
+    return(invisible(NULL))
+  }
+  warning(
+    "gg_boost_trajectory: ", length(flat_ids), " of ",
+    nlevels(gg_dta$id), " subject(s) have a constant fitted trajectory. ",
+    "With cv.flag = TRUE, fitted values are out-of-bag predictions, and a ",
+    "subject never out of bag by m.opt keeps its starting value. ",
+    "boostmtree before 2.0.13 reused control$seed for every tree, which ",
+    "leaves most subjects that way; refit with boostmtree 2.0.13 or later, ",
+    "or with control$seed = NULL after set.seed().",
+    call. = FALSE
+  )
+  invisible(NULL)
 }
 
 #' @export

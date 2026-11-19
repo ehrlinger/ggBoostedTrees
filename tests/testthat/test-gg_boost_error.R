@@ -14,8 +14,8 @@ test_that("gg_boost_error returns one row per boosting iteration", {
   fit <- boost_fixture()
   gg <- gg_boost_error(fit)
 
-  expect_identical(nrow(gg), 50L)
-  expect_identical(gg$iteration, 1:50)
+  expect_identical(nrow(gg), 100L)
+  expect_identical(gg$iteration, 1:100)
 })
 
 test_that("gg_boost_error takes values from the l2 column", {

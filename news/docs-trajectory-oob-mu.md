@@ -1,6 +1,11 @@
-* `gg_boost_trajectory()` and `gg_boost_calibration()` now document that a
-  `boostmtree` fit grown with `cv.flag = TRUE` stores out-of-bag predictions
-  in `mu`, and that `boostmtree` 2.0.x with a fixed `control$seed` leaves about
-  60% of subjects with a flat fitted trajectory. Until the fork draws a fresh
-  subsample at each iteration, grow with `control$seed = NULL` after
-  `set.seed()`.
+* `Remotes:` installs `boostmtree` 2.0.13 from the CCF fork (`v2.0.13-ccf`).
+  Before 2.0.13, a fixed `boostmtree.control(seed = )` drew the same
+  subsample for every tree, so with `cv.flag = TRUE` about 60% of subjects
+  were never out of bag and their fitted trajectory was a flat line at the
+  mean response of the other subjects. The test fixtures are refitted with
+  2.0.13; the reference fit now grows `M = 100`, because the honest
+  cross-validated error was still falling at 50 (`m.opt` is 88).
+* `gg_boost_trajectory()`, and so `gg_boost_calibration()`, warn when a
+  cross-validated `boostmtree` fit has subjects whose fitted values are
+  constant across two or more times, and name the cause. Both document that
+  such a fit stores out-of-bag predictions in `mu`, not the in-sample fit.

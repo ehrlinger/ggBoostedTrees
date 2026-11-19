@@ -1,12 +1,12 @@
 Fixture: boost_continuous.rds
-Backend: boostmtree 2.0.2
-Source: ehrlinger/boostmtree_src@v2.0.2-ccf (subdir = boostmtree)
-Generated: 2026-09-04
+Backend: boostmtree 2.0.13
+Source: ehrlinger/boostmtree_src@v2.0.13-ccf (subdir = boostmtree)
+Generated: 2026-11-19
 R: R version 4.6.1 (2026-06-24)
 Call: simLong(n = 25, n.time = 4, rho = 0.8, model = 1,
-  family = 'continuous'); boostmtree(M = 50, cv.flag = TRUE,
+  family = 'continuous'); boostmtree(M = 100, cv.flag = TRUE,
   control = boostmtree.control(seed = 7)); set.seed(7)
-m.opt: 19
+m.opt: 88
 
 Interpretation fixtures: vimp_marginal.rds, vimp_joint.rds,
   effect_partial.rds, effect_marginal.rds
@@ -25,8 +25,20 @@ Factor-covariate effect fixtures: effect_partial_factor.rds,
   The underlying fit is deliberately NOT committed; only the effect
   objects are needed and they are small.
 
+Multi-response effect fixtures: effect_{partial,marginal}_{ordinal,
+  nominal}.rds (covariate x1; three-level response, two components).
+  simLong(n = 20, n.time = 4, model = 1); boostmtree(M = 20,
+  control = boostmtree.control(seed = 19)); set.seed(19). Fits not
+  committed.
+
 BoostMLR fixture: boostmlr_grow.rds
   BoostMLR 1.0.3 (CRAN); simLong(n = 20, N = 3, rho = 0.8, model = 1,
   q_x = 2, q_y = 0); BoostMLR(M = 50, VarFlag = TRUE); set.seed(3)
   BoostMLR records no optimal iteration, so gg_boost_error()'s
   optimal column is all FALSE for this backend.
+  boostmlr_vimp.rds: predictBoostMLR(importance = TRUE,
+  setting_seed = TRUE, seed_value = 3) on it, keeping vimp, x_Names,
+  y_Names. boostmlr_partial.rds: boostmlr_partial(fit, c('x1', 'x2')).
+
+Predict fixture: boost_predict.rds, predict(fit, x = fit$x) keeping n.q,
+  q.set, id.unique, time and mu only (the full object is about 4.4 MB).

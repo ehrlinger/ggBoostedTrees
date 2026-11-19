@@ -39,7 +39,10 @@ if (file.exists(model.path) && !regenerate) {
     id = sim$id,
     y = sim$y,
     family = "continuous",
-    M = 50,
+    # M = 100, not 50: since boostmtree 2.0.13 a fixed seed no longer reuses
+    # one subsample for every tree, and the honest cross-validated error is
+    # still falling at 50. 100 gives an interior m.opt (88).
+    M = 100,
     cv.flag = TRUE,
     verbose = FALSE,
     control = boostmtree.control(seed = 7)
@@ -53,11 +56,11 @@ writeLines(
   c(
     "Fixture: boost_continuous.rds",
     paste0("Backend: boostmtree ", as.character(packageVersion("boostmtree"))),
-    "Source: ehrlinger/boostmtree_src@v2.0.2-ccf (subdir = boostmtree)",
+    "Source: ehrlinger/boostmtree_src@v2.0.13-ccf (subdir = boostmtree)",
     paste0("Generated: ", format(Sys.Date())),
     paste0("R: ", R.version.string),
     "Call: simLong(n = 25, n.time = 4, rho = 0.8, model = 1,",
-    "  family = 'continuous'); boostmtree(M = 50, cv.flag = TRUE,",
+    "  family = 'continuous'); boostmtree(M = 100, cv.flag = TRUE,",
     "  control = boostmtree.control(seed = 7)); set.seed(7)",
     paste0("m.opt: ", fit$m.opt),
     "",

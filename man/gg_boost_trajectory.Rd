@@ -48,12 +48,12 @@ What \code{fitted} holds depends on how the model was grown. With
 same values that produce the cross-validated error, so it sits further from
 \code{observed} than an in-sample fit would. A subject's out-of-bag prediction
 moves only at iterations where that subject is out of bag. A subject never
-out of bag keeps the starting value, a constant equal to the mean response
-of the other subjects. \code{boostmtree} 2.0.x passes \code{control$seed} unchanged to
-every tree, so a fixed seed leaves the same subjects out of bag at every
-iteration and roughly 60 percent of subjects flat. Grow with
-\code{control$seed = NULL} after \code{set.seed()}, which is still reproducible, or
-plot an in-sample fit from \code{predict()} instead.
+out of bag by \code{m.opt} keeps the starting value, a constant equal to the
+mean response of the other subjects, and the extractor warns when it finds
+one. Before \code{boostmtree} 2.0.13, a fixed \code{control$seed} drew the same
+subsample for every tree, which left roughly 60 percent of subjects flat.
+Refit with 2.0.13 or later, or grow with \code{control$seed = NULL} after
+\code{set.seed()}, which is still reproducible.
 
 This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
 \code{BoostMLR} stores \code{mu} and \code{y} as flat observation-by-response matrices,
