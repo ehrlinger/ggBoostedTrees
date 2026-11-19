@@ -98,10 +98,7 @@ autoplot.gg_boost_vimp <- function(object, ...) {
       ggplot2::aes(x = 0, xend = .data[["importance"]],
                    yend = .data[["variable"]])
     ) +
-    ggplot2::geom_point(
-      ggplot2::aes(shape = .data[["mark"]]), size = 3.5, stroke = 1,
-      fill = "white", ...
-    ) +
+    do.call(ggplot2::geom_point, .vimp_point_args(...)) +
     ggplot2::scale_shape_manual(
       values = c(`Detectable` = 16, `Within noise band` = 21),
       name = NULL, drop = FALSE
@@ -163,4 +160,18 @@ plot.gg_boost_vimp <- function(x, ...) {
     ggplot2::aes(label = .data[["label"]]),
     x = Inf, y = -Inf, hjust = 1.05, vjust = -0.6, inherit.aes = FALSE
   )
+}
+
+# Defaults for the dot layer, with any argument the caller passes through
+# `...` (size, stroke, show.legend, ...) taking precedence. show.legend = TRUE
+# draws both legend keys even when every value is inside the band;
+# drop = FALSE on the scale alone keeps the label but draws no symbol.
+.vimp_point_args <- function(...) {
+  args <- list(
+    mapping = ggplot2::aes(shape = .data[["mark"]]),
+    size = 3.5, stroke = 1, fill = "white", show.legend = TRUE
+  )
+  dots <- list(...)
+  args[names(dots)] <- dots
+  args
 }

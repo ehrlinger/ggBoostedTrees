@@ -130,6 +130,31 @@ test_that("a single component draws one panel and no note", {
                           logical(1))))
 })
 
+test_that("both legend keys are drawn even when nothing is detectable", {
+  # Every value in the recorded fixture sits inside its noise band.
+  p <- ggplot2::autoplot(gg_boost_vimp(vimp_fixture()))
+  point_layer <- p$layers[vapply(p$layers, function(l) {
+    inherits(l$geom, "GeomPoint")
+  }, logical(1))][[1]]
+
+  expect_true(isTRUE(point_layer$show.legend))
+  expect_identical(
+    ggplot2::ggplot_build(p)$plot$scales$get_scales("shape")$get_limits(),
+    c("Detectable", "Within noise band")
+  )
+})
+
+test_that("dot size and legend visibility can be overridden through ...", {
+  p <- ggplot2::autoplot(gg_boost_vimp(vimp_fixture()), size = 6,
+                         show.legend = FALSE)
+  point_layer <- p$layers[vapply(p$layers, function(l) {
+    inherits(l$geom, "GeomPoint")
+  }, logical(1))][[1]]
+
+  expect_identical(point_layer$aes_params$size, 6)
+  expect_false(point_layer$show.legend)
+})
+
 test_that("the importance plot is stable", {
   skip_on_cran()
   # Text rendering is not byte-identical across platforms, and the committed

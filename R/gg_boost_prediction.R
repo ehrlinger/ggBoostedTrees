@@ -123,10 +123,28 @@ gg_boost_prediction.boostmtree <- function(object, time, ...) {
   if (length(m) != 1L || is.na(m)) m <- object$M
 
   n <- nrow(x)
+  # .extrapolate = FALSE: by default boostmtree also predicts every subject at
+  # every distinct training time (muhat), which this extractor never reads.
+  # partial.plot() turns it off for the same reason.
   pred <- stats::predict(
-    object, x = x, tm = rep(time, n), id = seq_len(n), M = m
+    object, x = x, tm = rep(time, n), id = seq_len(n), M = m,
+    .extrapolate = FALSE
   )
-  predicted <- vapply(pred$mu, function(v) as.numeric(v)[1L], numeric(1))
+  mu <- pred$mu
+  # A two-level nominal or ordinal fit has n.q = 1 but keeps a response-level
+  # wrapper around mu: one element holding every subject. Unwrap it, or the
+  # first subject's prediction would be recycled into every row.
+  if (length(mu) == 1L && n > 1L && is.list(mu[[1L]])) {
+    mu <- mu[[1L]]
+  }
+  if (length(mu) != n) {
+    stop(
+      "gg_boost_prediction: boostmtree returned ", length(mu),
+      " prediction(s) for ", n, " subject(s).",
+      call. = FALSE
+    )
+  }
+  predicted <- vapply(mu, function(v) as.numeric(v)[1L], numeric(1))
 
   gg_dta <- data.frame(
     id = factor(seq_len(n)),

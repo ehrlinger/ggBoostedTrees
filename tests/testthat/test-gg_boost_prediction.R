@@ -68,3 +68,33 @@ test_that("a foreign object is refused", {
   expect_error(gg_boost_prediction(data.frame(x = 1), time = 1),
                "expected a 'boostmtree' object")
 })
+
+# boostmtree keeps a response-level wrapper around mu for a two-level
+# nominal or ordinal fit even though n.q is 1. Fitted live: these take well
+# under a second and no stored fixture covers the families.
+two_level_fit <- function(family) {
+  set.seed(1)
+  s <- boostmtree::simLong(n = 20, n.time = 3, model = 1,
+                           family = "binary")$data.list
+  boostmtree::boostmtree(
+    x = s$features, tm = s$time, id = s$id, y = s$y,
+    M = 10, verbose = FALSE, family = family
+  )
+}
+
+for (family in c("nominal", "ordinal")) {
+  test_that(paste("a two-level", family, "fit predicts every subject"), {
+    fit <- two_level_fit(family)
+    t_mid <- stats::median(unlist(fit$time))
+    gg <- gg_boost_prediction(fit, time = t_mid)
+    n <- nrow(fit$x)
+
+    direct <- predict(fit, x = fit$x, tm = rep(t_mid, n), id = seq_len(n),
+                      M = fit$M, .extrapolate = FALSE)
+    expect_identical(nrow(gg), n)
+    expect_equal(gg$predicted,
+                 vapply(direct$mu[[1]], `[`, numeric(1), 1L))
+    # The bug this guards: the first subject recycled into every row.
+    expect_gt(length(unique(gg$predicted)), 1L)
+  })
+}
