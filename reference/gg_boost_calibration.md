@@ -116,7 +116,11 @@ is available for `boostmtree` fits only.
 This figure accepts either a `boostmtree` or a `BoostMLR` grow fit. It
 reads its rows from
 [`gg_boost_trajectory`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md),
-so both backends' storage layouts are handled there.
+so both backends' storage layouts are handled there. For a `boostmtree`
+fit grown with `cv.flag = TRUE`, the fitted values are out-of-bag
+predictions; see
+[`gg_boost_trajectory`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md)
+for what that means.
 
 ## See also
 

@@ -100,6 +100,21 @@ instead of zigzagging. Subject identifiers come from the fit's own
 <code>id.unique</code>, not from a positional index.</p>
 <p><code>observed</code> is <code>NA</code> throughout when the fit carries no observed response,
 which happens for a prediction on new data.</p>
+<p>What <code>fitted</code> holds depends on how the model was grown. With
+<code>cv.flag = FALSE</code> it is the in-sample fit. With <code>cv.flag = TRUE</code>,
+<code>boostmtree</code> replaces <code>mu</code> with the out-of-bag prediction at <code>m.opt</code>, the
+same values that produce the cross-validated error, so it sits further from
+<code>observed</code> than an in-sample fit would. A subject's out-of-bag prediction
+moves only at iterations where that subject is out of bag. A subject never
+out of bag by <code>m.opt</code> keeps the starting value, a constant equal to the
+mean response of the other subjects. The extractor warns when the fit's own
+out-of-bag record (<code>gamma.i.list</code>) shows such a subject. A flat line alone
+does not trigger it, since a fit with an intercept-only time design
+(<code>d = 0</code>) is flat by construction. Before <code>boostmtree</code> 2.0.13, a fixed
+<code>control$seed</code> drew the same subsample for every tree, which left roughly
+60 percent of subjects flat.
+Refit with 2.0.13 or later, or grow with <code>control$seed = NULL</code> after
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>, which is still reproducible.</p>
 <p>This figure accepts either a <code>boostmtree</code> or a <code>BoostMLR</code> fit.
 <code>BoostMLR</code> stores <code>mu</code> and <code>y</code> as flat observation-by-response matrices,
 with <code>tm</code> and <code>id</code> as parallel flat vectors, rather than boostmtree's

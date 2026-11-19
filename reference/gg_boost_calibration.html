@@ -147,7 +147,9 @@ changes composition from one time to the next. The cohort curve is
 available for <code>boostmtree</code> fits only.</p>
 <p>This figure accepts either a <code>boostmtree</code> or a <code>BoostMLR</code> grow
 fit. It reads its rows from <code><a href="gg_boost_trajectory.html">gg_boost_trajectory</a></code>, so both
-backends' storage layouts are handled there.</p>
+backends' storage layouts are handled there. For a <code>boostmtree</code> fit
+grown with <code>cv.flag = TRUE</code>, the fitted values are out-of-bag predictions;
+see <code><a href="gg_boost_trajectory.html">gg_boost_trajectory</a></code> for what that means.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

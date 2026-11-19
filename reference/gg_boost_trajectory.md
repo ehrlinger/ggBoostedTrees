@@ -62,6 +62,23 @@ fit's own `id.unique`, not from a positional index.
 `observed` is `NA` throughout when the fit carries no observed response,
 which happens for a prediction on new data.
 
+What `fitted` holds depends on how the model was grown. With
+`cv.flag = FALSE` it is the in-sample fit. With `cv.flag = TRUE`,
+`boostmtree` replaces `mu` with the out-of-bag prediction at `m.opt`,
+the same values that produce the cross-validated error, so it sits
+further from `observed` than an in-sample fit would. A subject's
+out-of-bag prediction moves only at iterations where that subject is out
+of bag. A subject never out of bag by `m.opt` keeps the starting value,
+a constant equal to the mean response of the other subjects. The
+extractor warns when the fit's own out-of-bag record (`gamma.i.list`)
+shows such a subject. A flat line alone does not trigger it, since a fit
+with an intercept-only time design (`d = 0`) is flat by construction.
+Before `boostmtree` 2.0.13, a fixed `control$seed` drew the same
+subsample for every tree, which left roughly 60 percent of subjects
+flat. Refit with 2.0.13 or later, or grow with `control$seed = NULL`
+after [`set.seed()`](https://rdrr.io/r/base/Random.html), which is still
+reproducible.
+
 This figure accepts either a `boostmtree` or a `BoostMLR` fit.
 `BoostMLR` stores `mu` and `y` as flat observation-by-response matrices,
 with `tm` and `id` as parallel flat vectors, rather than boostmtree's
