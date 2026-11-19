@@ -20,6 +20,8 @@ A \code{gg_boost_vimp} \code{data.frame} with columns:
 \describe{
 \item{variable}{Factor covariate name.}
 \item{importance}{Numeric importance.}
+\item{shadow}{Logical, \code{TRUE} for a shadow covariate added by
+\code{\link{boost_shadow}}.}
 \item{component}{Factor, \code{main} or \code{interaction}.}
 \item{response}{Factor naming the response.}
 }
@@ -46,6 +48,11 @@ The importance metric is a string on the source object rather than a fixed
 quantity, so it travels as the \code{metric} attribute and the renderer uses it to
 label the axis. The overall time effect has no variable to attach to and
 travels as the \code{time.effect} attribute.
+
+A covariate named like the shadows \code{\link{boost_shadow}} adds
+(\code{shadow1.x1}, ...) is flagged in the \code{shadow} column. Shadows are permuted
+copies with no signal; the renderer uses them as the noise reference and
+does not draw them as variables.
 
 A joint importance object (\code{vimp.boostmtree(fit, joint = TRUE)}) reports a
 single combined value, labelled \code{joint.vimp}. Note that CRAN \code{boostmtree}
@@ -75,5 +82,6 @@ plot(gg_boost_vimp(boostmtree::vimp.boostmtree(fit)))
 
 }
 \seealso{
-\code{\link{plot.gg_boost_vimp}}, \code{\link{gg_boost_effect}}
+\code{\link{plot.gg_boost_vimp}}, \code{\link{boost_shadow}},
+\code{\link{gg_boost_effect}}
 }
