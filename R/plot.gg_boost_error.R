@@ -8,9 +8,20 @@
 #' theme or scale. Several responses are drawn as facets rather than as
 #' coloured series, because the responses do not share a y scale.
 #'
+#' The caption says whether boosting ran long enough. It gives the optimal
+#' iteration against the number grown, and how much the error fell over the
+#' last quarter of the iterations. An optimum at the last iteration does not
+#' by itself mean the fit is unfinished: if the error fell by a percent or
+#' so over that last stretch, the curve has flattened and more iterations
+#' would change little. A curve still falling steeply calls for a refit with
+#' more iterations or a larger learning rate.
+#'
 #' @param object A \code{\link{gg_boost_error}} object.
 #' @param x A \code{\link{gg_boost_error}} object.
 #' @param optimal Logical. Draw a vertical rule at the optimal iteration.
+#'   Defaults to `TRUE`.
+#' @param convergence Logical. Report the optimal iteration and the error's
+#'   relative change over the last quarter of the iterations in the caption.
 #'   Defaults to `TRUE`.
 #' @param ... Passed to \code{\link[ggplot2]{geom_line}}.
 #'
@@ -30,7 +41,8 @@
 #'
 #' @importFrom ggplot2 autoplot ggplot aes geom_line geom_vline facet_wrap labs
 #' @export
-autoplot.gg_boost_error <- function(object, optimal = TRUE, ...) {
+autoplot.gg_boost_error <- function(object, optimal = TRUE,
+                                    convergence = TRUE, ...) {
   .boost_check_gg(object, "gg_boost_error")
 
   gg_plt <- ggplot2::ggplot(
@@ -56,11 +68,60 @@ autoplot.gg_boost_error <- function(object, optimal = TRUE, ...) {
     gg_plt <- gg_plt + ggplot2::facet_wrap(~ response, scales = "free_y")
   }
 
+  if (isTRUE(convergence)) {
+    gg_plt <- gg_plt +
+      ggplot2::labs(caption = .error_caption(.error_convergence(object)))
+  }
+
   gg_plt
 }
 
 #' @rdname autoplot.gg_boost_error
 #' @export
-plot.gg_boost_error <- function(x, optimal = TRUE, ...) {
-  autoplot.gg_boost_error(x, optimal = optimal, ...)
+plot.gg_boost_error <- function(x, optimal = TRUE, convergence = TRUE, ...) {
+  autoplot.gg_boost_error(x, optimal = optimal, convergence = convergence,
+                          ...)
+}
+
+# One row per response: the optimal iteration (NA when the backend selects
+# none), the number of iterations grown, the width of the last quarter, and
+# the error's relative change across it. Computed from the extracted data
+# alone, so the renderer never reaches back into the fit.
+.error_convergence <- function(object, tail = 0.25) {
+  rows <- lapply(split(object, object$response, drop = TRUE), function(d) {
+    d <- d[order(d$iteration), , drop = FALSE]
+    m <- nrow(d)
+    window <- max(1L, as.integer(round(tail * m)))
+    from <- d$value[max(1L, m - window)]
+    opt <- d$iteration[d$optimal]
+    data.frame(
+      response = as.character(d$response[1]),
+      m_opt = if (length(opt)) opt[1] else NA_integer_,
+      m = m,
+      window = window,
+      change = (d$value[m] - from) / from,
+      stringsAsFactors = FALSE
+    )
+  })
+  do.call(rbind, rows)
+}
+
+.error_caption <- function(conv) {
+  lines <- vapply(seq_len(nrow(conv)), function(i) {
+    r <- conv[i, ]
+    opt <- if (is.na(r$m_opt)) {
+      paste0(r$m, " iterations")
+    } else {
+      paste0("Optimal iteration ", r$m_opt, " of ", r$m)
+    }
+    verb <- if (r$change <= 0) "fell" else "rose"
+    line <- paste0(opt, "; error ", verb, " ",
+                   format(round(100 * abs(r$change), 1), nsmall = 1),
+                   "% over the last ",
+                   if (r$window == 1L) "iteration" else
+                     paste(r$window, "iterations"))
+    if (nrow(conv) > 1L) line <- paste0(r$response, ": ", line)
+    line
+  }, character(1))
+  paste(lines, collapse = "\n")
 }

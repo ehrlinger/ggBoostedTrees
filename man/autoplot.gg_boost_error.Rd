@@ -5,14 +5,18 @@
 \alias{plot.gg_boost_error}
 \title{Plot a \code{\link{gg_boost_error}} object}
 \usage{
-\method{autoplot}{gg_boost_error}(object, optimal = TRUE, ...)
+\method{autoplot}{gg_boost_error}(object, optimal = TRUE, convergence = TRUE, ...)
 
-\method{plot}{gg_boost_error}(x, optimal = TRUE, ...)
+\method{plot}{gg_boost_error}(x, optimal = TRUE, convergence = TRUE, ...)
 }
 \arguments{
 \item{object}{A \code{\link{gg_boost_error}} object.}
 
 \item{optimal}{Logical. Draw a vertical rule at the optimal iteration.
+Defaults to \code{TRUE}.}
+
+\item{convergence}{Logical. Report the optimal iteration and the error's
+relative change over the last quarter of the iterations in the caption.
 Defaults to \code{TRUE}.}
 
 \item{...}{Passed to \code{\link[ggplot2]{geom_line}}.}
@@ -30,6 +34,14 @@ iteration, with the cross-validated optimal iteration marked.
 The returned plot carries no theme, so it composes with any \code{ggplot2}
 theme or scale. Several responses are drawn as facets rather than as
 coloured series, because the responses do not share a y scale.
+
+The caption says whether boosting ran long enough. It gives the optimal
+iteration against the number grown, and how much the error fell over the
+last quarter of the iterations. An optimum at the last iteration does not
+by itself mean the fit is unfinished: if the error fell by a percent or
+so over that last stretch, the curve has flattened and more iterations
+would change little. A curve still falling steeply calls for a refit with
+more iterations or a larger learning rate.
 }
 \examples{
 \donttest{
