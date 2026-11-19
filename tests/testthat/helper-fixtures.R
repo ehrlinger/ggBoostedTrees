@@ -141,6 +141,20 @@ boost_tied_fixture <- function() {
   )
 }
 
+# A cross-validated fit with an intercept-only time design (d = 0): every
+# fitted trajectory is flat, and every subject was out of bag by m.opt. Only
+# the fields gg_boost_trajectory() reads. See fixtures/make-fixtures.R.
+boost_d0_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "boost_d0.rds"))
+}
+
+# The reference fit as it was before boostmtree 2.0.13, when a fixed seed drew
+# one subsample for every tree: 16 of 25 subjects never out of bag by m.opt.
+# Frozen; make-fixtures.R cannot rebuild it. Only the extractor's fields.
+boost_seed_defect_fixture <- function() {
+  readRDS(testthat::test_path("fixtures", "boost_seed_defect.rds"))
+}
+
 # A fixture with one clear main effect (x1) and one clear interaction (x2),
 # against a noise band of 0.05 set by x4's negative main importance.
 vimp_signal_fixture <- function() {

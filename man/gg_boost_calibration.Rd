@@ -77,7 +77,9 @@ available for \code{boostmtree} fits only.
 
 This figure accepts either a \code{boostmtree} or a \code{BoostMLR} grow
 fit. It reads its rows from \code{\link{gg_boost_trajectory}}, so both
-backends' storage layouts are handled there.
+backends' storage layouts are handled there. For a \code{boostmtree} fit
+grown with \code{cv.flag = TRUE}, the fitted values are out-of-bag predictions;
+see \code{\link{gg_boost_trajectory}} for what that means.
 }
 \examples{
 \donttest{

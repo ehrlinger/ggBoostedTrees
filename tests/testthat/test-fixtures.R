@@ -5,7 +5,7 @@ test_that("the committed fixture is a cv.flag boostmtree grow object", {
   expect_identical(class(fit)[2], "grow")
   expect_false(is.null(fit$err.rate))
   expect_identical(colnames(fit$err.rate), c("l1", "l2"))
-  expect_identical(nrow(fit$err.rate), 50L)
+  expect_identical(nrow(fit$err.rate), 100L)
 })
 
 test_that("the fixture has an interior optimal iteration", {
@@ -13,7 +13,7 @@ test_that("the fixture has an interior optimal iteration", {
 
   # An m.opt pinned at 1 or at M would make the `optimal` column untestable.
   expect_gt(fit$m.opt, 1L)
-  expect_lt(fit$m.opt, 50L)
+  expect_lt(fit$m.opt, 100L)
 })
 
 test_that("fixture provenance is recorded", {
