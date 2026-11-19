@@ -52,10 +52,10 @@ iteration, with the cross-validated optimal iteration marked.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'gg_boost_error'</span></span>
-<span><span class="fu">autoplot</span><span class="op">(</span><span class="va">object</span>, optimal <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">autoplot</span><span class="op">(</span><span class="va">object</span>, optimal <span class="op">=</span> <span class="cn">TRUE</span>, convergence <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'gg_boost_error'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, optimal <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, optimal <span class="op">=</span> <span class="cn">TRUE</span>, convergence <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,6 +68,12 @@ iteration, with the cross-validated optimal iteration marked.</p>
 
 <dt id="arg-optimal">optimal<a class="anchor" aria-label="anchor" href="#arg-optimal"></a></dt>
 <dd><p>Logical. Draw a vertical rule at the optimal iteration.
+Defaults to <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-convergence">convergence<a class="anchor" aria-label="anchor" href="#arg-convergence"></a></dt>
+<dd><p>Logical. Report the optimal iteration and the error's
+relative change over the last quarter of the iterations in the caption.
 Defaults to <code>TRUE</code>.</p></dd>
 
 
@@ -88,6 +94,13 @@ Defaults to <code>TRUE</code>.</p></dd>
     <p>The returned plot carries no theme, so it composes with any <code>ggplot2</code>
 theme or scale. Several responses are drawn as facets rather than as
 coloured series, because the responses do not share a y scale.</p>
+<p>The caption says whether boosting ran long enough. It gives the optimal
+iteration against the number grown, and how much the error fell over the
+last quarter of the iterations. An optimum at the last iteration does not
+by itself mean the fit is unfinished: if the error fell by a percent or
+so over that last stretch, the curve has flattened and more iterations
+would change little. A curve still falling steeply calls for a refit with
+more iterations or a larger learning rate.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

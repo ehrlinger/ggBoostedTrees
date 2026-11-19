@@ -71,12 +71,14 @@ autoplot(gg_boost_error(fit))
 **Reading it.** The error should fall steeply and then flatten. If
 `m.opt` sits well inside `M`, the minimum was found. If `m.opt` equals
 `M`, as it does here, the error was still going down when boosting
-stopped, and the question is by how much. Here it fell 11% between steps
-100 and 400 but only about 1% over the last 100 steps: the curve has
-flattened, and more steps would change the figures below very little. A
-curve still falling steeply at `M` is a fit to refit with a larger `M`
-or a larger learning rate `nu`. At the default `nu = 0.05` this model
-was still improving at 600 steps, which is why it uses `nu = 0.25`.
+stopped, and the question is by how much. The caption answers that: it
+gives the error’s change over the last quarter of the iterations. Here
+it fell 11% between steps 100 and 400 but only about 1% over the last
+100 steps: the curve has flattened, and more steps would change the
+figures below very little. A curve still falling steeply at `M` is a fit
+to refit with a larger `M` or a larger learning rate `nu`. At the
+default `nu = 0.05` this model was still improving at 600 steps, which
+is why it uses `nu = 0.25`.
 
 ## A. How do subjects change over follow-up?
 

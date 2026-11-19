@@ -7,10 +7,10 @@ iteration, with the cross-validated optimal iteration marked.
 
 ``` r
 # S3 method for class 'gg_boost_error'
-autoplot(object, optimal = TRUE, ...)
+autoplot(object, optimal = TRUE, convergence = TRUE, ...)
 
 # S3 method for class 'gg_boost_error'
-plot(x, optimal = TRUE, ...)
+plot(x, optimal = TRUE, convergence = TRUE, ...)
 ```
 
 ## Arguments
@@ -24,6 +24,12 @@ plot(x, optimal = TRUE, ...)
 - optimal:
 
   Logical. Draw a vertical rule at the optimal iteration. Defaults to
+  `TRUE`.
+
+- convergence:
+
+  Logical. Report the optimal iteration and the error's relative change
+  over the last quarter of the iterations in the caption. Defaults to
   `TRUE`.
 
 - ...:
@@ -46,6 +52,14 @@ A `ggplot` object.
 The returned plot carries no theme, so it composes with any `ggplot2`
 theme or scale. Several responses are drawn as facets rather than as
 coloured series, because the responses do not share a y scale.
+
+The caption says whether boosting ran long enough. It gives the optimal
+iteration against the number grown, and how much the error fell over the
+last quarter of the iterations. An optimum at the last iteration does
+not by itself mean the fit is unfinished: if the error fell by a percent
+or so over that last stretch, the curve has flattened and more
+iterations would change little. A curve still falling steeply calls for
+a refit with more iterations or a larger learning rate.
 
 ## See also
 
