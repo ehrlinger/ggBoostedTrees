@@ -110,7 +110,7 @@
 <text x='644.57' y='275.23' style='font-size: 8.80px; font-family: sans;' textLength='42.08px' lengthAdjust='spacingAndGlyphs'>Detectable</text>
 <text x='644.57' y='292.51' style='font-size: 8.80px; font-family: sans;' textLength='69.95px' lengthAdjust='spacingAndGlyphs'>Within noise band</text>
 <text x='19.71' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='110.09px' lengthAdjust='spacingAndGlyphs'>vimp shadow band</text>
-<text x='610.85' y='559.19' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='105.66px' lengthAdjust='spacingAndGlyphs'>Overall time effect: -0.0318</text>
+<text x='610.85' y='559.19' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='105.66px' lengthAdjust='spacingAndGlyphs'>Overall time effect: -0.0181</text>
 <text x='610.85' y='568.69' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='190.31px' lengthAdjust='spacingAndGlyphs'>Band: largest importance of 2 shadow covariates</text>
 </g>
 </svg>

@@ -27,15 +27,15 @@
 </defs>
 <g clip-path='url(#cpMTkuNzF8MzY0LjM4fDM5LjQzfDUyMi4yNQ==)'>
 <rect x='19.71' y='39.43' width='344.67' height='482.81' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<line x1='214.50' y1='522.25' x2='214.50' y2='39.43' style='stroke-width: 1.07; stroke: #666666; stroke-linecap: butt;' />
-<line x1='214.50' y1='108.41' x2='348.71' y2='108.41' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='214.50' y1='453.27' x2='47.95' y2='453.27' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='214.50' y1='223.36' x2='35.38' y2='223.36' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='214.50' y1='338.32' x2='47.95' y2='338.32' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='128.85' y1='522.25' x2='128.85' y2='39.43' style='stroke-width: 1.07; stroke: #666666; stroke-linecap: butt;' />
+<line x1='128.85' y1='108.41' x2='348.71' y2='108.41' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='128.85' y1='223.36' x2='91.08' y2='223.36' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='128.85' y1='453.27' x2='45.52' y2='453.27' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='128.85' y1='338.32' x2='64.39' y2='338.32' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <circle cx='348.71' cy='108.41' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
-<circle cx='47.95' cy='453.27' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
-<circle cx='35.38' cy='223.36' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
-<circle cx='47.95' cy='338.32' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<circle cx='91.08' cy='223.36' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<circle cx='45.52' cy='453.27' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<circle cx='64.39' cy='338.32' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
 <rect x='19.71' y='39.43' width='344.67' height='482.81' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
@@ -47,15 +47,15 @@
 </defs>
 <g clip-path='url(#cpMzY5Ljg1fDcxNC41MnwzOS40M3w1MjIuMjU=)'>
 <rect x='369.85' y='39.43' width='344.67' height='482.81' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<line x1='564.64' y1='522.25' x2='564.64' y2='39.43' style='stroke-width: 1.07; stroke: #666666; stroke-linecap: butt;' />
-<line x1='564.64' y1='108.41' x2='414.10' y2='108.41' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='564.64' y1='453.27' x2='398.09' y2='453.27' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='564.64' y1='223.36' x2='399.07' y2='223.36' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='564.64' y1='338.32' x2='398.09' y2='338.32' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<circle cx='414.10' cy='108.41' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
-<circle cx='398.09' cy='453.27' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
-<circle cx='399.07' cy='223.36' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
-<circle cx='398.09' cy='338.32' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<line x1='479.00' y1='522.25' x2='479.00' y2='39.43' style='stroke-width: 1.07; stroke: #666666; stroke-linecap: butt;' />
+<line x1='479.00' y1='108.41' x2='399.74' y2='108.41' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='479.00' y1='223.36' x2='385.52' y2='223.36' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='479.00' y1='453.27' x2='402.62' y2='453.27' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='479.00' y1='338.32' x2='395.24' y2='338.32' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<circle cx='399.74' cy='108.41' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<circle cx='385.52' cy='223.36' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<circle cx='402.62' cy='453.27' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
+<circle cx='395.24' cy='338.32' r='4.44' style='stroke-width: 1.42; stroke: none; fill: #000000;' />
 <rect x='369.85' y='39.43' width='344.67' height='482.81' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
@@ -81,25 +81,17 @@
 <text x='542.19' y='34.14' text-anchor='middle' style='font-size: 8.80px; fill: #1A1A1A; font-family: sans;' textLength='78.26px' lengthAdjust='spacingAndGlyphs'>Interaction with time</text>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-<polyline points='54.28,524.99 54.28,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='134.39,524.99 134.39,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='214.50,524.99 214.50,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='294.61,524.99 294.61,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text x='54.28' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.06px' lengthAdjust='spacingAndGlyphs'>-0.04</text>
-<text x='134.39' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.06px' lengthAdjust='spacingAndGlyphs'>-0.02</text>
-<text x='214.50' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.00</text>
-<text x='294.61' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.02</text>
-<polyline points='404.42,524.99 404.42,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='484.53,524.99 484.53,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='564.64,524.99 564.64,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='644.75,524.99 644.75,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text x='404.42' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.06px' lengthAdjust='spacingAndGlyphs'>-0.04</text>
-<text x='484.53' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='20.06px' lengthAdjust='spacingAndGlyphs'>-0.02</text>
-<text x='564.64' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.00</text>
-<text x='644.75' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.02</text>
-<text x='14.78' y='456.30' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.30px' lengthAdjust='spacingAndGlyphs'>x2</text>
+<polyline points='128.85,524.99 128.85,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='261.28,524.99 261.28,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='128.85' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='261.28' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.1</text>
+<polyline points='479.00,524.99 479.00,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='611.42,524.99 611.42,522.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='479.00' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='611.42' y='533.23' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.1</text>
+<text x='14.78' y='456.30' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.30px' lengthAdjust='spacingAndGlyphs'>x3</text>
 <text x='14.78' y='341.35' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.30px' lengthAdjust='spacingAndGlyphs'>x4</text>
-<text x='14.78' y='226.39' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.30px' lengthAdjust='spacingAndGlyphs'>x3</text>
+<text x='14.78' y='226.39' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.30px' lengthAdjust='spacingAndGlyphs'>x2</text>
 <text x='14.78' y='111.43' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='9.30px' lengthAdjust='spacingAndGlyphs'>x1</text>
 <polyline points='16.97,453.27 19.71,453.27 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='16.97,338.32 19.71,338.32 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
@@ -107,7 +99,7 @@
 <polyline points='16.97,108.41 19.71,108.41 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <text x='367.11' y='545.37' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='154.08px' lengthAdjust='spacingAndGlyphs'>relative increase in OOB RMSE</text>
 <text x='19.71' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='132.83px' lengthAdjust='spacingAndGlyphs'>vimp both components</text>
-<text x='714.52' y='559.19' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='105.66px' lengthAdjust='spacingAndGlyphs'>Overall time effect: -0.0318</text>
+<text x='714.52' y='559.19' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='105.66px' lengthAdjust='spacingAndGlyphs'>Overall time effect: -0.0181</text>
 <text x='714.52' y='568.69' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='242.68px' lengthAdjust='spacingAndGlyphs'>No shadow covariates, so no noise band; see boost_shadow()</text>
 </g>
 </svg>
