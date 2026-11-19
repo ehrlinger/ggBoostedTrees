@@ -42,6 +42,22 @@ instead of zigzagging. Subject identifiers come from the fit's own
 \code{observed} is \code{NA} throughout when the fit carries no observed response,
 which happens for a prediction on new data.
 
+What \code{fitted} holds depends on how the model was grown. With
+\code{cv.flag = FALSE} it is the in-sample fit. With \code{cv.flag = TRUE},
+\code{boostmtree} replaces \code{mu} with the out-of-bag prediction at \code{m.opt}, the
+same values that produce the cross-validated error, so it sits further from
+\code{observed} than an in-sample fit would. A subject's out-of-bag prediction
+moves only at iterations where that subject is out of bag. A subject never
+out of bag by \code{m.opt} keeps the starting value, a constant equal to the
+mean response of the other subjects. The extractor warns when the fit's own
+out-of-bag record (\code{gamma.i.list}) shows such a subject. A flat line alone
+does not trigger it, since a fit with an intercept-only time design
+(\code{d = 0}) is flat by construction. Before \code{boostmtree} 2.0.13, a fixed
+\code{control$seed} drew the same subsample for every tree, which left roughly
+60 percent of subjects flat.
+Refit with 2.0.13 or later, or grow with \code{control$seed = NULL} after
+\code{set.seed()}, which is still reproducible.
+
 This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
 \code{BoostMLR} stores \code{mu} and \code{y} as flat observation-by-response matrices,
 with \code{tm} and \code{id} as parallel flat vectors, rather than boostmtree's

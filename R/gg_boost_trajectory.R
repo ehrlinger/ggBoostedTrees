@@ -19,6 +19,22 @@
 #' `observed` is `NA` throughout when the fit carries no observed response,
 #' which happens for a prediction on new data.
 #'
+#' What `fitted` holds depends on how the model was grown. With
+#' `cv.flag = FALSE` it is the in-sample fit. With `cv.flag = TRUE`,
+#' `boostmtree` replaces `mu` with the out-of-bag prediction at `m.opt`, the
+#' same values that produce the cross-validated error, so it sits further from
+#' `observed` than an in-sample fit would. A subject's out-of-bag prediction
+#' moves only at iterations where that subject is out of bag. A subject never
+#' out of bag by `m.opt` keeps the starting value, a constant equal to the
+#' mean response of the other subjects. The extractor warns when the fit's own
+#' out-of-bag record (`gamma.i.list`) shows such a subject. A flat line alone
+#' does not trigger it, since a fit with an intercept-only time design
+#' (`d = 0`) is flat by construction. Before `boostmtree` 2.0.13, a fixed
+#' `control$seed` drew the same subsample for every tree, which left roughly
+#' 60 percent of subjects flat.
+#' Refit with 2.0.13 or later, or grow with `control$seed = NULL` after
+#' `set.seed()`, which is still reproducible.
+#'
 #' This figure accepts either a \code{boostmtree} or a \code{BoostMLR} fit.
 #' `BoostMLR` stores `mu` and `y` as flat observation-by-response matrices,
 #' with `tm` and `id` as parallel flat vectors, rather than boostmtree's
@@ -182,8 +198,56 @@ gg_boost_trajectory.boostmtree <- function(object, ...) {
 
   gg_dta <- do.call(rbind, blocks)
   rownames(gg_dta) <- NULL
+
+  if (isTRUE(object$cv.flag)) {
+    .boost_warn_never_oob(object, id_levels)
+  }
+
   class(gg_dta) <- c("gg_boost_trajectory", class(gg_dta))
   gg_dta
+}
+
+# With cv.flag = TRUE, boostmtree stores out-of-bag predictions in mu, and a
+# subject never out of bag by m.opt keeps its starting value: the mean response
+# of the other subjects, not a prediction. Before boostmtree 2.0.13 a fixed
+# control$seed made that most subjects. A flat trajectory is not evidence of
+# it: an intercept-only time design (d = 0) is flat by construction. The fit
+# records the out-of-bag set itself, in gamma.i.list[[q]][[m]]: one entry per
+# subject, NULL unless that subject was out of bag at iteration m. With no such
+# record there is nothing to check, and no warning.
+.boost_warn_never_oob <- function(object, id_levels) {
+  gamma_i <- object$gamma.i.list
+  m_opt <- object$m.opt
+  if (!is.list(gamma_i) || length(gamma_i) == 0L || is.null(m_opt) ||
+        length(m_opt) != length(gamma_i)) {
+    return(invisible(NULL))
+  }
+  n_subject <- length(id_levels)
+  never <- rep(FALSE, n_subject)
+  for (q in seq_along(gamma_i)) {
+    steps <- gamma_i[[q]][seq_len(min(m_opt[q], length(gamma_i[[q]])))]
+    if (!all(lengths(steps) == n_subject)) {
+      return(invisible(NULL))
+    }
+    ever <- Reduce(`|`, lapply(steps, function(step) {
+      !vapply(step, is.null, logical(1))
+    }), rep(FALSE, n_subject))
+    never <- never | !ever
+  }
+  if (!any(never)) {
+    return(invisible(NULL))
+  }
+  warning(
+    "gg_boost_trajectory: ", sum(never), " of ", n_subject,
+    " subject(s) were never out of bag by m.opt, so their fitted values are ",
+    "the starting value (the mean response of the other subjects), not a ",
+    "prediction. With cv.flag = TRUE, fitted values are out-of-bag ",
+    "predictions. boostmtree before 2.0.13 reused control$seed for every ",
+    "tree, which leaves most subjects that way; refit with boostmtree 2.0.13 ",
+    "or later, or with control$seed = NULL after set.seed().",
+    call. = FALSE
+  )
+  invisible(NULL)
 }
 
 #' @export

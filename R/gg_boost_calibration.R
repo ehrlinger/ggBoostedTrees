@@ -37,7 +37,9 @@
 #'
 #' This figure accepts either a \code{boostmtree} or a \code{BoostMLR} grow
 #' fit. It reads its rows from \code{\link{gg_boost_trajectory}}, so both
-#' backends' storage layouts are handled there.
+#' backends' storage layouts are handled there. For a \code{boostmtree} fit
+#' grown with `cv.flag = TRUE`, the fitted values are out-of-bag predictions;
+#' see \code{\link{gg_boost_trajectory}} for what that means.
 #'
 #' @param object A fitted \code{\link[boostmtree]{boostmtree}} object, or a
 #'   fitted \code{BoostMLR} object. Not a predict object: pass that as

@@ -13,14 +13,14 @@ test_that("all three parameters are returned by default", {
   gg <- gg_boost_path(boost_fixture())
 
   expect_identical(levels(gg$parameter), c("rho", "phi", "lambda"))
-  expect_identical(nrow(gg), 150L)
+  expect_identical(nrow(gg), 300L)
 })
 
 test_that("parameters can be selected", {
   gg <- gg_boost_path(boost_fixture(), parameters = "rho")
 
   expect_identical(levels(gg$parameter), "rho")
-  expect_identical(nrow(gg), 50L)
+  expect_identical(nrow(gg), 100L)
 })
 
 test_that("values match the fitted parameter paths", {
@@ -63,7 +63,7 @@ test_that("duplicate parameters are de-duplicated rather than erroring", {
   gg <- gg_boost_path(boost_fixture(), parameters = c("rho", "rho"))
 
   expect_identical(levels(gg$parameter), "rho")
-  expect_identical(nrow(gg), 50L)
+  expect_identical(nrow(gg), 100L)
 })
 
 test_that("gg_boost_path rejects an empty parameters vector", {

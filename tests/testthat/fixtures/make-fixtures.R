@@ -39,7 +39,10 @@ if (file.exists(model.path) && !regenerate) {
     id = sim$id,
     y = sim$y,
     family = "continuous",
-    M = 50,
+    # M = 100, not 50: since boostmtree 2.0.13 a fixed seed no longer reuses
+    # one subsample for every tree, and the honest cross-validated error is
+    # still falling at 50. 100 gives an interior m.opt (88).
+    M = 100,
     cv.flag = TRUE,
     verbose = FALSE,
     control = boostmtree.control(seed = 7)
@@ -53,11 +56,11 @@ writeLines(
   c(
     "Fixture: boost_continuous.rds",
     paste0("Backend: boostmtree ", as.character(packageVersion("boostmtree"))),
-    "Source: ehrlinger/boostmtree_src@v2.0.2-ccf (subdir = boostmtree)",
+    "Source: ehrlinger/boostmtree_src@v2.0.13-ccf (subdir = boostmtree)",
     paste0("Generated: ", format(Sys.Date())),
     paste0("R: ", R.version.string),
     "Call: simLong(n = 25, n.time = 4, rho = 0.8, model = 1,",
-    "  family = 'continuous'); boostmtree(M = 50, cv.flag = TRUE,",
+    "  family = 'continuous'); boostmtree(M = 100, cv.flag = TRUE,",
     "  control = boostmtree.control(seed = 7)); set.seed(7)",
     paste0("m.opt: ", fit$m.opt),
     "",
@@ -98,7 +101,17 @@ writeLines(
     "  y_Names. boostmlr_partial.rds: boostmlr_partial(fit, c('x1', 'x2')).",
     "",
     "Predict fixture: boost_predict.rds, predict(fit, x = fit$x) keeping n.q,",
-    "  q.set, id.unique, time and mu only (the full object is about 4.4 MB)."
+    "  q.set, id.unique, time and mu only (the full object is about 4.4 MB).",
+    "",
+    "Intercept-only fixture: boost_d0.rds, simLong(n = 20, n.time = 4,",
+    "  model = 1); boostmtree(M = 15, d = 0, cv.flag = TRUE,",
+    "  control = boostmtree.control(seed = 4)); set.seed(4). Only the fields",
+    "  gg_boost_trajectory() reads, gamma.i.list included.",
+    "",
+    "Seed-defect fixture: boost_seed_defect.rds, FROZEN, not written by this",
+    "  script. The same fields taken from boost_continuous.rds as fitted",
+    "  with boostmtree 2.0.2 (M = 50, seed = 7; m.opt 19), before 2.0.13",
+    "  drew a fresh subsample per tree: 16 of 25 subjects never out of bag."
   ),
   file.path(here, "boost_continuous.dcf")
 )
@@ -117,6 +130,30 @@ pred.slim <- structure(
 )
 saveRDS(pred.slim, file.path(here, "boost_predict.rds"), compress = "xz")
 cat("wrote slimmed predict fixture\n")
+
+## Intercept-only time design fixture (d = 0).
+##
+## With d = 0 every subject's fitted trajectory is flat by construction, which
+## is not the out-of-bag defect gg_boost_trajectory() warns about. Every
+## subject here is out of bag by m.opt. Only the fields the extractor reads
+## are kept, with the class; gamma.i.list is the fit's own out-of-bag record.
+set.seed(4)
+sim.d0 <- simLong(n = 20, n.time = 4, model = 1)$data.list
+fit.d0 <- boostmtree(
+  x = sim.d0$features, tm = sim.d0$time, id = sim.d0$id, y = sim.d0$y,
+  M = 15, d = 0, cv.flag = TRUE, verbose = FALSE,
+  control = boostmtree.control(seed = 4)
+)
+saveRDS(
+  structure(
+    fit.d0[c("n.q", "q.set", "family", "id.unique", "time", "mu", "y.org",
+             "cv.flag", "m.opt", "gamma.i.list")],
+    class = class(fit.d0)
+  ),
+  file.path(here, "boost_d0.rds"),
+  compress = "xz"
+)
+cat("wrote d = 0 fixture, m.opt =", fit.d0$m.opt, "\n")
 
 ## Interpretation fixtures (Phase 3).
 ##
