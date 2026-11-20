@@ -10,6 +10,32 @@
 #' carries neither, and there is no error path to extract. If this function
 #' reports that the fit has no error path, refit with `cv.flag = TRUE`.
 #'
+#' \strong{More iterations can overfit.} In a random forest, more trees never
+#' hurt: `ntree` only steadies the average. Boosting is different. Each
+#' iteration moves the fit closer to the training data, so the number of
+#' iterations `M` and the learning rate `nu` together set how closely the
+#' model fits. Too many, or too large a `nu`, and it fits the noise. The
+#' cross-validated error path is where you see that: an error that falls,
+#' flattens, and then turns back up has overfit past its minimum.
+#'
+#' \strong{`m.opt` is one draw, not a property of the data.} `m.opt` is the
+#' iteration with the lowest cross-validated error. When the error is flat
+#' over a long stretch, that minimum can land anywhere along it, and a refit
+#' with another seed moves it. In one simulation (100 subjects, `M = 400`,
+#' `nu = 0.25`, 50 seeds), `m.opt` ran from 156 to 400, with a median near
+#' 385. That is one design at one sample size; how the spread changes with
+#' more subjects was not measured. Read whether the curve has flattened, and
+#' the error level it reaches, rather than the exact `m.opt`. The caption of
+#' \code{\link{autoplot.gg_boost_error}} reports the flattening.
+#'
+#' \strong{A seed reproduces a fit only within one randomForestSRC
+#' version.} `boostmtree` grows its trees with `randomForestSRC`, and a new
+#' `randomForestSRC` release can change the random stream. In the same
+#' simulation, none of the 50 seeds gave an identical fit under
+#' `randomForestSRC` 3.9.0 and 3.10.0, though the spread of fits matched. To
+#' reproduce a fit, call \code{set.seed()} and record and pin the
+#' `randomForestSRC` version, with `renv` for example.
+#'
 #' `boostmtree` stores the error on the standardized response scale in the
 #' `l2` column. `use.rmse = FALSE` returns `(l2 * y.sd)^2`, the squared error
 #' on the original scale.
