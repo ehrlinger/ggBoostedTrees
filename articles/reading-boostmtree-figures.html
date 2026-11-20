@@ -186,12 +186,43 @@
 <p>Rerunning <code>vimp.boostmtree()</code> is not enough on its own. The fit is one draw too, and in the 50-seed study above a refit moved verdicts as much as a rerun of the importance did. Before reporting a borderline covariate, refit under several seeds, compute the importance on each fit, and report how often it clears the band. An effect that matters clears it nearly every time, as <code>x1</code> does. These are simulation results at 100 subjects, and how the spread changes with more subjects was not measured. A lone, small interaction with a near-zero time effect is a reason to look at figure C for that covariate, not a finding on its own.</p>
 <p>When every interaction falls inside the band, the panel says <em>None detectable</em>. That is a finding, not a failure: the covariates shift trajectories up or down but none changes their shape, and a time-varying-effect claim is not supported.</p>
 <p>Both panels share one horizontal scale, so the interactions are judged against the main effects. A small interaction is drawn small.</p>
+</section><section class="level3"><h3 id="pooling-runs">Pooling runs<a class="anchor" aria-label="anchor" href="#pooling-runs"></a>
+</h3>
+<p><code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> takes a list of importance runs as well as one, and reports how often each covariate cleared the band. Five reruns on the first fit, the one from model 2, cost about half a minute:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span></span>
+<span><span class="va">runs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu">boostmtree</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boostmtree/man/vimp.boostmtree.html" class="external-link">vimp.boostmtree</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pooled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gg_boost_vimp.html">gg_boost_vimp</a></span><span class="op">(</span><span class="va">runs</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">pooled</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="reading-boostmtree-figures_files/figure-html/vimp-pool-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Reading it.</strong> Every run has its own band, so the x axis is each run’s importance <em>minus that run’s band</em>. Zero is the line every run was judged against, and a point right of it cleared its band. The box spans the 25th to 75th percentile over runs, the whiskers the 15th to 85th, and the label counts the runs that cleared the band. <code>x1</code>’s main effect and <code>x2</code>’s interaction sit well right of zero in every run. <code>x2</code>’s main effect, the borderline one, cleared the band in 1 of 5: a single run could have drawn it either way.</p>
+<p>The share measures how stable a single-run verdict is; it is not a test, and the package draws no verdict from it. Reruns on one fit only vary the importance’s own scrambling. Since a refit moves a verdict as much, the stronger check pools one run from each of several refits, at the cost of a fit each:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">refit_runs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="kw">function</span><span class="op">(</span><span class="va">seed</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="va">seed</span><span class="op">)</span></span>
+<span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu">boostmtree</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boostmtree/man/boostmtree.html" class="external-link">boostmtree</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="va">x</span>, tm <span class="op">=</span> <span class="va">sim</span><span class="op">$</span><span class="va">time</span>, id <span class="op">=</span> <span class="va">sim</span><span class="op">$</span><span class="va">id</span>, y <span class="op">=</span> <span class="va">sim</span><span class="op">$</span><span class="va">y</span>,</span>
+<span>    M <span class="op">=</span> <span class="fl">400</span>, nu <span class="op">=</span> <span class="fl">0.25</span>, cv.flag <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="fu">boostmtree</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boostmtree/man/vimp.boostmtree.html" class="external-link">vimp.boostmtree</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="../reference/gg_boost_vimp.html">gg_boost_vimp</a></span><span class="op">(</span><span class="va">refit_runs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>Every run must carry shadow covariates and name the same covariates; <code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> stops, naming the run, when one does not.</p>
 </section></section><section class="level2"><h2 id="c--how-does-an-important-covariate-shape-the-trajectory">C. How does an important covariate shape the trajectory?<a class="anchor" aria-label="anchor" href="#c--how-does-an-important-covariate-shape-the-trajectory"></a>
 </h2>
 <p>Importance says <em>whether</em> a covariate matters; this figure says <em>how</em>. It draws the predicted trajectory over time at several values of one covariate, holding the others at their reference values. That is a <strong>partial effect</strong>.</p>
 <p><code><a href="https://rdrr.io/pkg/boostmtree/man/partial.plot.boostmtree.html" class="external-link">boostmtree::partial.plot()</a></code> computes it and <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code> extracts it. The default plot puts the covariate on the x axis with one curve per time:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pp</span> <span class="op">&lt;-</span> <span class="fu">boostmtree</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/boostmtree/man/partial.plot.boostmtree.html" class="external-link">partial.plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit</span>, x.var.names <span class="op">=</span> <span class="st">"x2"</span>, output <span class="op">=</span> <span class="st">"data"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
@@ -206,7 +237,7 @@
 </div>
 <p>For the published orientation, response over time with one curve per covariate value, swap the roles in the extracted data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">eff</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">13</span>, <span class="fl">25</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">eff</span><span class="op">[</span><span class="va">eff</span><span class="op">$</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">keep</span>, <span class="op">]</span>,</span>
 <span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">estimate</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">signif</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -225,7 +256,7 @@
 </h2>
 <p>A partial effect holds every other covariate fixed. This figure does not: it predicts each subject’s response at one time (say, the end of follow-up) using that subject’s own covariates, and plots the predictions against one covariate. The smoother traces the trend; the scatter around it is the spread that all the other covariates produce.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">t_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gg_boost_prediction.html">gg_boost_prediction</a></span><span class="op">(</span><span class="va">fit</span>, time <span class="op">=</span> <span class="va">t_end</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred</span>, covariate <span class="op">=</span> <span class="st">"x1"</span><span class="op">)</span></span></code></pre></div>

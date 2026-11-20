@@ -120,7 +120,8 @@ permutes at random, so call <code><a href="https://rdrr.io/r/base/Random.html" c
 is one draw too. A covariate close to the shadow band can land on either
 side from one run to the next, and refitting moves it as much as
 rerunning the importance does. Refit as well as rerun before reporting a
-borderline verdict; <code><a href="boost_shadow.html">boost_shadow</a></code> gives the numbers.</p>
+borderline verdict; <code><a href="boost_shadow.html">boost_shadow</a></code> gives the numbers. Pass a
+list of runs to pool them; see <code><a href="gg_boost_vimp_pool.html">gg_boost_vimp_pool</a></code>.</p>
 <p>A joint importance object (<code>vimp.boostmtree(fit, joint = TRUE)</code>) reports a
 single combined value, labelled <code>joint.vimp</code>. Note that CRAN <code>boostmtree</code>
 2.0.0 cannot produce one at all; the patched build this package requires is

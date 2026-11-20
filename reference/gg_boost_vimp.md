@@ -88,7 +88,8 @@ either side from one run to the next, and refitting moves it as much as
 rerunning the importance does. Refit as well as rerun before reporting a
 borderline verdict;
 [`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
-gives the numbers.
+gives the numbers. Pass a list of runs to pool them; see
+[`gg_boost_vimp_pool`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp_pool.md).
 
 A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports
 a single combined value, labelled `joint.vimp`. Note that CRAN

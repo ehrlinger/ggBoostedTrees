@@ -267,6 +267,8 @@ path and the optimal iteration only when cross-validation ran.
   : Subject trajectory data object
 - [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
   : Variable importance data object
+- [`gg_boost_vimp(`*`<list>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp_pool.md)
+  : Pooled variable importance over several runs
 - [`boost_shadow()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
   : Add shadow covariates before fitting
 - [`gg_boost_effect()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_effect.md)
@@ -311,6 +313,12 @@ else.
   :
 
   Plot a `gg_boost_vimp` object
+
+- [`autoplot(`*`<gg_boost_vimp_pool>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_vimp_pool.md)
+  [`plot(`*`<gg_boost_vimp_pool>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_vimp_pool.md)
+  :
+
+  Plot a `gg_boost_vimp_pool` object
 
 - [`autoplot(`*`<gg_boost_effect>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_effect.md)
   [`plot(`*`<gg_boost_effect>`*`)`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_effect.md)
