@@ -1,5 +1,50 @@
 Package: ggBoostedTrees
-Version: 0.10.1
+Version: 0.10.2
+
+# ggBoostedTrees 0.10.2
+
+## Variable importance
+
+* `gg_boost_vimp()` pools importance runs. Pass a list of
+  `vimp.boostmtree()` results, repeated runs on one fit or one run on each
+  of several refits, and it returns a `gg_boost_vimp_pool` frame: for each
+  covariate and panel, the share of runs in which it cleared that run's own
+  shadow band, with percentiles of its margin over the band. The per-run
+  bands and margins travel as the `runs` attribute. A run without shadow
+  covariates, on different covariates, or with a missing importance stops
+  with an error naming it. A single importance object behaves as before.
+
+* `autoplot()` draws a pooled object as a box per covariate of the margin
+  over the band (box 25th to 75th percentile, whiskers 15th to 85th), with
+  each run as a point and the count of runs that cleared the band. The
+  article's figure B section shows five pooled runs.
+
+## Documentation
+
+* The help pages and vignettes now say how to use `boostmtree` correctly,
+  drawing on a 50-seed simulation (100 subjects, `M = 400`, `nu = 0.25`,
+  `randomForestSRC` 3.9.0 and 3.10.0). Documentation only; no behaviour
+  changes.
+  - `gg_boost_error()` and `autoplot.gg_boost_error()`: more iterations can
+    overfit, unlike `ntree` in a random forest, and a curve that turns back
+    up shows it. `m.opt` is one draw on a flat curve (156 to 400 across the
+    seeds), so read the flattening and the error level instead.
+  - A seed reproduces a fit only within one `randomForestSRC` version. Pin
+    it (with `renv`) along with `set.seed()`, and set a seed before
+    `vimp.boostmtree()`, and before `predict()` and `partial.plot()` under
+    `na.action = "na.impute"`.
+  - `boost_shadow()` and `gg_boost_vimp()`: a borderline importance verdict
+    needs repeated runs, and refitting moves it as much as rerunning
+    `vimp.boostmtree()`. The article's figure B section now advises refits,
+    not reruns alone.
+
+## Tests
+
+* The test fixtures' provenance file (`boost_continuous.dcf`) records the
+  `randomForestSRC` version they were fitted under (3.10.0), and
+  `make-fixtures.R` writes it. `boostmtree` grows its trees with
+  `randomForestSRC`, and a seeded fit is reproduced only under the same
+  version: 3.9.0 and 3.10.0 gave a different fit at every one of 50 seeds.
 
 # ggBoostedTrees 0.10.1
 
