@@ -45,8 +45,8 @@ one column and slows the fit in proportion.
 the importances both move from run to run, and a refit moves them as much
 as a rerun of \code{\link[boostmtree]{vimp.boostmtree}} on the same fit.
 In one simulation (100 subjects, 5 shadow copies, 50 seeds), strong
-effects cleared the band in 98 to 100\\% of runs and true nulls in 0 to
-6\\%. Small or borderline effects cleared it in only 14 to 46\\%. That is one
+effects cleared the band in 98 to 100\% of runs and true nulls in 0 to
+6\%. Small or borderline effects cleared it in only 14 to 46\%. That is one
 design at one sample size; other sizes were not measured. Before reporting
 a covariate close to the band, refit and rerun the importance under
 several seeds, and report how often it clears the band.

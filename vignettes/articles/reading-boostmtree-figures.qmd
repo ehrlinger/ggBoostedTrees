@@ -102,8 +102,9 @@ Don't report the exact `m.opt`. On a flat curve the minimum can land
 anywhere along the flat stretch. We refit this model under 50 seeds:
 `m.opt` ran from 156 to 400, with a median near 385. It is one draw, not a
 property of the data. What carries over from fit to fit is whether the
-curve flattened and the error level it reached, and the caption reports
-both. These are simulation results at 100 subjects; the spread at larger
+curve flattened and the error level it reached. The caption reports the
+flattening, as the change over the last quarter; read the level off the
+curve. These are simulation results at 100 subjects; the spread at larger
 sizes was not measured.
 
 ## A. How do subjects change over follow-up?
