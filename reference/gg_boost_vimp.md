@@ -79,6 +79,17 @@ adds (`shadow1.x1`, ...) is flagged in the `shadow` column. Shadows are
 permuted copies with no signal; the renderer uses them as the noise
 reference and does not draw them as variables.
 
+One importance object is one run.
+[`vimp.boostmtree`](https://rdrr.io/pkg/boostmtree/man/vimp.boostmtree.html)
+permutes at random, so call
+[`set.seed()`](https://rdrr.io/r/base/Random.html) before it. The fit it
+reads is one draw too. A covariate close to the shadow band can land on
+either side from one run to the next, and refitting moves it as much as
+rerunning the importance does. Refit as well as rerun before reporting a
+borderline verdict;
+[`boost_shadow`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
+gives the numbers.
+
 A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports
 a single combined value, labelled `joint.vimp`. Note that CRAN
 `boostmtree` 2.0.0 cannot produce one at all; the patched build this

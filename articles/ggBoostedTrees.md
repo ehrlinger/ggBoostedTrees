@@ -74,6 +74,17 @@ with the square of the number of subjects. On a large study, pass
 2.0.4 or later) to run it on several cores; the fit is the same either
 way. The package README has the timings.
 
+[`set.seed()`](https://rdrr.io/r/base/Random.html) makes the fit
+reproducible, but only within one version of `randomForestSRC`, which
+`boostmtree` uses to grow its trees. In a 50-seed simulation, no seed
+gave the same fit under `randomForestSRC` 3.9.0 and 3.10.0, though the
+fits varied by the same amount under both. To reproduce a fit later,
+record and pin the `randomForestSRC` version (with `renv`, for example)
+as well as the seed. Set a seed before `vimp.boostmtree()` too, and
+before [`predict()`](https://rdrr.io/r/stats/predict.html) and
+`partial.plot()`, which impute missing values at random under
+`na.action = "na.impute"`, the default.
+
 ## Did it converge?
 
 The error path is the first thing worth looking at, so a fitted model
@@ -93,6 +104,20 @@ against the number grown, and how much the error moved over the last
 quarter of them. An optimum at the last iteration is fine if that change
 is a percent or so; if the curve is still falling steeply at the right
 edge, grow more iterations or raise the learning rate `nu`.
+
+Watch for the opposite too. In a random forest, more trees never hurt.
+In boosting they can: each iteration fits the training data a little
+more closely, so `M` and `nu` together set how closely the model fits,
+and past a point it fits the noise. An error curve that turns back up
+after its minimum has overfit. Refit with a smaller `M` or `nu`.
+
+Don’t read much into the exact `m.opt`. When the curve is flat, its
+minimum can land anywhere along the flat stretch, and a refit with
+another seed moves it. In a simulation of 100 subjects (`M = 400`,
+`nu = 0.25`), `m.opt` ran from 156 to 400 over 50 seeds. That is one
+design at one size, and how the spread changes with more subjects was
+not measured. Report whether the curve flattened and the error it
+reached, not the iteration where it happened to bottom out.
 
 The shortcut hides the first step. Written out, it is the extractor and
 then the renderer, and the extractor’s result is an ordinary data frame:
@@ -198,7 +223,8 @@ detectable; the caption says so. Adding shuffled copies of the
 covariates with
 [`boost_shadow()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
 before fitting gives the plot that reference. The article *Four Figures
-From One boostmtree Fit* walks through it.
+From One boostmtree Fit* walks through it, including why a borderline
+verdict needs more than one fit.
 
 To see the shape of an effect rather than its size, ask `boostmtree` for
 a partial effect and hand the result to

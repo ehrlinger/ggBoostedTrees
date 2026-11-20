@@ -91,6 +91,11 @@ the smooth is extracted, matching the `marginal` choice above. The
 result has `kind` `partial` and one block per response, labelled from
 the fit's `y_Names`.
 
+Under `na.action = "na.impute"`, the `boostmtree` default,
+`partial.plot()` imputes missing values at random, so call
+[`set.seed()`](https://rdrr.io/r/base/Random.html) before it for a
+reproducible effect.
+
 No source computes a confidence interval, so none is reported here.
 
 `boostmtree` accepts factor covariates. For those, `partial.plot()` and

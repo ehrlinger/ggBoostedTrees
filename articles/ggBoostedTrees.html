@@ -102,6 +102,7 @@
 </div>
 <p><code>cv.flag = TRUE</code> matters here. <code>boostmtree</code> records the error path and the cross-validated optimal iteration (<code>m.opt</code>) only when cross-validation ran. A fit grown without it has no error path to draw, and <code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> will tell you so rather than draw something misleading.</p>
 <p>Cross-validation is also most of the fit’s cost, and that cost grows with the square of the number of subjects. On a large study, pass <code>control = boostmtree::boostmtree.control(cv.cores = 4)</code> (boostmtree 2.0.4 or later) to run it on several cores; the fit is the same either way. The package README has the timings.</p>
+<p><code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> makes the fit reproducible, but only within one version of <code>randomForestSRC</code>, which <code>boostmtree</code> uses to grow its trees. In a 50-seed simulation, no seed gave the same fit under <code>randomForestSRC</code> 3.9.0 and 3.10.0, though the fits varied by the same amount under both. To reproduce a fit later, record and pin the <code>randomForestSRC</code> version (with <code>renv</code>, for example) as well as the seed. Set a seed before <code>vimp.boostmtree()</code> too, and before <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> and <code>partial.plot()</code>, which impute missing values at random under <code>na.action = "na.impute"</code>, the default.</p>
 </section><section class="level2"><h2 id="did-it-converge">Did it converge?<a class="anchor" aria-label="anchor" href="#did-it-converge"></a>
 </h2>
 <p>The error path is the first thing worth looking at, so a fitted model goes straight to it:</p>
@@ -116,6 +117,8 @@
 </div>
 </div>
 <p>The dashed line marks the optimal iteration. Error that falls and then flattens well before the last iteration says <code>M</code> was large enough, as it does here. The caption puts a number on it: the optimal iteration against the number grown, and how much the error moved over the last quarter of them. An optimum at the last iteration is fine if that change is a percent or so; if the curve is still falling steeply at the right edge, grow more iterations or raise the learning rate <code>nu</code>.</p>
+<p>Watch for the opposite too. In a random forest, more trees never hurt. In boosting they can: each iteration fits the training data a little more closely, so <code>M</code> and <code>nu</code> together set how closely the model fits, and past a point it fits the noise. An error curve that turns back up after its minimum has overfit. Refit with a smaller <code>M</code> or <code>nu</code>.</p>
+<p>Don’t read much into the exact <code>m.opt</code>. When the curve is flat, its minimum can land anywhere along the flat stretch, and a refit with another seed moves it. In a simulation of 100 subjects (<code>M = 400</code>, <code>nu = 0.25</code>), <code>m.opt</code> ran from 156 to 400 over 50 seeds. That is one design at one size, and how the spread changes with more subjects was not measured. Report whether the curve flattened and the error it reached, not the iteration where it happened to bottom out.</p>
 <p>The shortcut hides the first step. Written out, it is the extractor and then the renderer, and the extractor’s result is an ordinary data frame:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
@@ -185,7 +188,7 @@
 </div>
 </div>
 </div>
-<p>Don’t read too much into importance from 25 subjects. The values are noisy at this size. A value below zero means permuting that covariate did not make the error worse, so the model is not leaning on it. This fit has no noise reference, so the plot draws no band and marks nothing detectable; the caption says so. Adding shuffled copies of the covariates with <code><a href="../reference/boost_shadow.html">boost_shadow()</a></code> before fitting gives the plot that reference. The article <em>Four Figures From One boostmtree Fit</em> walks through it.</p>
+<p>Don’t read too much into importance from 25 subjects. The values are noisy at this size. A value below zero means permuting that covariate did not make the error worse, so the model is not leaning on it. This fit has no noise reference, so the plot draws no band and marks nothing detectable; the caption says so. Adding shuffled copies of the covariates with <code><a href="../reference/boost_shadow.html">boost_shadow()</a></code> before fitting gives the plot that reference. The article <em>Four Figures From One boostmtree Fit</em> walks through it, including why a borderline verdict needs more than one fit.</p>
 <p>To see the shape of an effect rather than its size, ask <code>boostmtree</code> for a partial effect and hand the result to <code><a href="../reference/gg_boost_effect.html">gg_boost_effect()</a></code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">

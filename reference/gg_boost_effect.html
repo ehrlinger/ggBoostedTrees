@@ -120,6 +120,9 @@ so that both levels of <code>kind</code> mean the same thing: the fitted effect.
 partial effect and a lowess smooth of it over time; the smooth is
 extracted, matching the <code>marginal</code> choice above. The result has <code>kind</code>
 <code>partial</code> and one block per response, labelled from the fit's <code>y_Names</code>.</p>
+<p>Under <code>na.action = "na.impute"</code>, the <code>boostmtree</code> default,
+<code>partial.plot()</code> imputes missing values at random, so call
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> before it for a reproducible effect.</p>
 <p>No source computes a confidence interval, so none is reported here.</p>
 <p><code>boostmtree</code> accepts factor covariates. For those, <code>partial.plot()</code> and
 <code>marginal.plot()</code> return a character (or, for <code>marginal.plot()$data</code>,

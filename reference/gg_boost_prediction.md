@@ -64,6 +64,11 @@ as the `mu` stored on the fit, which
 plots and which is out-of-bag. A subject's dot here will generally sit
 closer to its observed trajectory than the fitted curve in that figure.
 
+Under `na.action = "na.impute"`, the `boostmtree` default, prediction
+imputes missing values at random, so call
+[`set.seed()`](https://rdrr.io/r/base/Random.html) before this function
+for a reproducible figure.
+
 `time` must lie within the observed follow-up. `boostmtree` builds its
 time effect from a B-spline basis, and a prediction beyond the last
 observation is an extrapolation of that basis rather than a model

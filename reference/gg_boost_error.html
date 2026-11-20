@@ -97,6 +97,29 @@ error; when <code>FALSE</code> return the unstandardized squared error.</p></dd>
 records <code>err.rate</code> and <code>m.opt</code> only when cross-validation ran; a default fit
 carries neither, and there is no error path to extract. If this function
 reports that the fit has no error path, refit with <code>cv.flag = TRUE</code>.</p>
+<p><strong>More iterations can overfit.</strong> In a random forest, more trees never
+hurt: <code>ntree</code> only steadies the average. Boosting is different. Each
+iteration moves the fit closer to the training data, so the number of
+iterations <code>M</code> and the learning rate <code>nu</code> together set how closely the
+model fits. Too many, or too large a <code>nu</code>, and it fits the noise. The
+cross-validated error path is where you see that: an error that falls,
+flattens, and then turns back up has overfit past its minimum.</p>
+<p><strong><code>m.opt</code> is one draw, not a property of the data.</strong> <code>m.opt</code> is the
+iteration with the lowest cross-validated error. When the error is flat
+over a long stretch, that minimum can land anywhere along it, and a refit
+with another seed moves it. In one simulation (100 subjects, <code>M = 400</code>,
+<code>nu = 0.25</code>, 50 seeds), <code>m.opt</code> ran from 156 to 400, with a median near
+385. That is one design at one sample size; how the spread changes with
+more subjects was not measured. Read whether the curve has flattened, and
+the error level it reaches, rather than the exact <code>m.opt</code>. The caption of
+<code><a href="autoplot.gg_boost_error.html">autoplot.gg_boost_error</a></code> reports the flattening.</p>
+<p><strong>A seed reproduces a fit only within one randomForestSRC
+version.</strong> <code>boostmtree</code> grows its trees with <code>randomForestSRC</code>, and a new
+<code>randomForestSRC</code> release can change the random stream. In the same
+simulation, none of the 50 seeds gave an identical fit under
+<code>randomForestSRC</code> 3.9.0 and 3.10.0, though the spread of fits matched. To
+reproduce a fit, call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> and record and pin the
+<code>randomForestSRC</code> version, with <code>renv</code> for example.</p>
 <p><code>boostmtree</code> stores the error on the standardized response scale in the
 <code>l2</code> column. <code>use.rmse = FALSE</code> returns <code>(l2 * y.sd)^2</code>, the squared error
 on the original scale.</p>

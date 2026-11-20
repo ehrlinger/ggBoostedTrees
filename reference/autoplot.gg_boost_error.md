@@ -61,6 +61,19 @@ or so over that last stretch, the curve has flattened and more
 iterations would change little. A curve still falling steeply calls for
 a refit with more iterations or a larger learning rate.
 
+A curve that turns back up after its minimum has overfit. Boosting
+iterations are not like trees in a random forest, where more never hurt:
+`M` and `nu` set how closely the model fits the data, and past a point
+it fits the noise. Refit with a smaller `M` or `nu`.
+
+When the curve is flat, do not read much into where the dashed line
+falls. The minimum of a flat curve can land anywhere along it, and a
+refit with another seed moves it, in one simulation by more than 200
+iterations (see
+[`gg_boost_error`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)).
+The flattening and the error level are the finding; the exact `m.opt` is
+not.
+
 ## See also
 
 [`gg_boost_error`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)

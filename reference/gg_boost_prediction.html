@@ -102,6 +102,9 @@ helped fit the trees. That is not the same quantity as the <code>mu</code> store
 the fit, which <code><a href="gg_boost_trajectory.html">gg_boost_trajectory</a></code> plots and which is
 out-of-bag. A subject's dot here will generally sit closer to its observed
 trajectory than the fitted curve in that figure.</p>
+<p>Under <code>na.action = "na.impute"</code>, the <code>boostmtree</code> default, prediction
+imputes missing values at random, so call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> before this
+function for a reproducible figure.</p>
 <p><code>time</code> must lie within the observed follow-up. <code>boostmtree</code> builds its
 time effect from a B-spline basis, and a prediction beyond the last
 observation is an extrapolation of that basis rather than a model

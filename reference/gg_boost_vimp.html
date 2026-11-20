@@ -115,6 +115,12 @@ travels as the <code>time.effect</code> attribute.</p>
 (<code>shadow1.x1</code>, ...) is flagged in the <code>shadow</code> column. Shadows are permuted
 copies with no signal; the renderer uses them as the noise reference and
 does not draw them as variables.</p>
+<p>One importance object is one run. <code><a href="https://rdrr.io/pkg/boostmtree/man/vimp.boostmtree.html" class="external-link">vimp.boostmtree</a></code>
+permutes at random, so call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> before it. The fit it reads
+is one draw too. A covariate close to the shadow band can land on either
+side from one run to the next, and refitting moves it as much as
+rerunning the importance does. Refit as well as rerun before reporting a
+borderline verdict; <code><a href="boost_shadow.html">boost_shadow</a></code> gives the numbers.</p>
 <p>A joint importance object (<code>vimp.boostmtree(fit, joint = TRUE)</code>) reports a
 single combined value, labelled <code>joint.vimp</code>. Note that CRAN <code>boostmtree</code>
 2.0.0 cannot produce one at all; the patched build this package requires is
