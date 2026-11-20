@@ -179,3 +179,24 @@ test_that("runs that order their covariates differently pool by name", {
   expect_identical(levels(reordered$variable), c("x1", "x2", "x3", "x4"))
   expect_equal(reordered, expected, ignore_attr = TRUE)
 })
+
+test_that("a run with a missing importance stops, by name", {
+  runs <- pool_runs()
+  runs$b$main["x2", 1] <- NA
+
+  # Counting the NA run as "not detected" would report x2's main effect as
+  # 1/2 when only one run gave a verdict.
+  expect_error(gg_boost_vimp(runs), "run .b. has no finite importance .*x2")
+
+  runs <- pool_runs()
+  runs$c$interaction["shadow1.x1:time", 1] <- NaN
+  expect_error(gg_boost_vimp(runs), "run .c. .*shadow1.x1")
+})
+
+test_that("pooled counts exclude no run when every importance is finite", {
+  gg <- gg_boost_vimp(pool_runs())
+
+  expect_identical(gg$n_runs, rep(3L, nrow(gg)))
+  expect_identical(nrow(attr(gg, "runs")), 3L * nrow(gg))
+  expect_false(anyNA(attr(gg, "runs")$margin))
+})

@@ -59,8 +59,10 @@ stable a single-run verdict is, not a test with a known error rate.
 
 Every run must carry shadow covariates (see \code{\link{boost_shadow}}),
 since a run without them has no band, and every run must name the same
-covariates, components, responses and metric as the first. Either problem
-stops with an error naming the run. Only \code{boostmtree} runs can be pooled.
+covariates, components, responses and metric as the first, and have a
+finite importance for every covariate, shadows included. Any of these
+problems stops with an error naming the run. Only \code{boostmtree} runs can
+be pooled.
 
 Runs are labelled by the names of the list, or numbered when it has none.
 }

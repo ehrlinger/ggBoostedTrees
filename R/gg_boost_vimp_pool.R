@@ -22,8 +22,10 @@
 #'
 #' Every run must carry shadow covariates (see \code{\link{boost_shadow}}),
 #' since a run without them has no band, and every run must name the same
-#' covariates, components, responses and metric as the first. Either problem
-#' stops with an error naming the run. Only `boostmtree` runs can be pooled.
+#' covariates, components, responses and metric as the first, and have a
+#' finite importance for every covariate, shadows included. Any of these
+#' problems stops with an error naming the run. Only `boostmtree` runs can
+#' be pooled.
 #'
 #' Runs are labelled by the names of the list, or numbered when it has none.
 #'
@@ -92,6 +94,18 @@ gg_boost_vimp.list <- function(object,
         "gg_boost_vimp: run ", sQuote(labels[i]), " has no shadow ",
         "covariates, so it has no band to be judged against. Fit with ",
         "boost_shadow() covariates.",
+        call. = FALSE
+      )
+    }
+    # A run with no importance for a covariate gives that covariate no
+    # verdict; counting it as "not detected" would bias the share.
+    bad <- !is.finite(gg$importance)
+    if (any(bad)) {
+      stop(
+        "gg_boost_vimp: run ", sQuote(labels[i]), " has no finite ",
+        "importance for ",
+        paste(sQuote(unique(as.character(gg$variable[bad]))), collapse = ", "),
+        ", so it gives no verdict to pool.",
         call. = FALSE
       )
     }
