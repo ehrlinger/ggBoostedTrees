@@ -135,6 +135,27 @@ test_that("a tail that starts at zero draws a caption without a percentage", {
                "error rose from zero over the last 2 iterations", fixed = TRUE)
 })
 
+test_that("unrecorded errors in the tail are skipped, not fatal", {
+  # NA at the window's start: measured from the recorded value before it.
+  start <- error_path(c(2, 1.6, 1.3, 1.1, 1.05, NA, 0.9, 0.8))
+  conv <- .error_convergence(start)
+  expect_equal(conv$change, (0.8 - 1.05) / 1.05)
+
+  # NA at the end: measured up to the last recorded value.
+  end <- error_path(c(2, 1.6, 1.3, 1.1, 1.05, 1.0, 0.9, NA))
+  conv <- .error_convergence(end)
+  expect_equal(conv$change, (0.9 - 1.05) / 1.05)
+  expect_match(ggplot2::autoplot(end)$labels$caption, "error fell 14.3%",
+               fixed = TRUE)
+
+  # Fewer than two recorded: no change, and the caption says so.
+  none <- error_path(c(NA, NA, NA, NA, NA, NA, NA, 0.8))
+  expect_true(is.na(.error_convergence(none)$change))
+  expect_match(ggplot2::autoplot(none)$labels$caption,
+               "error was not recorded over the last 2 iterations",
+               fixed = TRUE)
+})
+
 test_that("a backend with no optimum reports the iterations grown", {
   p <- ggplot2::autoplot(error_path(m_opt = 0L))
 

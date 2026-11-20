@@ -19,6 +19,13 @@ Version: 0.10.2
   each run as a point and the count of runs that cleared the band. The
   article's figure B section shows five pooled runs.
 
+## Other figures
+
+* The `gg_boost_error()` plot no longer fails when the error path has a
+  missing value at the start or end of its convergence window. The caption
+  measures the change across the recorded errors only, and says the error
+  "was not recorded" when fewer than two were.
+
 ## Documentation
 
 * The help pages and vignettes now say how to use `boostmtree` correctly,
