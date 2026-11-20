@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,37 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.10.1" id="ggboostedtrees-0101">ggBoostedTrees 0.10.1<a class="anchor" aria-label="anchor" href="#ggboostedtrees-0101"></a></h2>
+<div class="section level3">
+<h3 id="boostmtree-backend-0-10-1">boostmtree backend<a class="anchor" aria-label="anchor" href="#boostmtree-backend-0-10-1"></a></h3>
+<ul><li>
+<p><code>Remotes:</code> installs <code>boostmtree</code> 2.0.13 from the CCF fork (<code>v2.0.13-ccf</code>), and the README’s backend install line names that tag. The <code>Imports:</code> floor stays at 2.0.1. The fork’s releases since 2.0.8:</p>
+<ul><li>2.0.9 holds about 60% to 70% less memory per boosting step in a fitted object.</li>
+<li>2.0.10 fixes <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> and <code>partial.plot()</code> stopping with “subscript out of bounds” on a fit with <code>na.action = "na.omit"</code> when a row of <code>x</code> has a missing covariate, and rejects a bad <code>boostmtree.control(cv.cores = )</code> before the first tree.</li>
+<li>2.0.11 makes <code>partial.plot()</code> predict only at the time points it plots, and walks each step’s out-of-bag list once in a cross-validated prediction instead of scanning it for every subject.</li>
+<li>2.0.13 fixes a fixed <code>boostmtree.control(seed = )</code> drawing the same subsample for every tree. With <code>cv.flag = TRUE</code> about 60% of subjects were never out of bag, and their fitted trajectory was a flat line at the mean response of the other subjects; the cross-validated error, <code>m.opt</code> and grow-object importance were computed from the rest.</li>
+</ul></li>
+<li><p>The test fixtures are refitted with 2.0.13; the reference fit now grows <code>M = 100</code>, because the honest cross-validated error was still falling at 50 (<code>m.opt</code> is 88).</p></li>
+<li><p><code><a href="../reference/gg_boost_trajectory.html">gg_boost_trajectory()</a></code>, and so <code><a href="../reference/gg_boost_calibration.html">gg_boost_calibration()</a></code>, warn when a cross-validated <code>boostmtree</code> fit records subjects that were never out of bag by <code>m.opt</code>, read from the fit’s own out-of-bag record (<code>gamma.i.list</code>), and name the cause. A flat trajectory alone does not warn: a fit with an intercept-only time design (<code>d = 0</code>) is flat by construction. Both document that such a fit stores out-of-bag predictions in <code>mu</code>, not the in-sample fit.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="variable-importance-0-10-1">Variable importance<a class="anchor" aria-label="anchor" href="#variable-importance-0-10-1"></a></h3>
+<ul><li><p>The <code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> plot is redrawn as a dot chart: one panel for main effects and one for interactions with time, sharing a variable axis and an importance scale. Every value sits at its signed importance. Values right of a grey noise band are filled dots on a stem, values inside it hollow. An interaction panel with nothing outside the band says “None detectable”, where the old bar chart drew an empty panel. The overall time effect, previously dropped, is reported in the caption.</p></li>
+<li><p>New <code>boost_shadow(x, id, k = 5)</code> appends <code>k</code> shadow copies of every covariate, each shuffled between subjects, to give variable importance a noise reference measured in the fit itself. <code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> gains a logical <code>shadow</code> column that flags them by name.</p></li>
+<li><p>The noise band comes from the shadows: in each panel it runs up to the largest importance any shadow reached (or zero). Shadows set the band but are not drawn. The band is a reference, not a test with a known error rate: shadows in a copy share one subject shuffle and keep the covariates’ correlations, and a covariate with no effect of its own can clear the band when it is correlated with one that has an effect. A fit without shadows draws no band and no detectable-or-not verdict, and the caption says so. A band from the largest negative importance was tried and dropped: with every tree drawing its own subsample, negatives become rare as boosting increases while a pure-noise covariate scored as high as 0.57.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-figures-0-10-1">Other figures<a class="anchor" aria-label="anchor" href="#other-figures-0-10-1"></a></h3>
+<ul><li><p>New <code>gg_boost_prediction(fit, time)</code> predicts every subject’s response at one time from <code>predict.boostmtree()</code> at <code>m.opt</code>, with the subject’s covariates, and <code>plot(gg, covariate = )</code> draws the predictions against one covariate with a loess smoother. It refuses a time outside the observed follow-up, multi-response fits and <code>BoostMLR</code> fits.</p></li>
+<li><p>The <code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> plot’s caption reports convergence: the optimal iteration against the number grown, and the error’s relative change over the last quarter of the iterations. An optimum at the last iteration with a change of a percent or so means the curve has flattened; a steep fall means refit with more iterations or a larger learning rate. Turn it off with <code>convergence = FALSE</code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-10-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-10-1"></a></h3>
+<ul><li><p>New article, <em>Four Figures From One boostmtree Fit</em>, builds the subject trajectories, variable importance, a partial effect over time and a landmark-time prediction from one fit with shadow covariates, and says how to read each. It starts by reading the error path for convergence, and says that a verdict near the edge of the band can change between runs of <code>vimp.boostmtree()</code>.</p></li>
+<li><p>The getting-started vignette fits <code>M = 200</code> iterations instead of 50, so its error path levels off before the last iteration as its own advice asks, and reads the convergence caption. It seeds with <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> alone.</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.10.0" id="ggboostedtrees-0100">ggBoostedTrees 0.10.0<a class="anchor" aria-label="anchor" href="#ggboostedtrees-0100"></a></h2>
 <ul><li><p>The plot snapshot tests skip when <code>vdiffr</code> is not installed instead of failing, and <code>patchwork</code>, which nothing uses, leaves <code>Suggests</code>. Both from the CRAN Cookbook audit for this release.</p></li>

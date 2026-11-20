@@ -1,5 +1,105 @@
 # Changelog
 
+## ggBoostedTrees 0.10.1
+
+### boostmtree backend
+
+- `Remotes:` installs `boostmtree` 2.0.13 from the CCF fork
+  (`v2.0.13-ccf`), and the README’s backend install line names that tag.
+  The `Imports:` floor stays at 2.0.1. The fork’s releases since 2.0.8:
+
+  - 2.0.9 holds about 60% to 70% less memory per boosting step in a
+    fitted object.
+  - 2.0.10 fixes [`predict()`](https://rdrr.io/r/stats/predict.html) and
+    `partial.plot()` stopping with “subscript out of bounds” on a fit
+    with `na.action = "na.omit"` when a row of `x` has a missing
+    covariate, and rejects a bad `boostmtree.control(cv.cores = )`
+    before the first tree.
+  - 2.0.11 makes `partial.plot()` predict only at the time points it
+    plots, and walks each step’s out-of-bag list once in a
+    cross-validated prediction instead of scanning it for every subject.
+  - 2.0.13 fixes a fixed `boostmtree.control(seed = )` drawing the same
+    subsample for every tree. With `cv.flag = TRUE` about 60% of
+    subjects were never out of bag, and their fitted trajectory was a
+    flat line at the mean response of the other subjects; the
+    cross-validated error, `m.opt` and grow-object importance were
+    computed from the rest.
+
+- The test fixtures are refitted with 2.0.13; the reference fit now
+  grows `M = 100`, because the honest cross-validated error was still
+  falling at 50 (`m.opt` is 88).
+
+- [`gg_boost_trajectory()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_trajectory.md),
+  and so
+  [`gg_boost_calibration()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_calibration.md),
+  warn when a cross-validated `boostmtree` fit records subjects that
+  were never out of bag by `m.opt`, read from the fit’s own out-of-bag
+  record (`gamma.i.list`), and name the cause. A flat trajectory alone
+  does not warn: a fit with an intercept-only time design (`d = 0`) is
+  flat by construction. Both document that such a fit stores out-of-bag
+  predictions in `mu`, not the in-sample fit.
+
+### Variable importance
+
+- The
+  [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
+  plot is redrawn as a dot chart: one panel for main effects and one for
+  interactions with time, sharing a variable axis and an importance
+  scale. Every value sits at its signed importance. Values right of a
+  grey noise band are filled dots on a stem, values inside it hollow. An
+  interaction panel with nothing outside the band says “None
+  detectable”, where the old bar chart drew an empty panel. The overall
+  time effect, previously dropped, is reported in the caption.
+
+- New `boost_shadow(x, id, k = 5)` appends `k` shadow copies of every
+  covariate, each shuffled between subjects, to give variable importance
+  a noise reference measured in the fit itself.
+  [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
+  gains a logical `shadow` column that flags them by name.
+
+- The noise band comes from the shadows: in each panel it runs up to the
+  largest importance any shadow reached (or zero). Shadows set the band
+  but are not drawn. The band is a reference, not a test with a known
+  error rate: shadows in a copy share one subject shuffle and keep the
+  covariates’ correlations, and a covariate with no effect of its own
+  can clear the band when it is correlated with one that has an effect.
+  A fit without shadows draws no band and no detectable-or-not verdict,
+  and the caption says so. A band from the largest negative importance
+  was tried and dropped: with every tree drawing its own subsample,
+  negatives become rare as boosting increases while a pure-noise
+  covariate scored as high as 0.57.
+
+### Other figures
+
+- New `gg_boost_prediction(fit, time)` predicts every subject’s response
+  at one time from `predict.boostmtree()` at `m.opt`, with the subject’s
+  covariates, and `plot(gg, covariate = )` draws the predictions against
+  one covariate with a loess smoother. It refuses a time outside the
+  observed follow-up, multi-response fits and `BoostMLR` fits.
+
+- The
+  [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)
+  plot’s caption reports convergence: the optimal iteration against the
+  number grown, and the error’s relative change over the last quarter of
+  the iterations. An optimum at the last iteration with a change of a
+  percent or so means the curve has flattened; a steep fall means refit
+  with more iterations or a larger learning rate. Turn it off with
+  `convergence = FALSE`.
+
+### Documentation
+
+- New article, *Four Figures From One boostmtree Fit*, builds the
+  subject trajectories, variable importance, a partial effect over time
+  and a landmark-time prediction from one fit with shadow covariates,
+  and says how to read each. It starts by reading the error path for
+  convergence, and says that a verdict near the edge of the band can
+  change between runs of `vimp.boostmtree()`.
+
+- The getting-started vignette fits `M = 200` iterations instead of 50,
+  so its error path levels off before the last iteration as its own
+  advice asks, and reads the convergence caption. It seeds with
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) alone.
+
 ## ggBoostedTrees 0.10.0
 
 - The plot snapshot tests skip when `vdiffr` is not installed instead of

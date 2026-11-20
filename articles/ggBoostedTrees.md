@@ -43,8 +43,9 @@ to be supported.
 We simulate 25 subjects with up to four visits each, using `simLong()`
 from `boostmtree`. Model 1 builds the response from `x1`, `x3` and `x4`,
 plus an interaction between time and `x2`, so we know what a sensible
-fit ought to find. Fifty boosting iterations is enough to make the point
-and fits in about a second.
+fit ought to find. Two hundred boosting iterations at the default
+learning rate are enough for the error to level off, and the fit takes a
+few seconds.
 
 ``` r
 
@@ -56,8 +57,7 @@ sim <- boostmtree::simLong(n = 25, n.time = 4, model = 1)$data.list
 
 fit <- boostmtree::boostmtree(
   x = sim$features, tm = sim$time, id = sim$id, y = sim$y,
-  M = 50, cv.flag = TRUE, verbose = FALSE,
-  control = boostmtree::boostmtree.control(seed = 7)
+  M = 200, cv.flag = TRUE, verbose = FALSE
 )
 ```
 
@@ -87,8 +87,12 @@ autoplot(fit)
 ![](ggBoostedTrees_files/figure-html/error-shortcut-1.png)
 
 The dashed line marks the optimal iteration. Error that falls and then
-flattens well before the last iteration says `M` was large enough. If
-the curve is still falling at the right edge, grow more iterations.
+flattens well before the last iteration says `M` was large enough, as it
+does here. The caption puts a number on it: the optimal iteration
+against the number grown, and how much the error moved over the last
+quarter of them. An optimum at the last iteration is fine if that change
+is a percent or so; if the curve is still falling steeply at the right
+edge, grow more iterations or raise the learning rate `nu`.
 
 The shortcut hides the first step. Written out, it is the extractor and
 then the renderer, and the extractor’s result is an ordinary data frame:
@@ -98,9 +102,9 @@ then the renderer, and the extractor’s result is an ordinary data frame:
 gg_dta <- gg_boost_error(fit)
 head(gg_dta, 3)
 #>   iteration    value response optimal
-#> 1         1 1.014660        y   FALSE
-#> 2         2 1.013863        y   FALSE
-#> 3         3 1.008970        y   FALSE
+#> 1         1 1.016369        y   FALSE
+#> 2         2 1.006181        y   FALSE
+#> 3         3 1.000934        y   FALSE
 ```
 
 The `optimal` column flags the row for `m.opt`. Everything else in the
