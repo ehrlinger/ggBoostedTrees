@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggBoostedTrees</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,32 @@
       <small>Source: <a href="https://github.com/ehrlinger/ggBoostedTrees/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.10.2" id="ggboostedtrees-0102">ggBoostedTrees 0.10.2<a class="anchor" aria-label="anchor" href="#ggboostedtrees-0102"></a></h2>
+<div class="section level3">
+<h3 id="variable-importance-0-10-2">Variable importance<a class="anchor" aria-label="anchor" href="#variable-importance-0-10-2"></a></h3>
+<ul><li><p><code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code> pools importance runs. Pass a list of <code>vimp.boostmtree()</code> results, repeated runs on one fit or one run on each of several refits, and it returns a <code>gg_boost_vimp_pool</code> frame: for each covariate and panel, the share of runs in which it cleared that run’s own shadow band, with percentiles of its margin over the band. The per-run bands and margins travel as the <code>runs</code> attribute. A run without shadow covariates, on different covariates, or with a missing importance stops with an error naming it. A single importance object behaves as before.</p></li>
+<li><p><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> draws a pooled object as a box per covariate of the margin over the band (box 25th to 75th percentile, whiskers 15th to 85th), with each run as a point and the count of runs that cleared the band. The article’s figure B section shows five pooled runs.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-figures-0-10-2">Other figures<a class="anchor" aria-label="anchor" href="#other-figures-0-10-2"></a></h3>
+<ul><li>The <code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> plot no longer fails when the error path has a missing value at the start or end of its convergence window. The caption measures the change across the recorded errors only, and says the error “was not recorded” when fewer than two were.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-10-2">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-10-2"></a></h3>
+<ul><li>The help pages and vignettes now say how to use <code>boostmtree</code> correctly, drawing on a 50-seed simulation (100 subjects, <code>M = 400</code>, <code>nu = 0.25</code>, <code>randomForestSRC</code> 3.9.0 and 3.10.0). Documentation only; no behaviour changes.
+<ul><li>
+<code><a href="../reference/gg_boost_error.html">gg_boost_error()</a></code> and <code><a href="../reference/autoplot.gg_boost_error.html">autoplot.gg_boost_error()</a></code>: more iterations can overfit, unlike <code>ntree</code> in a random forest, and a curve that turns back up shows it. <code>m.opt</code> is one draw on a flat curve (156 to 400 across the seeds), so read the flattening and the error level instead.</li>
+<li>A seed reproduces a fit only within one <code>randomForestSRC</code> version. Pin it (with <code>renv</code>) along with <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>, and set a seed before <code>vimp.boostmtree()</code>, and before <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> and <code>partial.plot()</code> under <code>na.action = "na.impute"</code>.</li>
+<li>
+<code><a href="../reference/boost_shadow.html">boost_shadow()</a></code> and <code><a href="../reference/gg_boost_vimp.html">gg_boost_vimp()</a></code>: a borderline importance verdict needs repeated runs, and refitting moves it as much as rerunning <code>vimp.boostmtree()</code>. The article’s figure B section now advises refits, not reruns alone.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-0-10-2">Tests<a class="anchor" aria-label="anchor" href="#tests-0-10-2"></a></h3>
+<ul><li>The test fixtures’ provenance file (<code>boost_continuous.dcf</code>) records the <code>randomForestSRC</code> version they were fitted under (3.10.0), and <code>make-fixtures.R</code> writes it. <code>boostmtree</code> grows its trees with <code>randomForestSRC</code>, and a seeded fit is reproduced only under the same version: 3.9.0 and 3.10.0 gave a different fit at every one of 50 seeds.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.10.1" id="ggboostedtrees-0101">ggBoostedTrees 0.10.1<a class="anchor" aria-label="anchor" href="#ggboostedtrees-0101"></a></h2>
 <div class="section level3">

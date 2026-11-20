@@ -1,5 +1,69 @@
 # Changelog
 
+## ggBoostedTrees 0.10.2
+
+### Variable importance
+
+- [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md)
+  pools importance runs. Pass a list of `vimp.boostmtree()` results,
+  repeated runs on one fit or one run on each of several refits, and it
+  returns a `gg_boost_vimp_pool` frame: for each covariate and panel,
+  the share of runs in which it cleared that run’s own shadow band, with
+  percentiles of its margin over the band. The per-run bands and margins
+  travel as the `runs` attribute. A run without shadow covariates, on
+  different covariates, or with a missing importance stops with an error
+  naming it. A single importance object behaves as before.
+
+- [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+  draws a pooled object as a box per covariate of the margin over the
+  band (box 25th to 75th percentile, whiskers 15th to 85th), with each
+  run as a point and the count of runs that cleared the band. The
+  article’s figure B section shows five pooled runs.
+
+### Other figures
+
+- The
+  [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)
+  plot no longer fails when the error path has a missing value at the
+  start or end of its convergence window. The caption measures the
+  change across the recorded errors only, and says the error “was not
+  recorded” when fewer than two were.
+
+### Documentation
+
+- The help pages and vignettes now say how to use `boostmtree`
+  correctly, drawing on a 50-seed simulation (100 subjects, `M = 400`,
+  `nu = 0.25`, `randomForestSRC` 3.9.0 and 3.10.0). Documentation only;
+  no behaviour changes.
+  - [`gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_error.md)
+    and
+    [`autoplot.gg_boost_error()`](https://ehrlinger.github.io/ggBoostedTrees/reference/autoplot.gg_boost_error.md):
+    more iterations can overfit, unlike `ntree` in a random forest, and
+    a curve that turns back up shows it. `m.opt` is one draw on a flat
+    curve (156 to 400 across the seeds), so read the flattening and the
+    error level instead.
+  - A seed reproduces a fit only within one `randomForestSRC` version.
+    Pin it (with `renv`) along with
+    [`set.seed()`](https://rdrr.io/r/base/Random.html), and set a seed
+    before `vimp.boostmtree()`, and before
+    [`predict()`](https://rdrr.io/r/stats/predict.html) and
+    `partial.plot()` under `na.action = "na.impute"`.
+  - [`boost_shadow()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
+    and
+    [`gg_boost_vimp()`](https://ehrlinger.github.io/ggBoostedTrees/reference/gg_boost_vimp.md):
+    a borderline importance verdict needs repeated runs, and refitting
+    moves it as much as rerunning `vimp.boostmtree()`. The article’s
+    figure B section now advises refits, not reruns alone.
+
+### Tests
+
+- The test fixtures’ provenance file (`boost_continuous.dcf`) records
+  the `randomForestSRC` version they were fitted under (3.10.0), and
+  `make-fixtures.R` writes it. `boostmtree` grows its trees with
+  `randomForestSRC`, and a seeded fit is reproduced only under the same
+  version: 3.9.0 and 3.10.0 gave a different fit at every one of 50
+  seeds.
+
 ## ggBoostedTrees 0.10.1
 
 ### boostmtree backend
