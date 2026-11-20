@@ -23,11 +23,23 @@ stopifnot(dir.exists(here))
 ## id.unique, rho, phi, lambda, m.opt -- IS bit-identical across refits, so the
 ## committed fixture stays valid indefinitely.
 model.path <- file.path(here, "boost_continuous.rds")
+dcf.path <- file.path(here, "boost_continuous.dcf")
 regenerate <- nzchar(Sys.getenv("REGENERATE_MODEL_FIXTURE"))
 if (file.exists(model.path) && !regenerate) {
   message("boost_continuous.rds exists; not refitting. ",
           "Set REGENERATE_MODEL_FIXTURE=1 to force.")
+  # A reused model keeps the randomForestSRC version it was fitted under,
+  # not the one installed now.
+  rf.line <- grep("^randomForestSRC: ",
+                  if (file.exists(dcf.path)) readLines(dcf.path) else "",
+                  value = TRUE)
+  rf.version <- if (length(rf.line)) {
+    sub("^randomForestSRC: ", "", rf.line[1])
+  } else {
+    "unknown (not recorded when the model was fitted)"
+  }
 } else {
+  rf.version <- as.character(packageVersion("randomForestSRC"))
   set.seed(7)
   sim <- simLong(
     n = 25, n.time = 4, rho = 0.8, model = 1, family = "continuous"
@@ -60,8 +72,7 @@ writeLines(
     # a fit only under the same rfsrc version (3.9.0 and 3.10.0 gave a
     # different fit at every one of 50 seeds), so the version is part of the
     # provenance.
-    paste0("randomForestSRC: ",
-           as.character(packageVersion("randomForestSRC"))),
+    paste0("randomForestSRC: ", rf.version),
     "Source: ehrlinger/boostmtree_src@v2.0.13-ccf (subdir = boostmtree)",
     paste0("Generated: ", format(Sys.Date())),
     paste0("R: ", R.version.string),
@@ -119,7 +130,7 @@ writeLines(
     "  with boostmtree 2.0.2 (M = 50, seed = 7; m.opt 19), before 2.0.13",
     "  drew a fresh subsample per tree: 16 of 25 subjects never out of bag."
   ),
-  file.path(here, "boost_continuous.dcf")
+  dcf.path
 )
 
 cat("wrote fixture, m.opt =", fit$m.opt, "\n")
