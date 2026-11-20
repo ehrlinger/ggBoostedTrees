@@ -20,6 +20,7 @@ test_that("fixture provenance is recorded", {
   txt <- readLines(test_path("fixtures", "boost_continuous.dcf"))
 
   expect_true(any(grepl("^Backend: boostmtree", txt)))
+  expect_true(any(grepl("^randomForestSRC: [0-9]", txt)))
   expect_true(any(grepl("cv.flag = TRUE", txt, fixed = TRUE)))
 })
 

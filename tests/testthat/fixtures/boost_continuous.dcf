@@ -1,5 +1,6 @@
 Fixture: boost_continuous.rds
 Backend: boostmtree 2.0.13
+randomForestSRC: 3.10.0
 Source: ehrlinger/boostmtree_src@v2.0.13-ccf (subdir = boostmtree)
 Generated: 2026-11-19
 R: R version 4.6.1 (2026-06-24)

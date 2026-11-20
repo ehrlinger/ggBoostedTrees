@@ -56,6 +56,12 @@ writeLines(
   c(
     "Fixture: boost_continuous.rds",
     paste0("Backend: boostmtree ", as.character(packageVersion("boostmtree"))),
+    # boostmtree grows its trees with randomForestSRC, and a seed reproduces
+    # a fit only under the same rfsrc version (3.9.0 and 3.10.0 gave a
+    # different fit at every one of 50 seeds), so the version is part of the
+    # provenance.
+    paste0("randomForestSRC: ",
+           as.character(packageVersion("randomForestSRC"))),
     "Source: ehrlinger/boostmtree_src@v2.0.13-ccf (subdir = boostmtree)",
     paste0("Generated: ", format(Sys.Date())),
     paste0("R: ", R.version.string),
