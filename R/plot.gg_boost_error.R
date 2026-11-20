@@ -96,23 +96,29 @@ plot.gg_boost_error <- function(x, optimal = TRUE, convergence = TRUE, ...) {
 
 # One row per response: the optimal iteration (NA when the backend selects
 # none), the number of iterations grown, the width of the last quarter, and
-# the error's relative change across it (NA when the window starts at zero,
-# where a relative change is undefined). Computed from the extracted data
+# the error's relative change across it, over recorded (finite) errors only
+# (NA when the window starts at zero, where a relative change is undefined,
+# or when fewer than two errors were recorded). Computed from the extracted data
 # alone, so the renderer never reaches back into the fit.
 .error_convergence <- function(object, tail = 0.25) {
   rows <- lapply(split(object, object$response, drop = TRUE), function(d) {
     d <- d[order(d$iteration), , drop = FALSE]
     m <- nrow(d)
     window <- max(1L, as.integer(round(tail * m)))
-    from <- d$value[max(1L, m - window)]
     opt <- d$iteration[d$optimal]
+    # Only recorded errors count: the change runs from the recorded value
+    # `window` steps before the last recorded one to that last one.
+    rec <- d$value[is.finite(d$value)]
+    n_rec <- length(rec)
+    to <- if (n_rec) rec[n_rec] else NA_real_
+    from <- if (n_rec >= 2L) rec[max(1L, n_rec - window)] else NA_real_
     data.frame(
       response = as.character(d$response[1]),
       m_opt = if (length(opt)) opt[1] else NA_integer_,
       m = m,
       window = window,
-      change = if (from == 0) NA_real_ else (d$value[m] - from) / from,
-      to = d$value[m],
+      change = if (is.na(from) || from == 0) NA_real_ else (to - from) / from,
+      to = if (is.na(from)) NA_real_ else to,
       stringsAsFactors = FALSE
     )
   })
@@ -130,6 +136,8 @@ plot.gg_boost_error <- function(x, optimal = TRUE, convergence = TRUE, ...) {
     move <- if (!is.na(r$change)) {
       paste0(if (r$change <= 0) "fell " else "rose ",
              format(round(100 * abs(r$change), 1), nsmall = 1), "%")
+    } else if (is.na(r$to)) {
+      "was not recorded"
     } else if (r$to == 0) {
       "stayed at zero"
     } else {
