@@ -165,3 +165,17 @@ test_that("a run on a different metric stops, by name", {
 
   expect_error(gg_boost_vimp(runs), "run .c. differs .* metric")
 })
+
+test_that("runs that order their covariates differently pool by name", {
+  runs <- pool_runs()
+  rev_rows <- function(m) m[rev(seq_len(nrow(m))), , drop = FALSE]
+  runs$b$main <- rev_rows(runs$b$main)
+  runs$b$interaction <- rev_rows(runs$b$interaction)
+
+  reordered <- gg_boost_vimp(runs)
+  expected <- gg_boost_vimp(pool_runs())
+
+  # The first run's order is kept, and every cell matches by name.
+  expect_identical(levels(reordered$variable), c("x1", "x2", "x3", "x4"))
+  expect_equal(reordered, expected, ignore_attr = TRUE)
+})

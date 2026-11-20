@@ -98,6 +98,9 @@ gg_boost_vimp.list <- function(object,
     gg
   })
   .vimp_pool_check_alike(extracts, labels)
+  # The first run's covariate order, whatever order later runs use.
+  first <- extracts[[1L]]
+  var_levels <- unique(as.character(first$variable[!first$shadow]))
 
   runs <- do.call(rbind, lapply(seq_along(extracts), function(i) {
     gg <- extracts[[i]]
@@ -111,7 +114,7 @@ gg_boost_vimp.list <- function(object,
                              paste(bands$component, bands$response))]
     margin <- real$importance - band
     data.frame(
-      variable = droplevels(real$variable),
+      variable = factor(as.character(real$variable), levels = var_levels),
       component = real$component,
       response = real$response,
       run = factor(labels[i], levels = labels),
@@ -176,9 +179,11 @@ gg_boost_vimp.list <- function(object,
 # describe the same panels with the same covariates as the first.
 .vimp_pool_check_alike <- function(extracts, labels) {
   ref <- extracts[[1L]]
+  # Covariates are compared as a set: refits can order their columns
+  # differently, and the pooling matches cells by name.
   describe <- function(gg) {
     list(
-      covariates = levels(gg$variable),
+      covariates = sort(levels(gg$variable)),
       components = levels(gg$component),
       responses = levels(gg$response),
       metric = attr(gg, "metric") %||% NA_character_

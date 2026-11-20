@@ -53,6 +53,12 @@
 autoplot.gg_boost_vimp_pool <- function(object, ...) {
   .boost_check_gg(object, "gg_boost_vimp_pool")
   runs <- attr(object, "runs")
+  # A row subset of the frame keeps the whole runs attribute; draw only the
+  # runs for the cells still in the frame.
+  cell_key <- function(d) {
+    paste(d$variable, d$component, d$response, sep = "\r")
+  }
+  runs <- runs[cell_key(runs) %in% cell_key(object), , drop = FALSE]
 
   # Most important at the top, as in the single-run figure.
   by_variable <- tapply(object$q50, as.character(object$variable),

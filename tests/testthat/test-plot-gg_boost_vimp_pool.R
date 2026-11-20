@@ -99,3 +99,13 @@ test_that("the pooled importance plot is stable", {
     "pooled-vimp", ggplot2::autoplot(pooled_fixture())
   )
 })
+
+test_that("a row subset draws only the runs for the cells it keeps", {
+  gg <- pooled_fixture()
+  main <- gg[gg$component == "main", ]
+  p <- ggplot2::autoplot(main)
+
+  pts <- layer_of(p, "GeomPoint")
+  expect_identical(nrow(pts), 12L)
+  expect_identical(nrow(ggplot2::ggplot_build(p)$layout$layout), 1L)
+})
