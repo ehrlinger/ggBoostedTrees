@@ -30,7 +30,8 @@
 #' is one draw too. A covariate close to the shadow band can land on either
 #' side from one run to the next, and refitting moves it as much as
 #' rerunning the importance does. Refit as well as rerun before reporting a
-#' borderline verdict; \code{\link{boost_shadow}} gives the numbers.
+#' borderline verdict; \code{\link{boost_shadow}} gives the numbers. Pass a
+#' list of runs to pool them; see \code{\link{gg_boost_vimp_pool}}.
 #'
 #' A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports a
 #' single combined value, labelled `joint.vimp`. Note that CRAN `boostmtree`
