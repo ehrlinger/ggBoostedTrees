@@ -45,6 +45,10 @@ the fit, which \code{\link{gg_boost_trajectory}} plots and which is
 out-of-bag. A subject's dot here will generally sit closer to its observed
 trajectory than the fitted curve in that figure.
 
+Under \code{na.action = "na.impute"}, the \code{boostmtree} default, prediction
+imputes missing values at random, so call \code{set.seed()} before this
+function for a reproducible figure.
+
 \code{time} must lie within the observed follow-up. \code{boostmtree} builds its
 time effect from a B-spline basis, and a prediction beyond the last
 observation is an extrapolation of that basis rather than a model

@@ -25,6 +25,13 @@
 #' copies with no signal; the renderer uses them as the noise reference and
 #' does not draw them as variables.
 #'
+#' One importance object is one run. \code{\link[boostmtree]{vimp.boostmtree}}
+#' permutes at random, so call \code{set.seed()} before it. The fit it reads
+#' is one draw too. A covariate close to the shadow band can land on either
+#' side from one run to the next, and refitting moves it as much as
+#' rerunning the importance does. Refit as well as rerun before reporting a
+#' borderline verdict; \code{\link{boost_shadow}} gives the numbers.
+#'
 #' A joint importance object (`vimp.boostmtree(fit, joint = TRUE)`) reports a
 #' single combined value, labelled `joint.vimp`. Note that CRAN `boostmtree`
 #' 2.0.0 cannot produce one at all; the patched build this package requires is

@@ -58,8 +58,12 @@ Four settings matter here.
   importance is computed from the out-of-bag subjects that cross-validation
   sets aside, and the fixed-time prediction uses the cross-validated number
   of iterations.
-* The seed is set with `set.seed()`, which reproduces the fit on any
-  `boostmtree` version. Before `boostmtree` 2.0.13, a fixed
+* The seed is set with `set.seed()`. That reproduces the fit only under
+  the same `randomForestSRC` version, because `boostmtree` grows its trees
+  with it. In a 50-seed study of this model, no seed gave the same fit
+  under `randomForestSRC` 3.9.0 and 3.10.0, though the spread of fits
+  matched. Record and pin that version (with `renv`, for example) along
+  with the seed. Before `boostmtree` 2.0.13, a fixed
   `boostmtree.control(seed = )` was passed unchanged to every tree, so
   every tree drew the same subsample and most subjects were never out of
   bag; importance was then computed from the few that were. 2.0.13, the
@@ -87,6 +91,20 @@ would change the figures below very little. A curve still falling steeply at
 `M` is a fit to refit with a larger `M` or a larger learning rate `nu`. At
 the default `nu = 0.05` this model was still improving at 600 steps, which
 is why it uses `nu = 0.25`.
+
+The opposite failure is a curve that turns back up after its minimum. That
+is overfitting, and it is why `M` is not like `ntree` in a random forest,
+where more trees never hurt. In boosting, `M` and `nu` set how closely the
+model fits the data. Past a point it fits the noise, and the
+cross-validated error rises. Refit with a smaller `M` or `nu`.
+
+Don't report the exact `m.opt`. On a flat curve the minimum can land
+anywhere along the flat stretch. We refit this model under 50 seeds:
+`m.opt` ran from 156 to 400, with a median near 385. It is one draw, not a
+property of the data. What carries over from fit to fit is whether the
+curve flattened and the error level it reached, and the caption reports
+both. These are simulation results at 100 subjects; the spread at larger
+sizes was not measured.
 
 ## A. How do subjects change over follow-up?
 
@@ -144,6 +162,14 @@ are in the simulation too, but with smaller coefficients, and at 100
 subjects neither clears the band. A hollow dot means "not detected in this
 fit", not "has no effect".
 
+That reading is for this fit. We refit the model under 50 seeds and ran
+`vimp.boostmtree()` on each. `x1`'s main effect and `x2`'s interaction
+cleared the band in 98 to 100% of runs. Covariates with no effect cleared
+it in 0 to 6%. The small effects were a coin toss: `x3`'s main effect
+cleared it in 18% of runs, and `x2`'s main effect, which the
+`time^2 x2^2` term can produce, in 14 to 46%. So `x2`'s main effect is
+borderline on this design, and another seed could draw it filled.
+
 The importance is the relative increase in out-of-bag error, so 0.3 means
 the error rose 30% when that covariate was scrambled. It has no fixed scale:
 how much a covariate with no signal scores depends on the fit, and climbs
@@ -194,8 +220,15 @@ stable: `vimp.boostmtree()` scrambles each covariate at random, and running
 it again on this same fit with `set.seed(1)` puts `x2`'s interaction at
 0.036, inside the band, and moves `x3`'s main effect, which is real, out of
 it. A value close to the edge of the band can land on either side from one
-run to the next. Before reporting one, run `vimp.boostmtree()` a few times;
-an effect that matters clears the band every time, as `x1` does here. A
+run to the next.
+
+Rerunning `vimp.boostmtree()` is not enough on its own. The fit is one draw
+too, and in the 50-seed study above a refit moved verdicts as much as a
+rerun of the importance did. Before reporting a borderline covariate, refit
+under several seeds, compute the importance on each fit, and report how
+often it clears the band. An effect that matters clears it nearly every
+time, as `x1` does. These are simulation results at 100 subjects, and how
+the spread changes with more subjects was not measured. A
 lone, small interaction with a near-zero time effect is a reason to look at
 figure C for that covariate, not a finding on its own.
 

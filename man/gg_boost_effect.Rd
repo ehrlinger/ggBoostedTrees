@@ -54,6 +54,10 @@ partial effect and a lowess smooth of it over time; the smooth is
 extracted, matching the \code{marginal} choice above. The result has \code{kind}
 \code{partial} and one block per response, labelled from the fit's \code{y_Names}.
 
+Under \code{na.action = "na.impute"}, the \code{boostmtree} default,
+\code{partial.plot()} imputes missing values at random, so call
+\code{set.seed()} before it for a reproducible effect.
+
 No source computes a confidence interval, so none is reported here.
 
 \code{boostmtree} accepts factor covariates. For those, \code{partial.plot()} and

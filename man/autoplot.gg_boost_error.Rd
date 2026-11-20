@@ -42,6 +42,17 @@ by itself mean the fit is unfinished: if the error fell by a percent or
 so over that last stretch, the curve has flattened and more iterations
 would change little. A curve still falling steeply calls for a refit with
 more iterations or a larger learning rate.
+
+A curve that turns back up after its minimum has overfit. Boosting
+iterations are not like trees in a random forest, where more never hurt:
+\code{M} and \code{nu} set how closely the model fits the data, and past a point it
+fits the noise. Refit with a smaller \code{M} or \code{nu}.
+
+When the curve is flat, do not read much into where the dashed line
+falls. The minimum of a flat curve can land anywhere along it, and a refit
+with another seed moves it, in one simulation by more than 200 iterations
+(see \code{\link{gg_boost_error}}). The flattening and the error level are
+the finding; the exact \code{m.opt} is not.
 }
 \examples{
 \donttest{
