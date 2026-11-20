@@ -1,8 +1,8 @@
 Package: ggBoostedTrees
 Type: Package
 Title: Visually Exploring Boosted Tree Models
-Version: 0.10.0
-Date: 2026-10-21
+Version: 0.10.1
+Date: 2026-11-19
 Authors@R: person("John", "Ehrlinger",
   role = c("aut", "cre"),
   email = "john.ehrlinger@gmail.com",

@@ -121,6 +121,20 @@ test_that("a rising tail is reported as a rise", {
   expect_match(p$labels$caption, "error rose 12.5%", fixed = TRUE)
 })
 
+test_that("a tail that starts at zero draws a caption without a percentage", {
+  zero <- error_path(c(1, 0.5, 0.2, 0, 0, 0, 0, 0), m_opt = 4L)
+  conv <- .error_convergence(zero)
+  expect_true(is.na(conv$change))
+  expect_identical(
+    ggplot2::autoplot(zero)$labels$caption,
+    "Optimal iteration 4 of 8; error stayed at zero over the last 2 iterations"
+  )
+
+  rise <- error_path(c(1, 0.5, 0.2, 0, 0, 0, 0, 0.1), m_opt = 4L)
+  expect_match(ggplot2::autoplot(rise)$labels$caption,
+               "error rose from zero over the last 2 iterations", fixed = TRUE)
+})
+
 test_that("a backend with no optimum reports the iterations grown", {
   p <- ggplot2::autoplot(error_path(m_opt = 0L))
 

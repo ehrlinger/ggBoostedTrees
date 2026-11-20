@@ -85,7 +85,8 @@ plot.gg_boost_error <- function(x, optimal = TRUE, convergence = TRUE, ...) {
 
 # One row per response: the optimal iteration (NA when the backend selects
 # none), the number of iterations grown, the width of the last quarter, and
-# the error's relative change across it. Computed from the extracted data
+# the error's relative change across it (NA when the window starts at zero,
+# where a relative change is undefined). Computed from the extracted data
 # alone, so the renderer never reaches back into the fit.
 .error_convergence <- function(object, tail = 0.25) {
   rows <- lapply(split(object, object$response, drop = TRUE), function(d) {
@@ -99,7 +100,8 @@ plot.gg_boost_error <- function(x, optimal = TRUE, convergence = TRUE, ...) {
       m_opt = if (length(opt)) opt[1] else NA_integer_,
       m = m,
       window = window,
-      change = (d$value[m] - from) / from,
+      change = if (from == 0) NA_real_ else (d$value[m] - from) / from,
+      to = d$value[m],
       stringsAsFactors = FALSE
     )
   })
@@ -114,10 +116,15 @@ plot.gg_boost_error <- function(x, optimal = TRUE, convergence = TRUE, ...) {
     } else {
       paste0("Optimal iteration ", r$m_opt, " of ", r$m)
     }
-    verb <- if (r$change <= 0) "fell" else "rose"
-    line <- paste0(opt, "; error ", verb, " ",
-                   format(round(100 * abs(r$change), 1), nsmall = 1),
-                   "% over the last ",
+    move <- if (!is.na(r$change)) {
+      paste0(if (r$change <= 0) "fell " else "rose ",
+             format(round(100 * abs(r$change), 1), nsmall = 1), "%")
+    } else if (r$to == 0) {
+      "stayed at zero"
+    } else {
+      "rose from zero"
+    }
+    line <- paste0(opt, "; error ", move, " over the last ",
                    if (r$window == 1L) "iteration" else
                      paste(r$window, "iterations"))
     if (nrow(conv) > 1L) line <- paste0(r$response, ": ", line)
