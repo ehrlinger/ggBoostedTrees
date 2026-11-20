@@ -241,6 +241,53 @@ time-varying-effect claim is not supported.
 Both panels share one horizontal scale, so the interactions are judged
 against the main effects. A small interaction is drawn small.
 
+### Pooling runs
+
+`gg_boost_vimp()` takes a list of importance runs as well as one, and
+reports how often each covariate cleared the band. Five reruns on the first
+fit, the one from model 2, cost about half a minute:
+
+```{r vimp-pool, fig.height = 3.5}
+set.seed(11)
+runs <- lapply(1:5, function(i) boostmtree::vimp.boostmtree(fit))
+pooled <- gg_boost_vimp(runs)
+autoplot(pooled)
+```
+
+```{r vimp-pool-x2, include = FALSE}
+x2_main <- pooled[pooled$variable == "x2" & pooled$component == "main", ]
+```
+
+**Reading it.** Every run has its own band, so the x axis is each run's
+importance *minus that run's band*. Zero is the line every run was judged
+against, and a point right of it cleared its band. The box spans the 25th
+to 75th percentile over runs, the whiskers the 15th to 85th, and the label
+counts the runs that cleared the band. `x1`'s main effect and `x2`'s
+interaction sit well right of zero in every run. `x2`'s main effect, the
+borderline one, cleared the band in `r x2_main$n_detected` of
+`r x2_main$n_runs`: a single run could have drawn it either way.
+
+The share measures how stable a single-run verdict is; it is not a test,
+and the package draws no verdict from it. Reruns on one fit only vary the
+importance's own scrambling. Since a refit moves a verdict as much, the
+stronger check pools one run from each of several refits, at the cost of
+a fit each:
+
+```{r vimp-pool-refit, eval = FALSE}
+refit_runs <- lapply(1:5, function(seed) {
+  set.seed(seed)
+  f <- boostmtree::boostmtree(
+    x = x, tm = sim$time, id = sim$id, y = sim$y,
+    M = 400, nu = 0.25, cv.flag = TRUE, verbose = FALSE
+  )
+  boostmtree::vimp.boostmtree(f)
+})
+autoplot(gg_boost_vimp(refit_runs))
+```
+
+Every run must carry shadow covariates and name the same covariates;
+`gg_boost_vimp()` stops, naming the run, when one does not.
+
 ## C. How does an important covariate shape the trajectory?
 
 Importance says *whether* a covariate matters; this figure says *how*. It

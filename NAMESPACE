@@ -8,6 +8,7 @@ S3method(autoplot,gg_boost_path)
 S3method(autoplot,gg_boost_prediction)
 S3method(autoplot,gg_boost_trajectory)
 S3method(autoplot,gg_boost_vimp)
+S3method(autoplot,gg_boost_vimp_pool)
 S3method(gg_boost_calibration,BoostMLR)
 S3method(gg_boost_calibration,boostmtree)
 S3method(gg_boost_calibration,default)
@@ -29,6 +30,7 @@ S3method(gg_boost_trajectory,boostmtree)
 S3method(gg_boost_trajectory,default)
 S3method(gg_boost_vimp,BoostMLR)
 S3method(gg_boost_vimp,default)
+S3method(gg_boost_vimp,list)
 S3method(gg_boost_vimp,vimp.boostmtree)
 S3method(plot,gg_boost_calibration)
 S3method(plot,gg_boost_effect)
@@ -37,6 +39,7 @@ S3method(plot,gg_boost_path)
 S3method(plot,gg_boost_prediction)
 S3method(plot,gg_boost_trajectory)
 S3method(plot,gg_boost_vimp)
+S3method(plot,gg_boost_vimp_pool)
 export(boost_shadow)
 export(boostmlr_partial)
 export(gg_boost_calibration)
@@ -51,8 +54,10 @@ importFrom(ggplot2,
   aes,
   as_labeller,
   autoplot,
+  expansion,
   facet_grid,
   facet_wrap,
+  geom_boxplot,
   geom_line,
   geom_linerange,
   geom_point,
@@ -64,6 +69,7 @@ importFrom(ggplot2,
   ggplot,
   labs,
   scale_shape_manual,
+  scale_x_continuous,
   scale_y_discrete,
   stat_summary
 )

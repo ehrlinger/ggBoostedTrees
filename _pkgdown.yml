@@ -48,6 +48,7 @@ reference:
   - gg_boost_path
   - gg_boost_trajectory
   - gg_boost_vimp
+  - gg_boost_vimp_pool
   - boost_shadow
   - gg_boost_effect
   - gg_boost_prediction
@@ -65,6 +66,7 @@ reference:
   - autoplot.gg_boost_path
   - autoplot.gg_boost_trajectory
   - autoplot.gg_boost_vimp
+  - autoplot.gg_boost_vimp_pool
   - autoplot.gg_boost_effect
   - autoplot.gg_boost_prediction
   - autoplot.gg_boost_calibration
