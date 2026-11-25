@@ -58,6 +58,23 @@ test_that("a covariate that varies within subject is refused", {
   expect_error(boost_shadow(d$x, d$id), "'a' vary within subject")
 })
 
+test_that("a labeled covariate constant within subject is accepted", {
+  # Study data read from SAS, or by haven, carries a label on every column.
+  # Subsetting a plain vector drops it, so a comparison that counts
+  # attributes would call every labeled column time-varying.
+  d <- shadow_data()
+  attr(d$x$a, "label") <- "Covariate a"
+  attr(d$x$g, "label") <- "Covariate g"
+  set.seed(4)
+  out <- boost_shadow(d$x, d$id, k = 1)
+
+  expect_identical(out$a, d$x$a)
+  expect_identical(names(out), c("a", "g", "shadow1.a", "shadow1.g"))
+
+  d$x$a[2] <- 9
+  expect_error(boost_shadow(d$x, d$id), "'a' vary within subject")
+})
+
 test_that("bad inputs are refused", {
   d <- shadow_data()
 

@@ -84,9 +84,10 @@ boost_shadow <- function(x, id, k = 5) {
   subjects <- x[first, , drop = FALSE]
 
   # A shadow is a subject-level shuffle, so every covariate must have one
-  # value per subject.
+  # value per subject. Values are compared, not attributes: subsetting drops
+  # a column's label, so a labeled column would never equal its own subset.
   varying <- names(x)[vapply(names(x), function(v) {
-    !identical(x[[v]], subjects[[v]][subject_rows])
+    !identical(as.vector(x[[v]]), as.vector(subjects[[v]][subject_rows]))
   }, logical(1))]
   if (length(varying) > 0L) {
     stop("boost_shadow: covariate(s) ",
