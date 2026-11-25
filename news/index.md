@@ -1,5 +1,14 @@
 # Changelog
 
+## ggBoostedTrees 0.10.3
+
+- [`boost_shadow()`](https://ehrlinger.github.io/ggBoostedTrees/reference/boost_shadow.md)
+  accepts labeled covariates. Its check that each covariate is constant
+  within a subject compared attributes as well as values, and subsetting
+  drops a column’s `label`, so every labeled column, as study data read
+  from SAS carries, was refused as varying within subject. It now
+  compares the values only.
+
 ## ggBoostedTrees 0.10.2
 
 ### Variable importance
